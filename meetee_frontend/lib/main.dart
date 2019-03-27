@@ -8,19 +8,11 @@ import 'package:numberpicker/numberpicker.dart'; //number picker
 
 void main() => runApp(MyApp());
 
-final dummySnapshot = [
-  {"name": "Filip", "votes": 15},
-  {"name": "Abraham", "votes": 14},
-  {"name": "Richard", "votes": 11},
-  {"name": "Ike", "votes": 10},
-  {"name": "Justin", "votes": 1},
-];
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Baby Names',
+      title: ' Names',
       home: MyHomePage(),
     );
   }
@@ -124,6 +116,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
   DateTime _date = DateTime.now();
   TimeOfDay _time_start = TimeOfDay.now();
   TimeOfDay _time_end = TimeOfDay.now();
+  String seatType;
 
   int _currentValue = 1;
 
@@ -235,32 +228,112 @@ class _CustomerDemandState extends State<CustomerDemand> {
               children: <Widget>[
                 RaisedButton(
                   child: Text('Single Table'),
-                  onPressed: () {},
+                  onPressed: () {
+                    seatType = 'ST';
+                  },
                 ),
                 RaisedButton(
                   child: Text('Meeting Room'),
-                  onPressed: () {},
+                  onPressed: () {
+                    seatType = 'MR';
+                  },
                 ),
               ],
             ),
           ),
         ],
       ),
-      // bottomNavigationBar: RaisedButton(
-      //   color: Colors.greenAccent,
-      //   child: Text('Reserve !'),
-      //   onPressed: () {
-      //     Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //             builder: (context) => Summary(
-      //                   seatType: '${widget.seatType}',
-      //                   date: DateFormat('yyyy-MM-dd').format(_date),
-      //                   time_start: '${_time_start.toString()}',
-      //                   time_end: '${_time_end.toString()}',
-      //                 )));
-      //   },
-      // ),
+      bottomNavigationBar: RaisedButton(
+        color: Colors.greenAccent,
+        child: Text('Reserve !'),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AvailableSeat(
+                        seatType: '$seatType',
+                        date: DateFormat('yyyy-MM-dd').format(_date),
+                        time_start: '${_time_start.toString()}',
+                        time_end: '${_time_end.toString()}',
+                      )));
+        },
+      ),
     );
   }
+}
+
+class AvailableSeat extends StatefulWidget {
+  final String seatType;
+  final String date;
+  final String time_start;
+  final String time_end;
+
+  const AvailableSeat(
+      {Key key, this.seatType, this.date, this.time_start, this.time_end})
+      : super(key: key);
+
+  @override
+  _AvailableSeatState createState() => _AvailableSeatState();
+}
+
+class _AvailableSeatState extends State<AvailableSeat> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Result'),
+      ),
+      // body: _buildSeatMap(context),
+      body: StreamBuilder(
+        stream: Firestore.instance
+            .collection('SeatMap')
+            .document(widget.seatType)
+            .collection(getRoomName(widget.seatType))
+            // .document('MR101')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return LinearProgressIndicator();
+          return ListView(
+            padding: const EdgeInsets.only(top: 20.0),
+            children: <Widget>[
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: ListTile(
+                    title: Text(snapshot.data.documents[0]['name']),
+                    trailing: Text(snapshot.data.documents[0].documentID),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: ListTile(
+                    title: Text(snapshot.data.documents[1]['name']),
+                    trailing: Text(snapshot.data.documents[1].documentID),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+String getRoomName(String seatType) {
+  if (seatType == 'MR') return 'MeetingRoomSmall';
+  if (seatType == 'ST') return 'SingleTable';
+  return 'SingleTable';
 }
