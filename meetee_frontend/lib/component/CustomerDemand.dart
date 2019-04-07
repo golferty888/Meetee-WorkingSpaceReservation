@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:convert'; // JSON
 import 'package:flutter_calendar/flutter_calendar.dart';
 
+import 'package:meetee_frontend/model/Room.dart';
 import 'package:meetee_frontend/component/AvailableSeat.dart';
 
 class CustomerDemand extends StatefulWidget {
@@ -17,7 +18,28 @@ class _CustomerDemandState extends State<CustomerDemand> {
   String roomTypeSelected;
   String user = 'Mister A';
   String room = 'room39';
-  List roomType = ['Room A', 'Room B', 'Room C'];
+  // List roomType = ['Room A', 'Room B', 'Room C'];
+  List roomType = new List<Room>();
+
+  Future<String> getRoomType() async {
+    http.Response response = await http
+        .get('https://us-central1-meetee-api.cloudfunctions.net/api/roomtypes');
+    if (response.statusCode == 200) {
+      print(jsonEncode(response.body));
+      this.setState(() {
+        List list = json.decode(response.body);
+        roomType = list.map((model) => Room.fromJson(model)).toList();
+      });
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  @override
+  void initState() {
+    this.getRoomType();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +106,11 @@ class _CustomerDemandState extends State<CustomerDemand> {
           child: PageView.builder(
             itemCount: roomType.length,
             onPageChanged: (value) {
-              print(roomType[value]); // สำหรับเลือก Card นี้
-              // roomTypeSelected = roomType[index];
+              print('name: ' +
+                  roomType[value].roomTypeName); // สำหรับเลือก Card นี้
+              print(roomType[value].roomPrice);
+              print(roomType[value].roomCapacity);
+              roomTypeSelected = roomType[value].roomTypeName;
             },
             controller: PageController(viewportFraction: 0.7),
             itemBuilder: (BuildContext context, int itemIndex) {
@@ -129,7 +154,8 @@ class _CustomerDemandState extends State<CustomerDemand> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 4.0),
                       child: Text(
-                        '4-5 Persons',
+                        roomType[itemIndex].roomCapacity.toString() +
+                            ' Persons',
                         style: TextStyle(color: Colors.grey, fontSize: 10.0),
                       ),
                     ),
@@ -137,7 +163,15 @@ class _CustomerDemandState extends State<CustomerDemand> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 4.0),
                       child: Text(
-                        roomType[itemIndex],
+                        roomType[itemIndex].roomPrice.toString() + ' Baht/Hour',
+                        style: TextStyle(color: Colors.grey, fontSize: 10.0),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4.0),
+                      child: Text(
+                        roomType[itemIndex].roomTypeName,
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),

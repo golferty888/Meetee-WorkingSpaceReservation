@@ -20,7 +20,7 @@ class AvailableSeat extends StatefulWidget {
 class _AvailableSeatState extends State<AvailableSeat> {
   var persons = new List<Person>(); // from person.dart
 
-  Future<String> getData() async {
+  Future<String> getAvailableRoom() async {
     http.Response response =
         await http.get('https://jsonplaceholder.typicode.com/users');
     if (response.statusCode == 200) {
@@ -36,7 +36,7 @@ class _AvailableSeatState extends State<AvailableSeat> {
 
   @override
   void initState() {
-    this.getData();
+    this.getAvailableRoom();
     super.initState();
   }
 
