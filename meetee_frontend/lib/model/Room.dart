@@ -7,8 +7,8 @@ class Room {
   // named constructor
   Room.fromJson(Map<String, dynamic> json)
       : roomTypeName = json['roomTypeName'],
-        roomCapacity = json['roomCapacity'],
-        roomPrice = json['roomPrice'];
+        roomCapacity = json['roomTypeCapacity'],
+        roomPrice = json['roomTypePrice'];
 
   String show() {
     print(roomCapacity);
