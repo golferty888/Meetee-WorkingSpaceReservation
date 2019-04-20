@@ -20,6 +20,32 @@ app.get('/', (request, response) => {
     response.send('Meetee welcome!');
 });
 
+app.post('/check/available', (request, response) => {
+    const startDate = request.body.startDate;
+    const endDate = request.body.endDate;
+    const startTime = request.body.startTime;
+    const endTime = request.body.endTime;
+
+    var subQuery = knex.select('room_id').from('meetee.reservation')
+        .where('start_date', '=', startDate)
+        .andWhere(function () {
+            this.whereBetween('start_time', [startTime, endTime])
+                .orWhereBetween('end_time', [startTime, endTime])
+        })
+
+    knex('meetee.reservation')
+        .rightJoin('meetee.rooms', 'reservation.room_id', '=', 'rooms.id')
+        .whereNotIn('rooms.id', subQuery)
+        .orderBy('rooms.id')
+        .distinct('rooms.id', 'rooms.code')
+        .then((results) => {
+            response.send(results);
+        })
+        .catch((error) => {
+            response.send(error);
+        })
+})
+
 app.get('/view/rooms', (request, response) => {
     knex('meetee.rooms')
         .join('meetee.roomtypes', 'rooms.roomtype_id', '=', 'roomtypes.id')
