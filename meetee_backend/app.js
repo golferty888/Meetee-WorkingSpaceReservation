@@ -23,7 +23,8 @@ app.get('/', (request, response) => {
 app.post('/check/available', (request, response) => {
     const startDate = request.body.startDate;
     const endDate = request.body.endDate;
-    const startTime = request.body.startTime;
+    var startTime = request.body.startTime;
+    startTime = startTime.substr(0, 6) + '01';
     const endTime = request.body.endTime;
 
     var subQuery = knex.select('room_id').from('meetee.reservation')
