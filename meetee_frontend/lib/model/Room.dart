@@ -1,25 +1,31 @@
 class Room {
   String roomTypeName;
-  int roomCapacity;
-  int roomPrice;
-  Room(this.roomTypeName, this.roomCapacity, this.roomPrice);
+  int roomTypeCapacity;
+  int roomTypePrice;
+  String type;
+  String roomTypePic;
+  Room(this.roomTypeName, this.roomTypeCapacity, this.roomTypePrice, this.type,
+      this.roomTypePic);
 
   // named constructor
   Room.fromJson(Map<String, dynamic> json)
       : roomTypeName = json['roomTypeName'],
-        roomCapacity = json['roomTypeCapacity'],
-        roomPrice = json['roomTypePrice'];
+        roomTypeCapacity = json['roomTypeCapacity'],
+        roomTypePrice = json['roomTypePrice'],
+        type = json['type'],
+        roomTypePic = json['roomTypePic'];
 
   String show() {
-    print(roomCapacity);
+    print(roomTypePic);
   }
 
   // method
   Map<String, dynamic> toJson() {
     return {
       'roomTypeName': roomTypeName,
-      'roomCapacity': roomCapacity,
-      'roomPrice': roomPrice,
+      'roomCapacity': roomTypeCapacity,
+      'roomPrice': roomTypePrice,
+      'type': type,
     };
   }
 }

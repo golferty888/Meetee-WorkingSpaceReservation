@@ -42,22 +42,18 @@ class _AvailableSeatState extends State<AvailableSeat> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Result'),
-        ),
-        body: Container(
-            child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true, // container stick with top bar
-          itemCount: persons.length,
-          itemBuilder: (BuildContext context, int index) {
-            if (context != null) {
-              return makeCard(persons[index]);
-            }
-            // return CircularProgressIndicator();
-          },
-        )));
+    return Container(
+        child: ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true, // container stick with top bar
+      itemCount: persons.length,
+      itemBuilder: (BuildContext context, int index) {
+        if (context != null) {
+          return makeCard(persons[index]);
+        }
+        // return CircularProgressIndicator();
+      },
+    ));
   }
 }
 

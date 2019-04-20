@@ -3,17 +3,18 @@ import 'package:http/http.dart' as http;
 // import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'dart:async';
 import 'dart:convert'; // JSON
-import 'package:flutter_calendar/flutter_calendar.dart';
+// import 'package:flutter_calendar/flutter_calendar.dart';
 
 import 'package:meetee_frontend/model/Room.dart';
 import 'package:meetee_frontend/component/AvailableSeat.dart';
+import 'package:meetee_frontend/component/DatePicker.dart';
 
-class CustomerDemand extends StatefulWidget {
+class SeatSelection extends StatefulWidget {
   @override
-  _CustomerDemandState createState() => _CustomerDemandState();
+  _SeatSelectionState createState() => _SeatSelectionState();
 }
 
-class _CustomerDemandState extends State<CustomerDemand> {
+class _SeatSelectionState extends State<SeatSelection> {
   String startDate;
   String roomTypeSelected;
   String user = 'Mister A';
@@ -43,39 +44,36 @@ class _CustomerDemandState extends State<CustomerDemand> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Customer Demand',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-      ),
-      backgroundColor: Colors.cyanAccent,
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            title: Calendar(onDateSelected: (date) => handleNewDate(date)
-                // isExpandable: true,
-                ),
+    return ListView(
+      children: <Widget>[
+        Card(
+          child: ListTile(
+            leading: Icon(IconData(59389, fontFamily: 'MaterialIcons')),
+            title: TextField(keyboardType: TextInputType.number),
           ),
-          roomTypeCard(context),
-        ],
-      ),
-      bottomNavigationBar: RaisedButton(
-        color: Colors.greenAccent,
-        child: Text('Reserve !'),
-        onPressed: () {
-          onlineReserve(user, room, roomTypeSelected, startDate, startDate);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AvailableSeat(
-                        roomType: '$roomType',
-                      )));
-        },
-      ),
+          elevation: 0.0,
+          margin: EdgeInsets.only(left: 24, right: 24),
+        ),
+        Card(
+          child: ListTile(
+            leading: Icon(IconData(59670, fontFamily: 'MaterialIcons')),
+            title: DatePicker(),
+          ),
+          elevation: 0.0,
+          margin: EdgeInsets.only(left: 24, right: 24, top: 8),
+        ),
+        Card(
+          child: ListTile(
+            leading: Icon(IconData(58402, fontFamily: 'MaterialIcons')),
+            title: Text('Select Time'),
+          ),
+          elevation: 0.0,
+          margin: EdgeInsets.only(left: 24, right: 24, top: 8),
+        ),
+        // ListTile(
+        //   title: roomTypeCard(context),
+        // )
+      ],
     );
   }
 
