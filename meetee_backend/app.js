@@ -50,9 +50,9 @@ app.post('/reserve', (request, response) => {
     const userId = request.body.userId;
     const roomId = request.body.roomId;
     const startDate = request.body.startDate;
-    const endDate = request.body.endDate;    
+    const endDate = request.body.endDate;
     var startTime = request.body.startTime;
-    startTime = startTime.substr(0,6) + '01';
+    startTime = startTime.substr(0, 6) + '01';
     const endTime = request.body.endTime;
     knex('meetee.reservation')
         .returning('id', 'room_id', 'user_id', 'start_date', 'start_time', 'end_date', 'end_time')
@@ -68,6 +68,28 @@ app.post('/reserve', (request, response) => {
             response.send(result);
         })
         .catch((error) => {
+            response.send(error);
+        })
+});
+
+app.get('/type/room', (request, response) => {
+    knex('meetee.roomtypes')
+        .where('roomtypes.category_id', '1')
+        .select('roomtypes.id', 'roomtypes.name', 'roomtypes.price', 'roomtypes.capacity')
+        .then((results) => {
+            response.send(results);
+        }).catch((error) => {
+            response.send(error);
+        })
+});
+
+app.get('/type/seat', (request, response) => {
+    knex('meetee.roomtypes')
+        .where('roomtypes.category_id', '2')
+        .select('roomtypes.id', 'roomtypes.name', 'roomtypes.price', 'roomtypes.capacity')
+        .then((results) => {
+            response.send(results);
+        }).catch((error) => {
             response.send(error);
         })
 });
