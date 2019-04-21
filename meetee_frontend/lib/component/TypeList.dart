@@ -28,8 +28,9 @@ class _SeatTypeState extends State<SeatType> {
   }
 
   Future<String> getSeatType(String type) async {
-    http.Response response =
-        await http.get('http://localhost:9000/type/' + type);
+    String url = 'http://localhost:9500/type/' + type;
+    http.Response response = await http.get(url);
+
     if (response.statusCode == 200) {
       print(jsonEncode(response.body));
       this.setState(() {
