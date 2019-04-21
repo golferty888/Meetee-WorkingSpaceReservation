@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meetee_frontend/component/DatePicker.dart';
+import 'package:meetee_frontend/component/TypeList.dart';
 
 class RoomSelection extends StatefulWidget {
   final AnimationController controller;
@@ -43,7 +44,7 @@ class _RoomSelectionState extends State<RoomSelection> {
                     title: TextField(keyboardType: TextInputType.number),
                   ),
                   elevation: 0.0,
-                  margin: EdgeInsets.only(left: 24, right: 24),
+                  margin: EdgeInsets.only(left: 16, right: 16),
                 ),
                 Card(
                   child: ListTile(
@@ -51,7 +52,7 @@ class _RoomSelectionState extends State<RoomSelection> {
                     title: DatePicker(),
                   ),
                   elevation: 0.0,
-                  margin: EdgeInsets.only(left: 24, right: 24, top: 8),
+                  margin: EdgeInsets.only(left: 16, right: 16, top: 8),
                 ),
                 Card(
                   child: ListTile(
@@ -59,7 +60,7 @@ class _RoomSelectionState extends State<RoomSelection> {
                     title: Text('Select Time'),
                   ),
                   elevation: 0.0,
-                  margin: EdgeInsets.only(left: 24, right: 24, top: 8),
+                  margin: EdgeInsets.only(left: 16, right: 16, top: 8),
                 ),
                 // ListTile(
                 //   title: roomTypeCard(context),
@@ -70,6 +71,7 @@ class _RoomSelectionState extends State<RoomSelection> {
           PositionedTransition(
             rect: getPanelAnimation(constraints),
             child: Material(
+              color: Colors.white,
               // elevation: 12.0,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(16.0),
@@ -80,15 +82,17 @@ class _RoomSelectionState extends State<RoomSelection> {
                   Container(
                     height: header_height,
                     child: Center(
-                      child: Text('Reserve here',
+                      child: Text('Select Room Type',
                           style: Theme.of(context).textTheme.button),
                     ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Text('Front Panel'),
-                    ),
+                      child: SeatType(
+                    type: 'room',
                   )
+                      // child: Text('Front Panel'),
+
+                      )
                 ],
               ),
             ),

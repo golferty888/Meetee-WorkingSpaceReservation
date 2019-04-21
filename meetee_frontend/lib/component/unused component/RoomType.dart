@@ -3,31 +3,31 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert'; // JSON
 
-import 'package:meetee_frontend/model/Person.dart';
-import 'package:meetee_frontend/model/Room.dart';
+import 'package:meetee_frontend/model/Type.dart';
 
-class SeatType extends StatefulWidget {
+String url = 'http://localhost:9000/type/seat';
+
+class RoomType extends StatefulWidget {
   final String roomType;
   final String date;
   final String status;
 
-  SeatType({Key key, this.roomType, this.date, this.status}) : super(key: key);
+  RoomType({Key key, this.roomType, this.date, this.status}) : super(key: key);
 
   @override
-  _SeatTypeState createState() => _SeatTypeState();
+  _RoomTypeState createState() => _RoomTypeState();
 }
 
-class _SeatTypeState extends State<SeatType> {
-  List roomTypes = new List<Room>();
+class _RoomTypeState extends State<RoomType> {
+  List roomTypes = new List<Type>();
 
   Future<String> getSeatType() async {
-    http.Response response = await http
-        .get('https://us-central1-meetee-api.cloudfunctions.net/api/roomtypes');
+    http.Response response = await http.get('http://localhost:9000/type/room');
     if (response.statusCode == 200) {
       print(jsonEncode(response.body));
       this.setState(() {
         List list = json.decode(response.body);
-        roomTypes = list.map((model) => Room.fromJson(model)).toList();
+        roomTypes = list.map((model) => Type.fromJson(model)).toList();
       });
     } else {
       throw Exception('Failed to load post');
@@ -66,7 +66,7 @@ class _SeatTypeState extends State<SeatType> {
 //       ),
 //     );
 
-ListTile makeListTile(Room room) {
+ListTile makeListTile(Type room) {
   return ListTile(
       // contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       leading: Container(
@@ -93,7 +93,7 @@ ListTile makeListTile(Room room) {
             size: 16,
           ),
           Text(
-            room.roomTypeCapacity.toString() +
+            room.roomTypeCapacity +
                 ' | ฿' +
                 room.roomTypePrice.toString() +
                 '/hr',

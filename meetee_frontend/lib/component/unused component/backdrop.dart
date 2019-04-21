@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meetee_frontend/component/TwoPanels.dart';
+import 'package:meetee_frontend/component/unused component/TwoPanels.dart';
 
 // void main() => runApp(MaterialApp(
 //       home: backdropPage(),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meetee_frontend/component/DatePicker.dart';
-import 'package:meetee_frontend/component/SeatType.dart';
+import 'package:meetee_frontend/component/TypeList.dart';
 
 class SeatSelection extends StatefulWidget {
   final AnimationController controller;
@@ -86,10 +86,10 @@ class _SeatSelectionState extends State<SeatSelection> {
                           style: Theme.of(context).textTheme.button),
                     ),
                   ),
-                  Expanded(child: SeatType()
-                      // child: Text('Front Panel'),
-
-                      )
+                  Expanded(
+                      child: SeatType(
+                    type: 'seat',
+                  ))
                 ],
               ),
             ),

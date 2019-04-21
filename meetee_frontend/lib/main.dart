@@ -1,21 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // date form
-import 'package:http/http.dart' as http;
-// import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'dart:async';
-import 'dart:convert'; // JSON
-import 'package:flutter_calendar/flutter_calendar.dart';
-
-// import 'package:meetee_frontend/component/SeatSelection.dart';
-import 'package:meetee_frontend/component/RoomSelectionPanels.dart';
-import 'package:meetee_frontend/component/AvailableSeat.dart';
-import 'package:meetee_frontend/component/SeatSelectionPanels.dart';
-
-import 'package:meetee_frontend/model/Person.dart';
 
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-// import 'package:meetee_frontend/component/Vote.dart';
+
+import 'package:meetee_frontend/component/RoomSelectionPanels.dart';
+import 'package:meetee_frontend/component/SeatSelectionPanels.dart';
 
 void main() => runApp(MaterialApp(
       home: MeeteeApp(),
