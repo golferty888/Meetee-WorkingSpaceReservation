@@ -1,10 +1,11 @@
 const dotenv = require('dotenv').config();
 const express = require('express');
+var http = require('http');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 if (process.env.NODE_ENV == 'production') {
     var knex = require('./config/database-pg-rds');
-    var PORT = process.env.PORT || 9000;
+    var PORT = process.env.PORT || 9500;
 } else if (process.env.NODE_ENV == 'development') {
     var knex = require('./config/database-pg-local');
     var PORT = process.env.PORT || 8000;
@@ -12,6 +13,8 @@ if (process.env.NODE_ENV == 'production') {
 const URL = process.env.URL;
 
 const app = express();
+const server = http.createServer(app);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({ origin: true }));
@@ -122,6 +125,6 @@ app.get('/view/seats', (request, response) => {
         })
 });
 
-app.listen(PORT, URL, () => {
-    console.log(`Listening on PORT: ${PORT} > ${process.env.NODE_ENV} > ${process.env.DB_LOCAL_HOST}`);
+server.listen(PORT, URL, () => {
+    console.log(`Listening on PORT: ${server.address().port} > ${process.env.NODE_ENV} > ${process.env.DB_LOCAL_HOST}`);
 })
