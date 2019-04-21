@@ -21,6 +21,7 @@ app.get('/', (request, response) => {
 });
 
 app.post('/check/available', (request, response) => {
+    const type = request.body.type;
     const startDate = request.body.startDate;
     const endDate = request.body.endDate;
     var startTime = request.body.startTime;
@@ -28,15 +29,17 @@ app.post('/check/available', (request, response) => {
     const endTime = request.body.endTime;
 
     var subQuery = knex.select('room_id').from('meetee.reservation')
+        .join('meetee.rooms', 'reservation.room_id', '=', 'rooms.id')
+        .where('rooms.roomtype_id', '=', type)
         .where('start_date', '=', startDate)
         .andWhere(function () {
             this.whereBetween('start_time', [startTime, endTime])
                 .orWhereBetween('end_time', [startTime, endTime])
         })
 
-    knex('meetee.reservation')
-        .rightJoin('meetee.rooms', 'reservation.room_id', '=', 'rooms.id')
+    knex('meetee.rooms')
         .whereNotIn('rooms.id', subQuery)
+        .where('rooms.roomtype_id', '=', type)
         .orderBy('rooms.id')
         .distinct('rooms.id', 'rooms.code')
         .then((results) => {
@@ -44,7 +47,7 @@ app.post('/check/available', (request, response) => {
         })
         .catch((error) => {
             response.send(error);
-        })
+        });
 })
 
 app.post('/reserve', (request, response) => {
