@@ -13,6 +13,13 @@ class RoomSelection extends StatefulWidget {
 
 class _RoomSelectionState extends State<RoomSelection> {
   static const header_height = 32.0;
+  DateTime dateStart;
+
+  callback(newDateStart) {
+    setState(() {
+      dateStart = newDateStart;
+    });
+  }
 
   Animation<RelativeRect> getPanelAnimation(BoxConstraints constraints) {
     final height = constraints.biggest.height;
@@ -49,7 +56,7 @@ class _RoomSelectionState extends State<RoomSelection> {
                 Card(
                   child: ListTile(
                     leading: Icon(IconData(59670, fontFamily: 'MaterialIcons')),
-                    title: DatePicker(),
+                    title: DatePicker(dateStart, callback),
                   ),
                   elevation: 0.0,
                   margin: EdgeInsets.only(left: 16, right: 16, top: 8),
@@ -91,7 +98,6 @@ class _RoomSelectionState extends State<RoomSelection> {
                     type: 'room',
                   )
                       // child: Text('Front Panel'),
-
                       )
                 ],
               ),

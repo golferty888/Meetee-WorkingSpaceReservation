@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:meetee_frontend/component/DatePicker.dart';
 import 'package:meetee_frontend/component/TypeList.dart';
+import 'package:meetee_frontend/component/TimePicker.dart';
+
+import 'package:meetee_frontend/model/Reservation.dart';
 
 class SeatSelection extends StatefulWidget {
   final AnimationController controller;
+  // final DateTime dateStart;
+  // Reservation reservation;
 
-  SeatSelection({this.controller});
+  SeatSelection({this.controller,});
+  // SeatSelection({this.controller, this.dateStart});
 
   @override
   _SeatSelectionState createState() => _SeatSelectionState();
@@ -13,6 +19,24 @@ class SeatSelection extends StatefulWidget {
 
 class _SeatSelectionState extends State<SeatSelection> {
   static const header_height = 32.0;
+  DateTime dateStart;
+  // DatePicker datePicker;
+
+  @override
+  void initState() {
+    super.initState();
+    dateStart = DateTime.now();
+  }
+
+  callback(newDateStart) {
+    print('sdf' + newDateStart.toString());
+    setState(() {
+      dateStart = newDateStart;
+      print('dateStart: ' + dateStart.toString());
+    });
+  }
+
+  // final reservation = Reservation();
 
   Animation<RelativeRect> getPanelAnimation(BoxConstraints constraints) {
     final height = constraints.biggest.height;
@@ -38,18 +62,26 @@ class _SeatSelectionState extends State<SeatSelection> {
             color: theme.primaryColor,
             child: ListView(
               children: <Widget>[
+                // Card(
+                //   child: ListTile(
+                //     leading: Icon(IconData(59389, fontFamily: 'MaterialIcons')),
+                //     title: TextField(keyboardType: TextInputType.number),
+                //   ),
+                //   elevation: 0.0,
+                //   margin: EdgeInsets.only(left: 16, right: 16),
+                // ),
                 Card(
                   child: ListTile(
-                    leading: Icon(IconData(59389, fontFamily: 'MaterialIcons')),
-                    title: TextField(keyboardType: TextInputType.number),
-                  ),
+                      leading:
+                          Icon(IconData(59670, fontFamily: 'MaterialIcons')),
+                      title: DatePicker(dateStart, callback)),
                   elevation: 0.0,
                   margin: EdgeInsets.only(left: 16, right: 16),
                 ),
                 Card(
                   child: ListTile(
-                    leading: Icon(IconData(59670, fontFamily: 'MaterialIcons')),
-                    title: DatePicker(),
+                    leading: Icon(IconData(58402, fontFamily: 'MaterialIcons')),
+                    title: TimePicker(type: 'start'),
                   ),
                   elevation: 0.0,
                   margin: EdgeInsets.only(left: 16, right: 16, top: 8),
@@ -57,14 +89,11 @@ class _SeatSelectionState extends State<SeatSelection> {
                 Card(
                   child: ListTile(
                     leading: Icon(IconData(58402, fontFamily: 'MaterialIcons')),
-                    title: Text('Select Time'),
+                    title: TimePicker(type: 'end'),
                   ),
                   elevation: 0.0,
                   margin: EdgeInsets.only(left: 16, right: 16, top: 8),
                 ),
-                // ListTile(
-                //   title: roomTypeCard(context),
-                // )
               ],
             ),
           ),
@@ -86,9 +115,13 @@ class _SeatSelectionState extends State<SeatSelection> {
                           style: Theme.of(context).textTheme.button),
                     ),
                   ),
+                  Container(
+                    child: Text(dateStart.toString()),
+                  ),
                   Expanded(
                       child: SeatType(
                     type: 'seat',
+                    dateStart: dateStart,
                   ))
                 ],
               ),

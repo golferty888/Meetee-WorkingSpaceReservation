@@ -4,26 +4,27 @@ import 'dart:async';
 import 'dart:convert'; // JSON
 
 import 'package:meetee_frontend/model/Room.dart';
+import 'package:meetee_frontend/model/Reservation.dart';
 
-String url = 'http://localhost:9000/type/seat';
+String url = 'http://localhost:9500/check/available';
 
 class Available extends StatefulWidget {
-  final String room;
-  final String date;
-  final String status;
+  final DateTime dateStart;
 
-  Available({Key key, this.room, this.date, this.status}) : super(key: key);
-
+  Available({this.dateStart});
   @override
-  _AvailableState createState() => _AvailableState();
+  _AvailableState createState() => _AvailableState(dateStart);
 }
 
 class _AvailableState extends State<Available> {
+  DateTime dateStart;
+  _AvailableState(this.dateStart);
   List rooms = new List<Room>();
 
-  Future<String> getAvailable() async {
-    http.Response response = await http
-        .post('http://localhost:9000/check/available', body: {
+  Future<String> getAvailable(DateTime dateStart) async {
+    print('getAvail: '+ dateStart.toString());
+    http.Response response = await http.post(url, body: {
+      "type": "3",
       "startDate": "April 14, 2019",
       "startTime": "15:00:00",
       "endTime": "17:00:00"
@@ -41,7 +42,8 @@ class _AvailableState extends State<Available> {
 
   @override
   void initState() {
-    this.getAvailable();
+    print('init' + this.dateStart.toString());
+    this.getAvailable(this.dateStart);
     super.initState();
   }
 

@@ -57,7 +57,7 @@ class _SeatSelectionState extends State<SeatSelection> {
         Card(
           child: ListTile(
             leading: Icon(IconData(59670, fontFamily: 'MaterialIcons')),
-            title: DatePicker(),
+            // title: DatePicker(),
           ),
           elevation: 0.0,
           margin: EdgeInsets.only(left: 24, right: 24, top: 8),

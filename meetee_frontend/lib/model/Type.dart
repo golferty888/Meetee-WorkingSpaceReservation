@@ -2,17 +2,17 @@ class Type {
   String roomTypeName;
   String roomTypeCapacity;
   int roomTypePrice;
-  String type;
+  int roomTypeId;
   String roomTypePic;
   Type(this.roomTypeName, this.roomTypeCapacity, this.roomTypePrice,
-      this.type, this.roomTypePic);
+      this.roomTypeId, this.roomTypePic);
 
   // named constructor
   Type.fromJson(Map<String, dynamic> json)
       : roomTypeName = json['name'],
         roomTypeCapacity = json['capacity'],
-        roomTypePrice = json['price'];
-  // type = json['type'],
+        roomTypePrice = json['price'],
+        roomTypeId = json['id'];
   // roomTypePic = json['roomTypePic'];
 
   // method
