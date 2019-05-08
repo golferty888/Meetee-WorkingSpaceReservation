@@ -36,13 +36,14 @@ app.post("/check/available", (request, response) => {
   const endTime = request.body.endTime;
 
   var query = knex
-    .select("resv.room_id", "room.code")
+    .select("room.id", "room.code")
     .distinct()
     .from("meetee.reservation as resv")
-    .join("meetee.rooms as room", "resv.room_id", "=", "room.id")
+    .fullOuterJoin("meetee.rooms as room", "resv.room_id", "=", "room.id")
     .where("room.roomtype_id", "=", type)
     .andWhere(function () {
       this.where(knex.raw("resv.start_date <> ?", startDate));
+      this.orWhereNull("resv.start_date");
       this.orWhere(function () {
         this.where(knex.raw("resv.start_date = ?", startDate));
         this.andWhere(function () {
