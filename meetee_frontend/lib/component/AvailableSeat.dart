@@ -9,9 +9,10 @@ import 'package:meetee_frontend/model/Reservation.dart';
 String url = 'http://localhost:9500/check/available';
 
 class Available extends StatefulWidget {
-  Reservation reservation;
+  final Reservation reservation;
+  final String type;
 
-  Available(this.reservation);
+  Available(this.reservation, this.type);
 
   @override
   _AvailableState createState() => _AvailableState();
@@ -65,7 +66,7 @@ class _AvailableState extends State<Available> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Seat'),
+        title: Text('Select ' + widget.type),
       ),
       body: Container(
           child: ListView.builder(

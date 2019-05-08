@@ -15,18 +15,15 @@ class SeatType extends StatefulWidget {
   SeatType({this.type, Key key}) : super(key: key);
 
   @override
-  _SeatTypeState createState() => _SeatTypeState(type);
+  _SeatTypeState createState() => _SeatTypeState();
 }
 
 class _SeatTypeState extends State<SeatType> {
-  String type;
-  _SeatTypeState(this.type);
-
   List roomTypes = new List<Type>();
 
   @override
   void initState() {
-    this.getSeatType(this.type);
+    this.getSeatType(this.widget.type);
     super.initState();
   }
 
@@ -125,7 +122,7 @@ class _SeatTypeState extends State<SeatType> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Available(snapshot.data),
+                              builder: (context) => Available(snapshot.data, widget.type),
                             ),
                           );
                         },
