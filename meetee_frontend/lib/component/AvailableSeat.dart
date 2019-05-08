@@ -9,41 +9,55 @@ import 'package:meetee_frontend/model/Reservation.dart';
 String url = 'http://localhost:9500/check/available';
 
 class Available extends StatefulWidget {
-  final DateTime dateStart;
+  Reservation reservation;
 
-  Available({this.dateStart});
+  Available(this.reservation);
+
   @override
-  _AvailableState createState() => _AvailableState(dateStart);
+  _AvailableState createState() => _AvailableState();
 }
 
 class _AvailableState extends State<Available> {
-  DateTime dateStart;
-  _AvailableState(this.dateStart);
   List rooms = new List<Room>();
-
-  Future<String> getAvailable(DateTime dateStart) async {
-    print('getAvail: '+ dateStart.toString());
-    http.Response response = await http.post(url, body: {
-      "type": "3",
-      "startDate": "April 14, 2019",
-      "startTime": "15:00:00",
-      "endTime": "17:00:00"
-    });
+  // final body = {
+  //   'type': '4',
+  //   'startDate': 'April 5, 2019',
+  //   'startTime': '10:00:00',
+  //   'endTime': '12:00:00'
+  // };
+  //  final body = {
+  //   'type': '4',
+  //   'startDate': DateTime.now().toString(),
+  //   'startTime': TimeOfDay.now().toString(),
+  //   'endTime': TimeOfDay.now().toString()
+  // };
+  // final body = {
+  //   "type": "3",
+  //   "startDate": "April 14, 2019",
+  //   "startTime": "15:00:00",
+  //   "endTime": "17:00:00"
+  // };
+  Future<String> getAvailable() async {
+    final body = widget.reservation.toMap();
+    print(body);
+    // http.Response response = await http.post(url, body: body);
+    http.Response response = await http.post(url, body: body);
     if (response.statusCode == 200) {
+      print('success');
       print(jsonEncode(response.body));
       this.setState(() {
         List list = json.decode(response.body);
         rooms = list.map((model) => Room.fromJson(model)).toList();
       });
     } else {
+      print('fail');
       throw Exception('Failed to load post');
     }
   }
 
   @override
   void initState() {
-    print('init' + this.dateStart.toString());
-    this.getAvailable(this.dateStart);
+    this.getAvailable();
     super.initState();
   }
 
@@ -71,7 +85,7 @@ class _AvailableState extends State<Available> {
 
 ListTile makeListTile(Room room) {
   return ListTile(
-    // contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+    contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
     leading: Container(
         // padding: EdgeInsets.only(right: 12.0), // ข้างรูปซ้าย
         // decoration: BoxDecoration(

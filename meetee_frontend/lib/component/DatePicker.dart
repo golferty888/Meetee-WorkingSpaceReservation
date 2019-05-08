@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // date form
-import 'package:meetee_frontend/model/Reservation.dart';
+import 'package:meetee_frontend/blocs/bloc_provider.dart';
+import 'package:meetee_frontend/blocs/bloc_reservation.dart';
 
 class DatePicker extends StatefulWidget {
-  DateTime dateStart;
-  Function(DateTime) callback;
-
-  DatePicker(this.dateStart, this.callback);
-
   @override
   _DatePickerState createState() => _DatePickerState();
 }
@@ -15,25 +10,28 @@ class DatePicker extends StatefulWidget {
 class _DatePickerState extends State<DatePicker> {
   DateTime dateNow = DateTime.now();
 
-  Future<Null> _selectDate(BuildContext context, Function callback) async {
+  void _selectDate(
+      BuildContext context, BlocReservation dateReserveBloc) async {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2019),
         lastDate: DateTime(2020));
     if (picked != null) {
-      print('Selected date: ' + DateFormat('yyyy-MM-dd').format(picked));
+      dateReserveBloc.reserveDate(picked);
       setState(() {
         dateNow = picked;
-        callback(picked);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final BlocReservation dateReserveBloc =
+        BlocProvider.of<BlocReservation>(context);
+
     return GestureDetector(
-      onTap: () => _selectDate(context, widget.callback),
+      onTap: () => _selectDate(context, dateReserveBloc),
       child: AbsorbPointer(
         child: TextField(
           decoration: InputDecoration(

@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
+import 'package:meetee_frontend/blocs/bloc_provider.dart';
+import 'package:meetee_frontend/blocs/bloc_reservation.dart';
 
 import 'package:meetee_frontend/component/RoomSelectionPanels.dart';
 import 'package:meetee_frontend/component/SeatSelectionPanels.dart';
 
-void main() => runApp(MaterialApp(
+// void main() => runApp(MaterialApp(
+//       home: BlocProvider(
+//           bloc: BlocReservation(),
+//           child: MeeteeApp(),
+//         )
+//       // home: MeeteeApp(),
+//     ));
+
+void main() => runApp(
+  BlocProvider(
+    bloc: BlocReservation(),
+    child: MaterialApp(
       home: MeeteeApp(),
-    ));
+    ),
+  )
+);
 
 class MeeteeApp extends StatefulWidget {
   @override

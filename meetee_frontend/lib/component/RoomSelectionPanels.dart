@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:meetee_frontend/component/DatePicker.dart';
+import 'package:meetee_frontend/component/TimePicker.dart';
 import 'package:meetee_frontend/component/TypeList.dart';
 
 class RoomSelection extends StatefulWidget {
   final AnimationController controller;
 
-  RoomSelection({this.controller});
+  RoomSelection({this.controller, Key key}) : super(key: key);
 
   @override
   _RoomSelectionState createState() => _RoomSelectionState();
@@ -15,10 +16,9 @@ class _RoomSelectionState extends State<RoomSelection> {
   static const header_height = 32.0;
   DateTime dateStart;
 
-  callback(newDateStart) {
-    setState(() {
-      dateStart = newDateStart;
-    });
+  @override
+  void initState() {
+    super.initState();
   }
 
   Animation<RelativeRect> getPanelAnimation(BoxConstraints constraints) {
@@ -45,18 +45,26 @@ class _RoomSelectionState extends State<RoomSelection> {
             color: theme.primaryColor,
             child: ListView(
               children: <Widget>[
+                // Card(
+                //   child: ListTile(
+                //     leading: Icon(IconData(59389, fontFamily: 'MaterialIcons')),
+                //     title: TextField(keyboardType: TextInputType.number),
+                //   ),
+                //   elevation: 0.0,
+                //   margin: EdgeInsets.only(left: 16, right: 16),
+                // ),
                 Card(
                   child: ListTile(
-                    leading: Icon(IconData(59389, fontFamily: 'MaterialIcons')),
-                    title: TextField(keyboardType: TextInputType.number),
-                  ),
+                      leading:
+                          Icon(IconData(59670, fontFamily: 'MaterialIcons')),
+                      title: DatePicker()),
                   elevation: 0.0,
                   margin: EdgeInsets.only(left: 16, right: 16),
                 ),
                 Card(
                   child: ListTile(
-                    leading: Icon(IconData(59670, fontFamily: 'MaterialIcons')),
-                    title: DatePicker(dateStart, callback),
+                    leading: Icon(IconData(58402, fontFamily: 'MaterialIcons')),
+                    title: TimePicker(type: 'start'),
                   ),
                   elevation: 0.0,
                   margin: EdgeInsets.only(left: 16, right: 16, top: 8),
@@ -64,14 +72,11 @@ class _RoomSelectionState extends State<RoomSelection> {
                 Card(
                   child: ListTile(
                     leading: Icon(IconData(58402, fontFamily: 'MaterialIcons')),
-                    title: Text('Select Time'),
+                    title: TimePicker(type: 'end'),
                   ),
                   elevation: 0.0,
                   margin: EdgeInsets.only(left: 16, right: 16, top: 8),
                 ),
-                // ListTile(
-                //   title: roomTypeCard(context),
-                // )
               ],
             ),
           ),
@@ -96,9 +101,7 @@ class _RoomSelectionState extends State<RoomSelection> {
                   Expanded(
                       child: SeatType(
                     type: 'room',
-                  )
-                      // child: Text('Front Panel'),
-                      )
+                  ))
                 ],
               ),
             ),
