@@ -53,6 +53,7 @@ app.post("/check/available", (request, response) => {
         });
       });
     })
+    .orderBy("room.id")
     .then(results => {
       console.log(results);
       response.send(results);
@@ -67,8 +68,7 @@ app.post("/reserve", (request, response) => {
   const roomId = request.body.roomId;
   const startDate = request.body.startDate;
   const endDate = request.body.endDate;
-  var startTime = request.body.startTime;
-  startTime = startTime.substr(0, 6) + "01";
+  const startTime = request.body.startTime;
   const endTime = request.body.endTime;
   knex("meetee.reservation")
     .returning(
