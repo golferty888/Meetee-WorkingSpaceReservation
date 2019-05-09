@@ -12,6 +12,11 @@ if (process.env.NODE_ENV == "production") {
 }
 const URL = process.env.URL;
 
+const {
+  createError,
+  GENERIC_ERROR
+} = require('./errors/error_helper')
+
 const app = express();
 const server = http.createServer(app);
 
@@ -26,6 +31,13 @@ app.use(cors({
 app.get("/", (request, response) => {
   response.send("Meetee welcome!");
 });
+app.get('/check/reservation', (request, response) => {
+  knex.select().from('meetee.reservation')
+    .orderBy('room_id')
+    .then((results) => {
+      response.send(results);
+    })
+})
 
 app.post("/check/available", (request, response) => {
   const type = request.body.type;
@@ -35,31 +47,32 @@ app.post("/check/available", (request, response) => {
   startTime = startTime.substr(0, 6) + "01";
   const endTime = request.body.endTime;
 
-  var query = knex
-    .select("room.id", "room.code")
-    .distinct()
+  const unavailableRoomSubQuery = knex
+    .select('room.id as room_id')
     .from("meetee.reservation as resv")
-    .fullOuterJoin("meetee.rooms as room", "resv.room_id", "=", "room.id")
+    .join("meetee.rooms as room", "resv.room_id", "=", "room.id")
     .where("room.roomtype_id", "=", type)
+    .andWhere("resv.start_date", '=', startDate)
     .andWhere(function () {
-      this.where(knex.raw("resv.start_date <> ?", startDate));
-      this.orWhereNull("resv.start_date");
-      this.orWhere(function () {
-        this.where(knex.raw("resv.start_date = ?", startDate));
-        this.andWhere(function () {
-          this.where(knex.raw("? NOT BETWEEN resv.start_time AND resv.end_time", startTime));
-          this.andWhere(
-            knex.raw("? NOT BETWEEN resv.start_time AND resv.end_time", endTime));
-        });
-      });
+      this.where(knex.raw("? BETWEEN resv.start_time AND resv.end_time", startTime));
+      this.orWhere(
+        knex.raw("? BETWEEN resv.start_time AND resv.end_time", endTime));
     })
+    .orderBy("resv.id");
+
+  const availableRoomQuery = knex
+    .select('room.id as roomId', 'room.code as roomCode', 'room.floor as floor', 'room.roomtype_id as roomType')
+    .from("meetee.rooms as room")
+    .where("room.roomtype_id", "=", type)
+    .whereNotIn('room.id', unavailableRoomSubQuery)
     .orderBy("room.id")
-    .then(results => {
-      console.log(results);
-      response.send(results);
-    })
+    .then(availableList => response.json({
+      message: 'Successfully',
+      availableList
+    }))
     .catch(error => {
       console.log(error);
+      response.status(400).send('Bad Request');
     });
 });
 
