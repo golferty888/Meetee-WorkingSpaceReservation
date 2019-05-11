@@ -14,10 +14,21 @@ class _TimePickerState extends State<TimePicker> {
   String type;
   _TimePickerState(this.type);
 
+  // TimeOfDay timeStart;
+  // TimeOfDay timeEnd;
   TimeOfDay timeStart = TimeOfDay.now();
-  TimeOfDay timeEnd = TimeOfDay.now();
+  TimeOfDay timeEnd =
+      TimeOfDay(hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute);
+  // @override
+  // initState() {
+  //   timeStart = TimeOfDay.now();
+  //   timeEnd = TimeOfDay(
+  //       hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute);
+  //   super.initState();
+  // }
 
-  Future<Null> _selectTimeStart(BuildContext context, BlocReservation timeReserveBloc) async {
+  Future<Null> _selectTimeStart(
+      BuildContext context, BlocReservation timeReserveBloc) async {
     final TimeOfDay picked = await showTimePicker(
       context: context,
       initialTime: timeStart,
@@ -25,12 +36,15 @@ class _TimePickerState extends State<TimePicker> {
     if (picked != null) {
       setState(() {
         timeStart = picked;
-        timeReserveBloc.reserveTimeStart(picked);
+        // timeEnd = TimeOfDay(hour: picked.hour + 1, minute: picked.minute);
+        timeReserveBloc.reserveTimeStart(timeStart);
+        // timeReserveBloc.reserveTimeStart(timeEnd);
       });
     }
   }
 
-  Future<Null> _selectTimeEnd(BuildContext context, BlocReservation timeReserveBloc) async {
+  Future<Null> _selectTimeEnd(
+      BuildContext context, BlocReservation timeReserveBloc) async {
     final TimeOfDay picked = await showTimePicker(
       context: context,
       initialTime: timeEnd,
@@ -38,7 +52,7 @@ class _TimePickerState extends State<TimePicker> {
     if (picked != null) {
       setState(() {
         timeEnd = picked;
-        timeReserveBloc.reserveTimeEnd(picked);
+        timeReserveBloc.reserveTimeEnd(timeEnd);
       });
     }
   }
@@ -54,7 +68,7 @@ class _TimePickerState extends State<TimePicker> {
         child: AbsorbPointer(
           child: TextField(
             decoration: InputDecoration(
-                border: InputBorder.none, hintText: timeStart.toString()),
+                border: InputBorder.none, hintText: timeStart.format(context)),
             // border: InputBorder.none,
             // hintText: 'Time Start'),
           ),
@@ -66,7 +80,7 @@ class _TimePickerState extends State<TimePicker> {
         child: AbsorbPointer(
           child: TextField(
             decoration: InputDecoration(
-                border: InputBorder.none, hintText: timeEnd.toString()),
+                border: InputBorder.none, hintText: timeEnd.format(context)),
             // border: InputBorder.none,
             // hintText: 'Time End'),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:meetee_frontend/blocs/bloc_provider.dart';
 import 'package:meetee_frontend/blocs/bloc_reservation.dart';
 
@@ -35,7 +36,7 @@ class _DatePickerState extends State<DatePicker> {
       child: AbsorbPointer(
         child: TextField(
           decoration: InputDecoration(
-              border: InputBorder.none, hintText: dateNow.toString()),
+              border: InputBorder.none, hintText: DateFormat('dd MMMM yyyy').format(dateNow).toString()),
           // border: InputBorder.none, hintText: 'Select Date'),
         ),
       ),
