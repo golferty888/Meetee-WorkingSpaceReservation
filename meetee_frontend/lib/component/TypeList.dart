@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:meetee_frontend/blocs/bloc_provider.dart';
 import 'package:meetee_frontend/blocs/bloc_reservation.dart';
+import 'package:meetee_frontend/component/AvailablePanels.dart';
 import 'package:meetee_frontend/model/Reservation.dart';
 import 'dart:async';
 import 'dart:convert'; // JSON
@@ -75,7 +76,9 @@ class _SeatTypeState extends State<SeatType> {
                         roomTypes[index].roomTypeId.toString(),
                         DateTime.now(),
                         TimeOfDay.now(),
-                        TimeOfDay.now()),
+                        TimeOfDay(
+                            hour: TimeOfDay.now().hour + 1,
+                            minute: TimeOfDay.now().minute)),
                     builder: (context, snapshot) {
                       return ListTile(
                         // contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -122,7 +125,9 @@ class _SeatTypeState extends State<SeatType> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Available(snapshot.data, widget.type),
+                              builder: (context) =>
+                                  // Available(snapshot.data, widget.type),
+                                  AvailablePanels(snapshot.data, widget.type)
                             ),
                           );
                         },

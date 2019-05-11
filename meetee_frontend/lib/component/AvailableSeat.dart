@@ -6,7 +6,8 @@ import 'dart:convert'; // JSON
 import 'package:meetee_frontend/model/Room.dart';
 import 'package:meetee_frontend/model/Reservation.dart';
 
-String url = 'http://localhost:9500/check/available';
+String urlAvail = 'http://localhost:9500/check/available';
+String urlReserve = 'http://localhost:9500/reserve';
 
 class Available extends StatefulWidget {
   final Reservation reservation;
@@ -42,16 +43,16 @@ class _AvailableState extends State<Available> {
     final body = widget.reservation.toMap();
     print(body);
     // http.Response response = await http.post(url, body: body);
-    http.Response response = await http.post(url, body: body);
+    http.Response response = await http.post(urlAvail, body: body);
     if (response.statusCode == 200) {
-      print('success');
+      print('get available seat success');
       print(jsonEncode(response.body));
       this.setState(() {
         List list = json.decode(response.body);
         rooms = list.map((model) => Room.fromJson(model)).toList();
       });
     } else {
-      print('fail');
+      print('fail to get available seat');
       throw Exception('Failed to load post');
     }
   }
@@ -64,27 +65,46 @@ class _AvailableState extends State<Available> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Select ' + widget.type),
-      ),
-      body: Container(
-          child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true, // container stick with top bar
-        itemCount: rooms.length,
-        itemBuilder: (BuildContext context, int index) {
-          if (context != null) {
-            return makeListTile(rooms[index]);
-          }
-          // return CircularProgressIndicator();
-        },
-      )),
-    );
+    return Container(
+        child: ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true, // container stick with top bar
+      itemCount: rooms.length,
+      itemBuilder: (BuildContext context, int index) {
+        if (context != null) {
+          return makeListTile(rooms[index], reserve);
+        }
+        // return CircularProgressIndicator();
+      },
+    ));
+  }
+
+  Future<Null> reserve(Room room) async {
+    final body = {
+      'userId': '1',
+      'roomId': room.roomId.toString(),
+      'startDate': (widget.reservation.toMap())['startDate'],
+      'endDate': (widget.reservation.toMap())['startDate'],
+      'startTime': (widget.reservation.toMap())['startTime'],
+      'endTime': (widget.reservation.toMap())['endTime'],
+    };
+    print(body);
+    // http.Response response = await http.post(urlReserve, body: body);
+    // if (response.statusCode == 200) {
+    //   print('reserve success');
+    //   print(jsonEncode(response.body));
+    //   // this.setState(() {
+    //   //   List list = json.decode(response.body);
+    //   //   rooms = list.map((model) => Room.fromJson(model)).toList();
+    //   // });
+    // } else {
+    //   print('reserve fail');
+    //   throw Exception('Failed to load post');
+    // }
   }
 }
 
-ListTile makeListTile(Room room) {
+ListTile makeListTile(Room room, Function reserve) {
   return ListTile(
     contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
     leading: Container(
@@ -117,5 +137,6 @@ ListTile makeListTile(Room room) {
     //   ],
     // ),
     trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
+    onTap: () => reserve(room),
   );
 }

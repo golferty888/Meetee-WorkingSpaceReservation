@@ -5,7 +5,12 @@ import 'package:meetee_frontend/blocs/bloc_provider.dart';
 import 'package:meetee_frontend/model/Reservation.dart';
 
 class BlocReservation implements BlocBase {
-  Reservation reservation = Reservation('4', DateTime.now(), TimeOfDay.now(), TimeOfDay.now());
+  Reservation reservation = Reservation(
+      '4',
+      DateTime.now(),
+      TimeOfDay.now(),
+      TimeOfDay(
+          hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute));
   // Reservation reservation;
 
   StreamController<Reservation> dateStreamController =
@@ -20,7 +25,6 @@ class BlocReservation implements BlocBase {
   void dispose() {
     dateStreamController.close();
   }
-
 
   reserveType(String type) {
     reservation.type = type;

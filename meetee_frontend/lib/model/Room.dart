@@ -1,14 +1,18 @@
 class Room {
+  int roomId;
   String roomName;
   String roomCapacity;
   int roomPrice;
   int type;
   String roomPic;
-  Room(this.roomName, this.roomCapacity, this.roomPrice, this.type,
+  Room(this.roomId, this.roomName, this.roomCapacity, this.roomPrice, this.type,
       this.roomPic);
 
   // named constructor
-  Room.fromJson(Map<dynamic, dynamic> json) : roomName = json['code'];
+  Room.fromJson(Map<dynamic, dynamic> json) : 
+    roomName = json['code'],
+    roomId = json['id'];
+
   // roomCapacity = json['capacity'],
   // roomPrice = json['price'];
   // type = json['type'],
