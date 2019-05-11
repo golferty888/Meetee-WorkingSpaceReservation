@@ -12,11 +12,6 @@ if (process.env.NODE_ENV == "production") {
 }
 const URL = process.env.URL;
 
-const {
-  createError,
-  GENERIC_ERROR
-} = require('./errors/error_helper')
-
 const app = express();
 const server = http.createServer(app);
 
@@ -31,13 +26,14 @@ app.use(cors({
 app.get("/", (request, response) => {
   response.send("Meetee welcome!");
 });
+
 app.get('/check/reservation', (request, response) => {
   knex.select().from('meetee.reservation')
     .orderBy('room_id')
     .then((results) => {
       response.send(results);
     })
-})
+});
 
 app.post("/check/available", (request, response) => {
   const type = request.body.type;
