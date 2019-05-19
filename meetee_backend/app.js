@@ -45,6 +45,10 @@ app.get('/type/room', roomQuery.getRoomTypeList)
 
 app.get('/type/seat', roomQuery.getSeatTypeList)
 
+app.get('/rooms', roomQuery.getRoomList)
+
+app.get('/seats', roomQuery.getSeatList)
+
 app.post('/user/history', userQuery.getReservationHistoryList)
 
 app.use("*", function (request, response) {
