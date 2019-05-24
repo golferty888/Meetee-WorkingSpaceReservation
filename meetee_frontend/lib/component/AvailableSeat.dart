@@ -108,34 +108,13 @@ ListTile makeListTile(Room room, Function reserve) {
   return ListTile(
     contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
     leading: Container(
-        // padding: EdgeInsets.only(right: 12.0), // ข้างรูปซ้าย
-        // decoration: BoxDecoration(
-        //     border: Border(
-        //         right: new BorderSide(width: 1.0, color: Colors.black87))),
         child: Icon(
       IconData(58418, fontFamily: 'MaterialIcons'),
       size: 60.0,
-      //     Image.network(
-      //   room.roomTypePic,
     )),
     title: Text(
       room.roomName,
-      // style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
     ),
-    // subtitle: Text("Meeting Room A", style: TextStyle(color: Colors.black38)),
-    // subtitle: Row(
-    //   children: <Widget>[
-    //     Icon(
-    //       Icons.person,
-    //       color: Colors.grey,
-    //       size: 16,
-    //     ),
-    //     Text(
-    //       room.roomCapacity + ' | ฿' + room.roomPrice.toString() + '/hr',
-    //     )
-    //     // style: TextStyle(color: Colors.green))
-    //   ],
-    // ),
     trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 30.0),
     onTap: () => reserve(room),
   );
