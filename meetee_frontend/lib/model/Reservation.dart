@@ -18,6 +18,7 @@ class Reservation {
     var map = new Map<String, dynamic>();
     map["type"] = type.toString();
     map["startDate"] = startDate.toString();
+    // map["startDate"] = DateFormat('MMMM dd').format(startDate).toString();
     // map["startTime"] = (int.parse(startTime.toString().substring(10, 12)) + 7).toString() + startTime.toString().substring(12, 15) + ':';
     map["startTime"] = startTime.toString().substring(10, 15) + ':';
     // map["endTime"] = (int.parse(endTime.toString().substring(10, 12)) + 7).toString() + endTime.toString().substring(12, 15) + ':';
