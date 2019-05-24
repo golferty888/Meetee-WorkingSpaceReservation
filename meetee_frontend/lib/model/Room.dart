@@ -10,8 +10,8 @@ class Room {
 
   // named constructor
   Room.fromJson(Map<dynamic, dynamic> json) : 
-    roomName = json['code'],
-    roomId = json['id'];
+    roomName = json['roomCode'],
+    roomId = json['roomId'];
 
   // roomCapacity = json['capacity'],
   // roomPrice = json['price'];

@@ -34,7 +34,7 @@ class _SeatTypeState extends State<SeatType> {
   }
 
   Future<String> getSeatType(String type) async {
-    String url = 'http://localhost:9500/type/' + type;
+    String url = 'http://18.139.5.203:9000/type/$type';
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -94,9 +94,9 @@ class _SeatTypeState extends State<SeatType> {
                           //   room.roomTypePic,
                         )),
                         title: Text(
-                          roomTypes[index].roomTypeName +
+                          roomTypes[index].roomTypeName
                               // snapshot.data.type.toString(),
-                              roomTypes[index].roomTypeId.toString(),
+                              // roomTypes[index].roomTypeId.toString(),
                           // style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                         // subtitle: Text("Meeting Room A", style: TextStyle(color: Colors.black38)),
@@ -127,7 +127,7 @@ class _SeatTypeState extends State<SeatType> {
                             MaterialPageRoute(
                               builder: (context) =>
                                   // Available(snapshot.data, widget.type),
-                                  AvailablePanels(snapshot.data, widget.type)
+                                  AvailablePanels(snapshot.data, widget.type, roomTypes[index].roomTypeName)
                             ),
                           );
                         },

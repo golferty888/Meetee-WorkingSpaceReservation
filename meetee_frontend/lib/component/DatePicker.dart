@@ -4,6 +4,8 @@ import 'package:meetee_frontend/blocs/bloc_provider.dart';
 import 'package:meetee_frontend/blocs/bloc_reservation.dart';
 
 class DatePicker extends StatefulWidget {
+  String format;
+  DatePicker({this.format});
   @override
   _DatePickerState createState() => _DatePickerState();
 }
@@ -20,6 +22,7 @@ class _DatePickerState extends State<DatePicker> {
         lastDate: DateTime(2020));
     if (picked != null) {
       dateReserveBloc.reserveDate(picked);
+      dateReserveBloc.getAvailableFromBloc();
       setState(() {
         dateNow = picked;
       });
@@ -31,15 +34,30 @@ class _DatePickerState extends State<DatePicker> {
     final BlocReservation dateReserveBloc =
         BlocProvider.of<BlocReservation>(context);
 
-    return GestureDetector(
-      onTap: () => _selectDate(context, dateReserveBloc),
-      child: AbsorbPointer(
-        child: TextField(
-          decoration: InputDecoration(
-              border: InputBorder.none, hintText: DateFormat('dd MMMM yyyy').format(dateNow).toString()),
-          // border: InputBorder.none, hintText: 'Select Date'),
+    if (widget.format == 'tab') {
+      return GestureDetector(
+        onTap: () => _selectDate(context, dateReserveBloc),
+        child: AbsorbPointer(
+          child: TextField(
+            decoration: InputDecoration(
+              border: InputBorder.none, 
+              hintText: DateFormat('MMMM dd').format(dateNow).toString(),
+              hintStyle: TextStyle(color: Colors.white),), 
+            // border: InputBorder.none, hintText: 'Select Date'),
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return GestureDetector(
+        onTap: () => _selectDate(context, dateReserveBloc),
+        child: AbsorbPointer(
+          child: TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none, hintText: DateFormat('dd MMMM yyyy').format(dateNow).toString()),
+            // border: InputBorder.none, hintText: 'Select Date'),
+          ),
+        ),
+      );
+    }
   }
 }

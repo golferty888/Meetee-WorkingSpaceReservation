@@ -6,8 +6,8 @@ import 'dart:convert'; // JSON
 import 'package:meetee_frontend/model/Room.dart';
 import 'package:meetee_frontend/model/Reservation.dart';
 
-String urlAvail = 'http://localhost:9500/check/available';
-String urlReserve = 'http://localhost:9500/reserve';
+String urlAvail = 'http://18.139.5.203:9000/check/available';
+String urlReserve = 'http://18.139.5.203:9000/reserve';
 
 class Available extends StatefulWidget {
   final Reservation reservation;
@@ -41,14 +41,13 @@ class _AvailableState extends State<Available> {
   // };
   Future<String> getAvailable() async {
     final body = widget.reservation.toMap();
-    print(body);
-    // http.Response response = await http.post(url, body: body);
+    print('post avail body: $body');
     http.Response response = await http.post(urlAvail, body: body);
     if (response.statusCode == 200) {
       print('get available seat success');
-      print(jsonEncode(response.body));
+      print(response.body);
       this.setState(() {
-        List list = json.decode(response.body);
+        List list = json.decode(response.body)["availableList"];
         rooms = list.map((model) => Room.fromJson(model)).toList();
       });
     } else {
@@ -65,6 +64,7 @@ class _AvailableState extends State<Available> {
 
   @override
   Widget build(BuildContext context) {
+    // getAvailable();
     return Container(
         child: ListView.builder(
       scrollDirection: Axis.vertical,
@@ -106,7 +106,7 @@ class _AvailableState extends State<Available> {
 
 ListTile makeListTile(Room room, Function reserve) {
   return ListTile(
-    contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+    contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
     leading: Container(
         // padding: EdgeInsets.only(right: 12.0), // ข้างรูปซ้าย
         // decoration: BoxDecoration(
