@@ -1,8 +1,8 @@
 FROM node:10.15.1-alpine
-RUN mkdir /app
+RUN apt-get update
 WORKDIR /app
-COPY meetee_backend/package.json /app
+COPY ./package.json /app
 RUN npm install
-COPY meetee_backend /app
+COPY . /app
 EXPOSE 9000
 CMD ["npm", "start"]
