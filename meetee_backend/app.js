@@ -58,11 +58,11 @@ app.use("*", function (request, response) {
   response.status(404).send('404, Not found');
 });
 
+// server.listen(PORT);
 server.listen(PORT, URL, () => {
   console.log(
-    `Listening on PORT: ${server.address().port} > ${process.env.NODE_ENV} > ${
-      process.env.DB_LOCAL_HOST
-    }`
+    `Listening on PORT: ${server.address().port} > ${process.env.NODE_ENV} > ${server.address().address}`
   );
-});
+}
+);
 
