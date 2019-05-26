@@ -29,7 +29,7 @@ const reserve = (request, response) => {
 
 const getAllReservations = (request, response) => {
     knex.select().from('meetee.reservation')
-        .orderBy('room_id')
+        .orderBy('id')
         .then((results) => {
             response.send(results);
         })
