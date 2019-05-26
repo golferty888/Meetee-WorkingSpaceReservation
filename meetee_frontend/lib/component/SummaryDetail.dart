@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import "package:flutter/material.dart";
+import 'package:meetee_frontend/main.dart';
 import 'package:meetee_frontend/model/Room.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,7 +20,7 @@ class _SummaryDetail extends State<SummaryDetail> {
   // List rooms = new List<Room>();
   // final room_detail;
   // SummaryDetail(this.room_detail);
-  String urlReserve = 'http://18.139.5.203:9000/reserve';
+  String urlReserve = 'http://18.139.12.132:9000/reserve';
 
   Future<Null> reserve(Room room) async {
     final body = {
@@ -43,6 +44,41 @@ class _SummaryDetail extends State<SummaryDetail> {
       print('reserve fail');
       throw Exception('Failed to load post');
     }
+  }
+
+  void _showDialog() {
+    reserve(widget.room);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(6.0)),
+          title: new Text("Reserve complete!"),
+          // content: new Text("Alert Dialog body"),
+          actions: <Widget>[
+            // new FlatButton(
+            //   child: new Text("Close"),
+            //   onPressed: () {
+            //     Navigator.of(context).pop();
+            //   },
+            // ),
+            new FlatButton(
+              // shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+              child: new Text("Go to home page"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MeeteeApp()),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -84,10 +120,12 @@ class _SummaryDetail extends State<SummaryDetail> {
               style: TextStyle(fontSize: 16),
             ),
             ButtonTheme(
+              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8.0)),
               minWidth: 300,
               child: RaisedButton(
                 elevation: 10,
-                onPressed: () => reserve(widget.room),
+                onPressed: () => _showDialog(),
+                // onPressed: () => reserve(widget.room),
                 color: Color(0xFFFF6F61),
                 textColor: Colors.white,
                 child: Text('Reserve'),

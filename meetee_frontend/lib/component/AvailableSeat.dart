@@ -7,8 +7,8 @@ import 'dart:convert'; // JSON
 import 'package:meetee_frontend/model/Room.dart';
 import 'package:meetee_frontend/model/Reservation.dart';
 
-String urlAvail = 'http://18.139.5.203:9000/check/available';
-String urlReserve = 'http://18.139.5.203:9000/reserve';
+String urlAvail = 'http://18.139.12.132:9000/check/available';
+String urlReserve = 'http://18.139.12.132:9000/reserve';
 
 class Available extends StatefulWidget {
   final Reservation reservation;
