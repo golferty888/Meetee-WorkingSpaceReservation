@@ -13,8 +13,9 @@ String urlReserve = 'http://18.139.5.203:9000/reserve';
 class Available extends StatefulWidget {
   final Reservation reservation;
   final String type;
+  final int price;
 
-  Available(this.reservation, this.type);
+  Available(this.reservation, this.type, this.price);
 
   @override
   _AvailableState createState() => _AvailableState();
@@ -73,7 +74,7 @@ class _AvailableState extends State<Available> {
       itemCount: rooms.length,
       itemBuilder: (BuildContext context, int index) {
         if (context != null) {
-          return makeListTile(rooms[index], widget.reservation, context);
+          return makeListTile(rooms[index], widget.price, widget.reservation, context);
         }
         // return CircularProgressIndicator();
       },
@@ -105,7 +106,7 @@ class _AvailableState extends State<Available> {
   // }
 }
 
-InkWell makeListTile(Room room, Reservation reservation, BuildContext context) {
+InkWell makeListTile(Room room, int price, Reservation reservation, BuildContext context) {
   // return ListTile(
   //   contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
   //   leading: Container(
@@ -121,7 +122,7 @@ InkWell makeListTile(Room room, Reservation reservation, BuildContext context) {
   // );
   return InkWell(
     onTap: () => Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SummaryDetail(room, reservation))),
+        context, MaterialPageRoute(builder: (context) => SummaryDetail(room, price, reservation))),
     // onTap: () {
     //   Navigator.of(context).push(SummaryPageRoute(room));
     // },

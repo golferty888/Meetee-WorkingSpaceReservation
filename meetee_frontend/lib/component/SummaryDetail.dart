@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import "package:flutter/material.dart";
-import 'package:meetee_frontend/model/Reservation.dart';
 import 'package:meetee_frontend/model/Room.dart';
 import 'package:http/http.dart' as http;
 
 class SummaryDetail extends StatefulWidget {
   final room;
+  final price;
   final reservation;
 
-  SummaryDetail(this.room, this.reservation);
+  SummaryDetail(this.room, this.price, this.reservation);
 
   @override
   _SummaryDetail createState() => _SummaryDetail();
@@ -19,8 +19,8 @@ class _SummaryDetail extends State<SummaryDetail> {
   // List rooms = new List<Room>();
   // final room_detail;
   // SummaryDetail(this.room_detail);
- String urlReserve = 'http://18.139.5.203:9000/reserve';
- 
+  String urlReserve = 'http://18.139.5.203:9000/reserve';
+
   Future<Null> reserve(Room room) async {
     final body = {
       'userId': '1',
@@ -49,7 +49,7 @@ class _SummaryDetail extends State<SummaryDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('detail page'),
+        title: Text(widget.room.roomName),
       ),
       body: Center(
         child: Column(
@@ -69,22 +69,29 @@ class _SummaryDetail extends State<SummaryDetail> {
                   )),
             ),
             Text(
-              'Name: ' +
-                  widget.room.roomName +
-                  '\n' +
-                  'Date: ' +
+              // 'Name: ' +
+              //     widget.room.roomName +
+              //     '\n' +
+              'Date: ' +
                   (widget.reservation.toMap())['startDate'].substring(0, 10) +
                   '\nTime: ' +
                   (widget.reservation.toMap())['startTime'] +
                   '00 - ' +
                   (widget.reservation.toMap())['endTime'] +
-                  '\nPrice: ' + widget.room.roomPrice.toString(),
-              style: TextStyle(fontSize: 22),
+                  '\nPrice: ' +
+                  widget.price.toString() +
+                  ' baht/hours',
+              style: TextStyle(fontSize: 16),
             ),
-            RaisedButton(
-              elevation: 10,
-              onPressed: () => reserve(widget.room),
-              child: Text('Please press me'),
+            ButtonTheme(
+              minWidth: 300,
+              child: RaisedButton(
+                elevation: 10,
+                onPressed: () => reserve(widget.room),
+                color: Color(0xFFFF6F61),
+                textColor: Colors.white,
+                child: Text('Reserve'),
+              ),
             )
           ],
         ),

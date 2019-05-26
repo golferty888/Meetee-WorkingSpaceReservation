@@ -54,7 +54,8 @@ class _MeeteeAppState extends State with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primaryColor: Colors.purple[900]),
+      theme: ThemeData(primaryColor: Color(0xFF2979ff)),
+      // theme: ThemeData(primaryColor: Colors.purple[900]),
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -70,14 +71,16 @@ class _MeeteeAppState extends State with SingleTickerProviderStateMixin {
               ),
             ),
             title: Container(
-              color: Colors.purpleAccent[900],
+              // color: Colors.purpleAccent[900],
+              // color: Colors.purpleAccent[900],
               height: 60.0,
               alignment: Alignment.center,
               child: TabBar(
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicator: BubbleTabIndicator(
                   indicatorHeight: 30.0,
-                  indicatorColor: Colors.red[700],
+                  indicatorColor: Color(0xFFFF6F61),
+                  // indicatorColor: Colors.red[700],
                   tabBarIndicatorSize: TabBarIndicatorSize.tab,
                 ),
                 tabs: [

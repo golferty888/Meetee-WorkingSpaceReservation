@@ -93,12 +93,11 @@ class _SeatTypeState extends State<SeatType> {
                           //     Image.network(
                           //   room.roomTypePic,
                         )),
-                        title: Text(
-                          roomTypes[index].roomTypeName
-                              // snapshot.data.type.toString(),
-                              // roomTypes[index].roomTypeId.toString(),
-                          // style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                        ),
+                        title: Text(roomTypes[index].roomTypeName
+                            // snapshot.data.type.toString(),
+                            // roomTypes[index].roomTypeId.toString(),
+                            // style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                            ),
                         // subtitle: Text("Meeting Room A", style: TextStyle(color: Colors.black38)),
                         subtitle: Row(
                           children: <Widget>[
@@ -125,10 +124,13 @@ class _SeatTypeState extends State<SeatType> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  // Available(snapshot.data, widget.type),
-                                  AvailablePanels(snapshot.data, widget.type, roomTypes[index].roomTypeName)
-                            ),
+                                builder: (context) =>
+                                    // Available(snapshot.data, widget.type),
+                                    AvailablePanels(
+                                        snapshot.data,
+                                        widget.type,
+                                        roomTypes[index].roomTypeName,
+                                        roomTypes[index].roomTypePrice)),
                           );
                         },
                       );
