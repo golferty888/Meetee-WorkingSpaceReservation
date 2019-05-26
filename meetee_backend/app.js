@@ -17,6 +17,7 @@ const server = http.createServer(app);
 
 const reservationQuery = require('./controllers/query/reservation');
 const availabilityQuery = require('./controllers/query/availability');
+const unAvailabilityQuery = require('./controllers/query/unavailability');
 const densityQuery = require('./controllers/query/density');
 const roomQuery = require('./controllers/query/room');
 const userQuery = require('./controllers/query/user')
@@ -36,6 +37,8 @@ app.get("/", (request, response) => {
 app.get('/reservations', reservationQuery.getAllReservations)
 
 app.post('/check/available', availabilityQuery.checkAvailability)
+
+app.post('/check/unavailable', unAvailabilityQuery.checkUnAvailability)
 
 app.post('/reserve', reservationQuery.reserve)
 
