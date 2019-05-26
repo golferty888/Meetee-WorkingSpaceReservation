@@ -7,7 +7,8 @@ const getRoomTypeList = (request, response) => {
       "roomtypes.id",
       "roomtypes.name",
       "roomtypes.price",
-      "roomtypes.capacity"
+      "roomtypes.capacity",
+      "roomtypes.url"
     )
     .then(results => {
       response.send(results);
@@ -24,7 +25,8 @@ const getSeatTypeList = (request, response) => {
       "roomtypes.id",
       "roomtypes.name",
       "roomtypes.price",
-      "roomtypes.capacity"
+      "roomtypes.capacity",
+      "roomtypes.url"
     )
     .then(results => {
       response.send(results);
