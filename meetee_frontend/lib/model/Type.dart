@@ -12,8 +12,8 @@ class Type {
       : roomTypeName = json['name'],
         roomTypeCapacity = json['capacity'],
         roomTypePrice = json['price'],
-        roomTypeId = json['id'];
-  // roomTypePic = json['roomTypePic'];
+        roomTypeId = json['id'],
+        roomTypePic = json['url'];
 
   // method
   Map<String, dynamic> toJson() {

@@ -82,17 +82,20 @@ class _SeatTypeState extends State<SeatType> {
                     builder: (context, snapshot) {
                       return ListTile(
                         // contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                        // leading: Container(
+                        //     // padding: EdgeInsets.only(right: 12.0), // ข้างรูปซ้าย
+                        //     // decoration: BoxDecoration(
+                        //     //     border: Border(
+                        //     //         right: new BorderSide(width: 1.0, color: Colors.black87))),
+                        //     child: Icon(
+                        //   IconData(58418, fontFamily: 'MaterialIcons'),
+                        //   size: 60.0,
+                        //   //     Image.network(
+                        //   //   room.roomTypePic,
+                        // )),
                         leading: Container(
-                            // padding: EdgeInsets.only(right: 12.0), // ข้างรูปซ้าย
-                            // decoration: BoxDecoration(
-                            //     border: Border(
-                            //         right: new BorderSide(width: 1.0, color: Colors.black87))),
-                            child: Icon(
-                          IconData(58418, fontFamily: 'MaterialIcons'),
-                          size: 60.0,
-                          //     Image.network(
-                          //   room.roomTypePic,
-                        )),
+                          child: Image.network(roomTypes[index].roomTypePic),
+                        ),
                         title: Text(roomTypes[index].roomTypeName
                             // snapshot.data.type.toString(),
                             // roomTypes[index].roomTypeId.toString(),
@@ -130,7 +133,8 @@ class _SeatTypeState extends State<SeatType> {
                                         snapshot.data,
                                         widget.type,
                                         roomTypes[index].roomTypeName,
-                                        roomTypes[index].roomTypePrice)),
+                                        roomTypes[index].roomTypePrice,
+                                        roomTypes[index].roomTypePic)),
                           );
                         },
                       );

@@ -14,8 +14,9 @@ class Available extends StatefulWidget {
   final Reservation reservation;
   final String type;
   final int price;
+  final String picUrl;
 
-  Available(this.reservation, this.type, this.price);
+  Available(this.reservation, this.type, this.price, this.picUrl);
 
   @override
   _AvailableState createState() => _AvailableState();
@@ -74,9 +75,10 @@ class _AvailableState extends State<Available> {
       itemCount: rooms.length,
       itemBuilder: (BuildContext context, int index) {
         if (context != null) {
-          return makeListTile(rooms[index], widget.price, widget.reservation, context);
+          return makeListTile(rooms[index], widget.price, widget.picUrl,
+              widget.reservation, context);
         }
-        // return CircularProgressIndicator();
+        return CircularProgressIndicator();
       },
     ));
   }
@@ -106,7 +108,8 @@ class _AvailableState extends State<Available> {
   // }
 }
 
-InkWell makeListTile(Room room, int price, Reservation reservation, BuildContext context) {
+InkWell makeListTile(Room room, int price, String urlPic,
+    Reservation reservation, BuildContext context) {
   // return ListTile(
   //   contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
   //   leading: Container(
@@ -122,7 +125,10 @@ InkWell makeListTile(Room room, int price, Reservation reservation, BuildContext
   // );
   return InkWell(
     onTap: () => Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SummaryDetail(room, price, reservation))),
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                SummaryDetail(room, price, urlPic, reservation))),
     // onTap: () {
     //   Navigator.of(context).push(SummaryPageRoute(room));
     // },
@@ -133,10 +139,15 @@ InkWell makeListTile(Room room, int price, Reservation reservation, BuildContext
         children: <Widget>[
           Hero(
               tag: "picture_" + room.roomId.toString(),
-              child: Icon(
-                IconData(58418, fontFamily: 'MaterialIcons'),
-                size: 60.0,
-              )),
+              // child: Icon(
+              //   IconData(58418, fontFamily: 'MaterialIcons'),
+              //   size: 60.0,
+              // )),
+              child: Container(
+                width: 100,
+                child: Image.network(urlPic),
+              )
+              ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(room.roomName),

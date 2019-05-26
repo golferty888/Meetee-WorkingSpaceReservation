@@ -9,8 +9,9 @@ class SummaryDetail extends StatefulWidget {
   final room;
   final price;
   final reservation;
+  final String urlPic;
 
-  SummaryDetail(this.room, this.price, this.reservation);
+  SummaryDetail(this.room, this.price, this.urlPic, this.reservation);
 
   @override
   _SummaryDetail createState() => _SummaryDetail();
@@ -53,7 +54,8 @@ class _SummaryDetail extends State<SummaryDetail> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(6.0)),
+          shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(6.0)),
           title: new Text("Reserve complete!"),
           // content: new Text("Alert Dialog body"),
           actions: <Widget>[
@@ -69,9 +71,7 @@ class _SummaryDetail extends State<SummaryDetail> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MeeteeApp()),
+                  MaterialPageRoute(builder: (context) => MeeteeApp()),
                 );
               },
             ),
@@ -93,16 +93,31 @@ class _SummaryDetail extends State<SummaryDetail> {
             Container(
               padding: EdgeInsets.all(16),
               child: Hero(
-                  tag: "picture_" + widget.room.roomId.toString(),
-                  // child: Text(room_detail.roomName),
-                  // child: CircleAvatar(
-                  //   radius: 100,
-                  //   backgroundImage: NetworkImage(_user.avatar),
-                  // ),
-                  child: Icon(
-                    IconData(58418, fontFamily: 'MaterialIcons'),
-                    size: 60.0,
-                  )),
+                tag: "picture_" + widget.room.roomId.toString(),
+                // child: Text(room_detail.roomName),
+                // child: CircleAvatar(
+                //   radius: 100,
+                //   backgroundImage: NetworkImage(_user.avatar),
+                // ),
+                child: Container(
+                  child: Image.network(widget.urlPic),
+                )
+                // child: Stack(
+                //   children: <Widget>[
+                //     Center(
+                //       child: CircularProgressIndicator(),
+                //     ),
+                //     Center(
+                //       // child: FadeInImage.memoryNetwork(
+                //       //   // placeholder: kTransparentImage,
+                //       //   image: widget.urlPic,
+                //       // ),
+                //       child: Image.network(widget.urlPic),
+                //       // )
+                //     ),
+                //   ],
+                // ),
+              ),
             ),
             Text(
               // 'Name: ' +
@@ -120,7 +135,8 @@ class _SummaryDetail extends State<SummaryDetail> {
               style: TextStyle(fontSize: 16),
             ),
             ButtonTheme(
-              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8.0)),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(8.0)),
               minWidth: 300,
               child: RaisedButton(
                 elevation: 10,

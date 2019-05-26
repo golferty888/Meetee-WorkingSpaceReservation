@@ -10,8 +10,9 @@ class AvailablePanels extends StatefulWidget {
   final String type;
   final String typeName;
   final int typePrice;
+  final String pic;
 
-  AvailablePanels(this.reservation, this.type, this.typeName, this.typePrice);
+  AvailablePanels(this.reservation, this.type, this.typeName, this.typePrice, this.pic);
 
   @override
   _AvailablePanelsState createState() => _AvailablePanelsState();
@@ -116,7 +117,7 @@ class _AvailablePanelsState extends State<AvailablePanels> {
               //   height: _PANEL_HEADER_HEIGHT,
               //   child:  Center(child:  Text(widget.type)),
               // ),
-              Expanded(child: Available(widget.reservation, widget.type, widget.typePrice))
+              Expanded(child: Available(widget.reservation, widget.type, widget.typePrice, widget.pic))
             ]),
           ),
         ],
