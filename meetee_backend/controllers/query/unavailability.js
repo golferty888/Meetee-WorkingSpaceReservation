@@ -10,6 +10,7 @@ const checkUnAvailability = (request, response) => {
 
     const unavailableRoomSubQuery = knex
         .select('room.id as room_id', 'room.code as room_code', 'roomtype.name as roomtype_name', 'resv.start_time', 'resv.end_time')
+        .distinct('room.id')
         .from("meetee.reservation as resv")
         .join("meetee.rooms as room", "resv.room_id", "=", "room.id")
         .join("meetee.roomtypes as roomtype", "room.roomtype_id", "=", "roomtype.id")
