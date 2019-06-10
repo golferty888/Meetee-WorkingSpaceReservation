@@ -3,13 +3,11 @@ const express = require("express");
 var http = require("http");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-if (process.env.NODE_ENV == "production") {
-  var knex = require("./config/database-pg-rds");
-} else if (process.env.NODE_ENV == "development") {
-  var knex = require("./config/database-pg-local");
-}
-const PORT = process.env.PORT || 9000;
+const knex = require('knex')(
+  require('./config/knexfile')[process.env.NODE_ENV]
+)
 module.exports.knex = knex;
+const PORT = process.env.PORT || 9000;
 const URL = process.env.URL;
 
 const app = express();
@@ -58,11 +56,8 @@ app.use("*", function (request, response) {
   response.status(404).send('404, Not found');
 });
 
-// server.listen(PORT);
 server.listen(PORT, URL, () => {
   console.log(
     `Listening on PORT: ${server.address().port} > ${process.env.NODE_ENV} > ${server.address().address}`
   );
-}
-);
-
+});
