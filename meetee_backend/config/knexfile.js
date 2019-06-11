@@ -11,10 +11,7 @@ module.exports = {
             user: 'meetee_admin',
             password: 'meetee_admin',
             database: 'meeteedb',
-            schema: 'meetee'
-        },
-        migrations: {
-            directory: '../knex/migrations'
+            schema: 'meeteenew'
         }
     },
     production: {
