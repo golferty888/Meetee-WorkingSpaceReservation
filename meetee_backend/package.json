@@ -7,8 +7,13 @@
     "start": "cross-env NODE_ENV=production nodemon app.js",
     "dev": "cross-env NODE_ENV=development nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate:make": "knex migrate:make --knexfile config/knexfile.js --env development",
-    "migrate:latest": "knex migrate:latest --knexfile config/knexfile.js --env development"
+    "migrate:make": "cross-env NODE_ENV=development knex migrate:make --knexfile config/knexfile.js",
+    "migrate:latest": "cross-env NODE_ENV=development knex migrate:latest --knexfile config/knexfile.js && knex seed:run --knexfile config/knexfile.js",
+    "migrate:rollback": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js",
+    "seed:make": "cross-env NODE_ENV=development knex seed:make --knexfile config/knexfile.js",
+    "seed:run": "cross-env NODE_ENV=development knex seed:run --knexfile config/knexfile.js",
+    "int2": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js && knex migrate:latest --knexfile config/knexfile.js",
+    "int3": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js && knex migrate:latest --knexfile config/knexfile.js && knex seed:run --knexfile config/knexfile.js"
   },
   "author": "Tanapat Panakit and Pronsawan",
   "license": "ISC",
@@ -17,10 +22,12 @@
     "body-parser": "^1.18.3",
     "bookshelf": "^0.14.2",
     "bookshelf-json-columns": "^2.1.1",
+    "bookshelf-modelbase": "^2.10.4",
     "cors": "^2.8.5",
     "cross-env": "^5.2.0",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
+    "joi": "^14.3.1",
     "knex": "^0.16.3",
     "mongodb": "^3.2.3",
     "pg": "^7.9.0"
