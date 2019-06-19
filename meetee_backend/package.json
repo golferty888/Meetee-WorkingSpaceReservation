@@ -13,7 +13,7 @@
     "seed:make": "cross-env NODE_ENV=development knex seed:make --knexfile config/knexfile.js",
     "seed:run": "cross-env NODE_ENV=development knex seed:run --knexfile config/knexfile.js",
     "int2": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js && knex migrate:latest --knexfile config/knexfile.js",
-    "int3": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js && knex migrate:latest --knexfile config/knexfile.js && knex seed:run --knexfile config/knexfile.js"
+    "int3": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js && knex migrate:latest --knexfile config/knexfile.js && knex seed:run --knexfile config/knexfile.js && npm run dev"
   },
   "author": "Tanapat Panakit and Pronsawan",
   "license": "ISC",
