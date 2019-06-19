@@ -11,7 +11,16 @@ module.exports = {
             user: 'meetee_admin',
             password: 'meetee_admin',
             database: 'meeteedb',
-            schema: 'meeteenew'
+            schema: 'meeteenew',
+            charset: 'utf8',
+            timezone: '+07'
+        },
+        pool: {
+            afterCreate: function (connection, callback) {
+                connection.query(`SET timezone = 'UTC-07';`, function (err) {
+                    callback(err, connection);
+                });
+            }
         }
     },
     production: {
