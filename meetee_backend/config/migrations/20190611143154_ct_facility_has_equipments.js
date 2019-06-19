@@ -22,7 +22,6 @@ exports.up = function (knex, Promise) {
                 .inTable(`${schemaName}.${refTable2}`)
                 .onDelete('CASCADE');
             table.unique([`${refColumn1}`, `${refColumn2}`]);
-            table.timestamp('created_at').defaultTo(knex.fn.now());
         })
     ]);
 };
