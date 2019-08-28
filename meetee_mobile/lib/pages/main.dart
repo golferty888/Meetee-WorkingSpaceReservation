@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meetee_mobile/pages/history.dart';
 
 void main() => runApp(MyApp());
 
@@ -64,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => null,
+                      builder: (context) => HistoryPage(),
                     ),
                   );
                 },
