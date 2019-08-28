@@ -2,12 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
+import 'package:meetee_mobile/module/facilityType.dart';
+
 class SelectFacilityType extends StatefulWidget {
   @override
   _SelectFacilityTypeState createState() => _SelectFacilityTypeState();
 }
 
 class _SelectFacilityTypeState extends State<SelectFacilityType> {
+  List<FacilityType> facilityTypeList = [
+    FacilityType(
+      'Chill\nRelax\nPrivate',
+      'images/person.svg',
+      'Single seat',
+      0xFFffdd94,
+    ),
+    FacilityType(
+      'Mate\nTeamwork\nCollaboration',
+      'images/meeting.svg',
+      'Meeting room',
+      0xFFffa0a0,
+    ),
+    FacilityType(
+      'Strategy\nDiscussion\nCooperation',
+      'images/strategy.svg',
+      'Playground room',
+      0xFFccabd8,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +60,9 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
               width: 256.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.0),
-                color: Color(0xFFffdd94),
+                color: Color(
+                  facilityTypeList[index].colorCode,
+                ),
               ),
               margin: EdgeInsets.fromLTRB(0, 0, 0, 48.0),
               padding: EdgeInsets.all(16.0),
@@ -47,37 +72,22 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 // make text start LEFT
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // make text align LEFT
-                    children: <Widget>[
-                      Text(
-                        'Chill',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      Text(
-                        'Relax',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      Text(
-                        'Private',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ],
+                  Text(
+                    facilityTypeList[index].words,
+                    style: TextStyle(fontSize: 16.0),
                   ),
-//                      Image.asset('images/person.png')
                   Container(
                     alignment: Alignment.center,
                     child: Column(
                       children: <Widget>[
                         SvgPicture.asset(
-                          'images/person.svg',
+                          facilityTypeList[index].imagePath,
                         ),
                         SizedBox(
                           height: 24.0,
                         ),
                         Text(
-                          'Single seat',
+                          facilityTypeList[index].typeName,
                           style: TextStyle(fontSize: 24.0),
                         )
                       ],
