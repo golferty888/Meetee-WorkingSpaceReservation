@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meetee_mobile/pages/history.dart';
+import 'package:meetee_mobile/pages/selectFacility.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => null,
+                      builder: (context) => SelectFacilityType(),
                     ),
                   );
                 },
