@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:meetee_mobile/pages/history.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
 
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.grey,
+        fontFamily: 'Product Sans',
       ),
       home: MyHomePage(),
     );

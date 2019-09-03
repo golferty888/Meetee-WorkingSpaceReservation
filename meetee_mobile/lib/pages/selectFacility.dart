@@ -74,21 +74,30 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                 children: <Widget>[
                   Text(
                     facilityTypeList[index].words,
-                    style: TextStyle(fontSize: 16.0),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                   Container(
                     alignment: Alignment.center,
                     child: Column(
                       children: <Widget>[
-                        SvgPicture.asset(
-                          facilityTypeList[index].imagePath,
+                        Hero(
+                          tag: 'facilityType' + index.toString(),
+                          child: SvgPicture.asset(
+                            facilityTypeList[index].imagePath,
+                          ),
                         ),
                         SizedBox(
                           height: 24.0,
                         ),
                         Text(
                           facilityTypeList[index].typeName,
-                          style: TextStyle(fontSize: 24.0),
+                          style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         )
                       ],
                     ),
