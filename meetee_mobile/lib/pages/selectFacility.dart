@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 import 'package:meetee_mobile/module/facilityType.dart';
+import 'package:meetee_mobile/pages/customerDemand.dart';
 
 class SelectFacilityType extends StatefulWidget {
   @override
@@ -107,12 +108,23 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
               ),
             );
           },
-          itemCount: 3,
+          itemCount: facilityTypeList.length,
           viewportFraction: 0.85,
           scale: 0.9,
           pagination: SwiperPagination(
             margin: EdgeInsets.fromLTRB(0.0, 0, 0.0, 16.0),
           ),
+          onTap: (index) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CustomerDemand(
+                  facilityType: facilityTypeList[index],
+                  index: index,
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
