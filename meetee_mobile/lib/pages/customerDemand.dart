@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:meetee_mobile/module/facilityType.dart';
+
+import 'package:meetee_mobile/components/datePicker.dart';
 
 class CustomerDemand extends StatefulWidget {
   final FacilityType facilityType;
   final int index;
 
-  // In the constructor, require a Todo.
   CustomerDemand({Key key, @required this.facilityType, this.index})
       : super(key: key);
   @override
@@ -61,6 +63,9 @@ class _CustomerDemandState extends State<CustomerDemand> {
                 ),
               ),
             ),
+            DatePicker(
+              primaryColor: widget.facilityType.colorCode,
+            )
           ],
         ),
       ),
