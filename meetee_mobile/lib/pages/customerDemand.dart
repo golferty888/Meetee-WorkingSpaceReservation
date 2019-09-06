@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:meetee_mobile/module/facilityType.dart';
 
 import 'package:meetee_mobile/components/datePicker.dart';
+import 'package:meetee_mobile/components/timePicker.dart';
 
 class CustomerDemand extends StatefulWidget {
   final FacilityType facilityType;
@@ -39,32 +40,39 @@ class _CustomerDemandState extends State<CustomerDemand> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            Container(
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
 //              color: Colors.black,
-              height: 88.0,
-              width: 272.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.0),
-                color: Color(
-                  widget.facilityType.colorCode,
+                height: 88.0,
+                width: 272.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.0),
+                  color: Color(
+                    widget.facilityType.colorCode,
+                  ),
                 ),
-              ),
-              margin: EdgeInsets.fromLTRB(
-                24.0,
-                0.0,
-                24.0,
-                16.0,
-              ),
-              padding: EdgeInsets.all(16.0),
-              child: Hero(
-                tag: 'facilityType' + widget.index.toString(),
-                child: SvgPicture.asset(
-                  widget.facilityType.imagePath,
+                margin: EdgeInsets.fromLTRB(
+                  24.0,
+                  0.0,
+                  24.0,
+                  16.0,
+                ),
+                padding: EdgeInsets.all(16.0),
+                child: Hero(
+                  tag: 'facilityType' + widget.index.toString(),
+                  child: SvgPicture.asset(
+                    widget.facilityType.imagePath,
+                  ),
                 ),
               ),
             ),
             DatePicker(
               primaryColor: widget.facilityType.colorCode,
+            ),
+            TimePicker(
+              primaryColor: Colors.yellow[800],
+              secondaryColor: widget.facilityType.colorCode,
             )
           ],
         ),

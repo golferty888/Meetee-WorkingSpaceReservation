@@ -32,9 +32,9 @@ class _DatePickerState extends State<DatePicker> {
     return Container(
       margin: EdgeInsets.fromLTRB(
         24.0,
-        0.0,
+        8.0,
         24.0,
-        16.0,
+        24.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: Container(
               alignment: AlignmentDirectional.center,
-              color: Colors.lightBlueAccent,
+              color: Colors.amber[200],
               child: FlatButton(
                 onPressed: () {
                   Navigator.push(
@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: Container(
               alignment: AlignmentDirectional.center,
-              color: Colors.pinkAccent,
+              color: Colors.teal[200],
               child: FlatButton(
                 onPressed: () {
                   Navigator.push(
