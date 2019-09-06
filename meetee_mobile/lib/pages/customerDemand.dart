@@ -49,7 +49,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16.0),
                   color: Color(
-                    widget.facilityType.colorCode,
+                    widget.facilityType.secondaryColorCode,
                   ),
                 ),
                 margin: EdgeInsets.fromLTRB(
@@ -68,11 +68,11 @@ class _CustomerDemandState extends State<CustomerDemand> {
               ),
             ),
             DatePicker(
-              primaryColor: widget.facilityType.colorCode,
+              primaryColor: widget.facilityType.secondaryColorCode,
             ),
             TimePicker(
-              primaryColor: Colors.yellow[800],
-              secondaryColor: widget.facilityType.colorCode,
+              primaryColor: widget.facilityType.primaryColor,
+              secondaryColor: widget.facilityType.secondaryColorCode,
             )
           ],
         ),

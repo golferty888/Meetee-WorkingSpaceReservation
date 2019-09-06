@@ -1,8 +1,17 @@
+import 'package:flutter/material.dart';
+
 class FacilityType {
   String words;
   String imagePath;
   String typeName;
-  int colorCode;
+  Color primaryColor;
+  int secondaryColorCode;
 
-  FacilityType(this.words, this.imagePath, this.typeName, this.colorCode);
+  FacilityType(
+    this.words,
+    this.imagePath,
+    this.typeName,
+    this.primaryColor,
+    this.secondaryColorCode,
+  );
 }

@@ -16,18 +16,21 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       'Chill\nRelax\nPrivate',
       'images/person.svg',
       'Single seat',
+      Colors.yellow[800],
       0xFFffdd94,
     ),
     FacilityType(
       'Mate\nTeamwork\nCollaboration',
       'images/meeting.svg',
       'Meeting room',
+      Colors.red[800],
       0xFFffa0a0,
     ),
     FacilityType(
       'Strategy\nDiscussion\nCooperation',
       'images/strategy.svg',
       'Playground room',
+      Colors.deepPurple,
       0xFFccabd8,
     ),
   ];
@@ -62,7 +65,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.0),
                 color: Color(
-                  facilityTypeList[index].colorCode,
+                  facilityTypeList[index].secondaryColorCode,
                 ),
               ),
               margin: EdgeInsets.fromLTRB(0, 0, 0, 48.0),
