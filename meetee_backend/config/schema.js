@@ -10,14 +10,6 @@ module.exports = {
         equipment_class: 'equipment_class',
         equipment: 'equipment',
         facility_equipment: 'facility_has_equipments'
-        // user: 'users',
-        // category: 'categories',
-        // facility_type: 'room_types',
-        // facility: 'rooms',
-        // reserv: 'reservation',
-        // reserv_facility: 'reservation_has_facilities',
-        // equip_type: 'equipment_type',
-        // equip: 'equipment',
     },
     column: {
         faccate_ref_facclass: 'facility_class_id',
