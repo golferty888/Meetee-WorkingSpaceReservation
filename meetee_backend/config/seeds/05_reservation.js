@@ -8,8 +8,16 @@ exports.seed = function (knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex(`${schemaName}.${table}`).insert([{
-          start_time: '2019-11-01 23:00:00',
-          end_time: '2019-11-02 02:00:00',
+          facility_id: 1,
+          start_time: '2019-11-10 11:00:00',
+          end_time: '2019-11-10 12:00:00',
+          status: 'Booked',
+          user_id: 1
+        },
+        {
+          facility_id: 3,
+          start_time: '2019-11-10 10:00:00',
+          end_time: '2019-11-10 13:00:00',
           status: 'Booked',
           user_id: 1
         }
