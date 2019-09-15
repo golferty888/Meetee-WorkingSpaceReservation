@@ -4,6 +4,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 import 'package:meetee_mobile/module/facilityType.dart';
 import 'package:meetee_mobile/pages/customerDemand.dart';
+import 'package:meetee_mobile/pages/facilityDetail.dart';
 
 class SelectFacilityType extends StatefulWidget {
   @override
@@ -76,12 +77,31 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 // make text start LEFT
                 children: <Widget>[
-                  Text(
-                    facilityTypeList[index].words,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontStyle: FontStyle.italic,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        facilityTypeList[index].words,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      InkWell(
+                        child: Icon(
+                          Icons.info_outline,
+                          size: 24.0,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => facilityDetail(),
+                              ));
+                        },
+                      ),
+                    ],
                   ),
                   Container(
                     alignment: Alignment.center,
