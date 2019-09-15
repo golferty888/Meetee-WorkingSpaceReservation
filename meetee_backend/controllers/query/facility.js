@@ -4,10 +4,12 @@ const {
     FacilityClass
 } = require('../../models/facility')
 
+const io = require("../../app").io
+
 exports.getAllFacility = (request, response) => {
     Facility
         .forge()
-        .fetch({
+        .fetchAll({
             withRelated: ['facilityCategory']
         })
         .then(data => response.json({
@@ -16,30 +18,63 @@ exports.getAllFacility = (request, response) => {
         }))
 }
 
-exports.getFacilityCategory = (request, response) => {
-    FacilityClass
-        .forge({
-            id: request.params.id
-        })
-        .fetch({
-            withRelated: ['facilityCategories.equipments.equipments']
+exports.getAllFacilityCategory = (request, response) => {
+    FacilityCategory
+        .forge()
+        .fetchAll({
+            // columns: ['id'],
+            withRelated: ['facilityClass'],
+            withRelated: [{
+                'equipments.equipment': function (qb) {
+                    qb.column('equipment.id', 'equipment.name')
+                }
+            }]
         })
         .then(data => response.json({
-            successful: true,
+            success: true,
             data
         }))
 }
 
-exports.getFacilityCategoryEquipment = (request, response) => {
-    FacilityCategory
-        .forge({
-            id: request.params.id
+exports.getFacilityFromClass = (request, response) => {
+    const id = request.params.id
+    Facility
+        .query(qb => {
+            qb.join('meeteenew.facility_category', 'facility.facility_category_id', 'facility_category.id')
+            // qb.join('meeteenew.facility_class', 'facility_category.facility_class_id', 'facility_class.id')
+            // qb.where('facility_class.id', '=', id)
+            // qb.where('facility_category.id', '=', id)
         })
-        .fetch({
-            withRelated: ['equipments.equipments']
+        .fetchAll()
+        .then(data => {
+            response.send(data)
         })
-        .then(data => response.json({
-            successful: true,
-            data
-        }))
 }
+
+// exports.getFacilityCategory = (request, response) => {
+//     FacilityClass
+//         .forge({
+//             id: request.params.id
+//         })
+//         .fetch({
+//             withRelated: ['facilityCategories.equipments.equipment.class']
+//         })
+//         .then(data => response.json({
+//             successful: true,
+//             data
+//         }))
+// }
+
+// exports.getFacilityCategoryEquipment = (request, response) => {
+//     FacilityCategory
+//         .forge({
+//             id: request.params.id
+//         })
+//         .fetch({
+//             withRelated: ['equipments']
+//         })
+//         .then(data => response.json({
+//             successful: true,
+//             data
+//         }))
+// }
