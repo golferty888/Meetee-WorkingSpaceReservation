@@ -30,5 +30,6 @@ const ReservationDetail = Bookshelf.Model.extend({
 
 module.exports = {
     Facility,
+    Reservation,
     ReservationDetail
 }, Bookshelf.model('Reservation', Reservation)

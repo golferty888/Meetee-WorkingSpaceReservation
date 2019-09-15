@@ -27,28 +27,31 @@ const FacilityCategory = Bookshelf.Model.extend({
     }
 })
 
-const Equipment = Bookshelf.Model.extend({
-    tableName: 'meeteenew.equipment',
-    facilityCategories() {
-        return this.hasMany(EquipmentFacilityCategory, 'equipment_id')
-    }
-})
-
 const EquipmentFacilityCategory = Bookshelf.Model.extend({
     tableName: 'meeteenew.facility_has_equipments',
     facilityCategories() {
         return this.belongsTo(FacilityCategory, 'facility_category_id')
     },
-    equipments() {
+    equipment() {
         return this.belongsTo(Equipment, 'equipment_id')
     }
 })
 
 const EquipmentClass = Bookshelf.Model.extend({
     tableName: 'meeteenew.equipment_class',
-    equipments() {
-        const Equipment = require('./equipment').model
+    equipment() {
+        // const Equipment = require('./equipment').model
         return this.hasMany(Equipment, 'equipment_class_id')
+    }
+})
+
+const Equipment = Bookshelf.Model.extend({
+    tableName: 'meeteenew.equipment',
+    facilityCategories() {
+        return this.hasMany(EquipmentFacilityCategory, 'equipment_id')
+    },
+    class() {
+        return this.belongsTo(EquipmentClass, 'equipment_class_id')
     }
 })
 

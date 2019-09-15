@@ -1,18 +1,13 @@
 const Bookshelf = require('../database')
 const {
-    FacilityCategory
+    FacilityCategory,
+    EquipmentFacilityCategory
 } = require('./facility')
 
 const Equipment = Bookshelf.Model.extend({
     tableName: 'meeteenew.equipment',
     facilityCategories() {
-        return this.belongToMany(FacilityCategory)
-    }
-})
-
-FacilityCategory({
-    equipments() {
-        return this.belongToMany(Equipment)
+        return this.belongsTo(EquipmentFacilityCategory)
     }
 })
 
