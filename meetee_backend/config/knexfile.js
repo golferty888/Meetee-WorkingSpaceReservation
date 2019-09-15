@@ -31,10 +31,14 @@ module.exports = {
             user: process.env.DB_USERNAME,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            schema: 'meetee'
+            timezone: '+07'
         },
-        migrations: {
-            directory: '../knex/migrations'
+        pool: {
+            afterCreate: function (connection, callback) {
+                connection.query(`SET timezone = 'UTC-07';`, function (err) {
+                    callback(err, connection);
+                });
+            }
         }
     }
 }
