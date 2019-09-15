@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:meetee_mobile/components/scaleRoute.dart';
 
 import 'package:meetee_mobile/module/facilityType.dart';
 import 'package:meetee_mobile/pages/customerDemand.dart';
@@ -96,8 +97,8 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                         onTap: () {
                           Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => facilityDetail(),
+                              ScaleRoute(
+                                page: facilityDetail(),
                               ));
                         },
                       ),
