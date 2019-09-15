@@ -6,7 +6,7 @@ import 'package:meetee_frontend/blocs/bloc_reservation.dart';
 
 import 'package:meetee_frontend/component/RoomSelectionPanels.dart';
 import 'package:meetee_frontend/component/SeatSelectionPanels.dart';
-
+import 'package:meetee_frontend/component/History.dart';
 // void main() => runApp(MaterialApp(
 //       home: BlocProvider(
 //           bloc: BlocReservation(),
@@ -15,14 +15,12 @@ import 'package:meetee_frontend/component/SeatSelectionPanels.dart';
 //       // home: MeeteeApp(),
 //     ));
 
-void main() => runApp(
-  BlocProvider(
-    bloc: BlocReservation(),
-    child: MaterialApp(
-      home: MeeteeApp(),
-    ),
-  )
-);
+void main() => runApp(BlocProvider(
+      bloc: BlocReservation(),
+      child: MaterialApp(
+        home: MeeteeApp(),
+      ),
+    ));
 
 class MeeteeApp extends StatefulWidget {
   @override
@@ -63,7 +61,12 @@ class _MeeteeAppState extends State with SingleTickerProviderStateMixin {
             elevation: 0.0,
             leading: IconButton(
               onPressed: () {
-                controller.fling(velocity: isPanelVisible ? -1.0 : 1.0);
+                // controller.fling(velocity: isPanelVisible ? -1.0 : 1.0);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => history(),
+                    ));
               },
               icon: AnimatedIcon(
                 icon: AnimatedIcons.close_menu, // can change to arrow menu

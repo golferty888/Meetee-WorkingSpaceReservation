@@ -34,23 +34,23 @@ class _SeatTypeState extends State<SeatType> {
   }
 
   Future<String> getSeatType(String type) async {
-    String url = 'http://18.139.12.132:9000/type/$type';
-    http.Response response = await http.get(url);
+    // String url = 'http://18.139.12.132:9000/type/$type';
+    // http.Response response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      print('Get $type type:  ' + jsonEncode(response.body));
-      this.setState(() {
-        if (response.body != null) {
-          List list = json.decode(response.body);
-          roomTypes = list.map((model) => Type.fromJson(model)).toList();
-        } else {
-          print('$type type NULL body');
-        }
-      });
-    } else {
-      print('Fail to load $type type');
-      throw Exception('Failed to load post');
-    }
+    // if (response.statusCode == 200) {
+    //   print('Get $type type:  ' + jsonEncode(response.body));
+    //   this.setState(() {
+    //     if (response.body != null) {
+    //       List list = json.decode(response.body);
+    //       roomTypes = list.map((model) => Type.fromJson(model)).toList();
+    //     } else {
+    //       print('$type type NULL body');
+    //     }
+    //   });
+    // } else {
+    //   print('Fail to load $type type');
+    //   throw Exception('Failed to load post');
+    // }
   }
 
   @override
