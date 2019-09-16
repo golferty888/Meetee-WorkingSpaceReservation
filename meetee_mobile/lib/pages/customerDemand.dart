@@ -5,6 +5,7 @@ import 'package:meetee_mobile/module/facilityType.dart';
 
 import 'package:meetee_mobile/components/datePicker.dart';
 import 'package:meetee_mobile/components/timePicker.dart';
+import 'package:meetee_mobile/pages/seatSelection.dart';
 
 class CustomerDemand extends StatefulWidget {
   final FacilityType facilityType;
@@ -39,6 +40,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
       ),
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             GestureDetector(
               onTap: () => Navigator.pop(context),
@@ -73,7 +75,22 @@ class _CustomerDemandState extends State<CustomerDemand> {
             TimePicker(
               primaryColor: widget.facilityType.primaryColor,
               secondaryColor: widget.facilityType.secondaryColorCode,
-            )
+            ),
+            SizedBox(
+              height: 80.0,
+            ),
+            RaisedButton(
+              child: Text('Reserve'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => seatSelection(),
+                  ),
+                );
+              },
+            ),
+            SizedBox(),
           ],
         ),
       ),
