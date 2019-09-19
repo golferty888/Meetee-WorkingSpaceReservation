@@ -12,6 +12,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        accentColor: Color(0xFF49c5b6),
+//        primaryColor: Color(0xFFF2F2F2),
         primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.grey,
         fontFamily: 'Product Sans',
@@ -30,60 +32,82 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home page'),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              alignment: AlignmentDirectional.center,
-              color: Colors.amber[200],
-              child: FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SelectFacilityType(),
-                    ),
-                  );
-                },
-                child: Text(
-                  'Reserve',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 36.0,
-                  ),
-                ),
-              ),
+      backgroundColor: Colors.white,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'images/noise.png',
             ),
+            fit: BoxFit.fill,
           ),
-          Expanded(
-            child: Container(
-              alignment: AlignmentDirectional.center,
-              color: Colors.teal[200],
-              child: FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HistoryPage(),
-                    ),
-                  );
-                },
-                child: Text(
-                  'History',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 36.0,
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+//          crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Container(
+                height: 160.0,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('images/meetee_logo.png'),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
+              Text(
+                'Meetee,',
+                style: TextStyle(fontSize: 48.0),
+              ),
+              Text(
+                'Just a reservation app.'
+                '\nJust a reservation app.'
+                '\nJust a reservation app.'
+                '\nJust a reservation app.',
+                style: TextStyle(fontSize: 24.0),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 48.0,
+              ),
+              RaisedButton(
+                color: Colors.black,
+//                highlightColor: Colors.white,
+                splashColor: Colors.white,
+                elevation: 0.0,
+                highlightElevation: 0.0,
+                child: Text(
+                  'Take a seat',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(_createRoute());
+                },
+              ),
+              SizedBox(),
+            ],
+          ),
+        ),
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        SelectFacilityType(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset(0.0, 0.0);
+      var curve = Curves.easeIn;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

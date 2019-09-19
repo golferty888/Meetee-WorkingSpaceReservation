@@ -69,6 +69,10 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                 color: Color(
                   facilityTypeList[index].secondaryColorCode,
                 ),
+                image: DecorationImage(
+                  image: AssetImage('images/noise.png'),
+                  fit: BoxFit.fill,
+                ),
               ),
               margin: EdgeInsets.fromLTRB(0, 0, 0, 48.0),
               padding: EdgeInsets.all(16.0),

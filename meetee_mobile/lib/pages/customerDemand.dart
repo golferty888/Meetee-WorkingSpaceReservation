@@ -53,6 +53,12 @@ class _CustomerDemandState extends State<CustomerDemand> {
                   color: Color(
                     widget.facilityType.secondaryColorCode,
                   ),
+                  image: DecorationImage(
+                    image: AssetImage(
+                      'images/noise.png',
+                    ),
+                    fit: BoxFit.fill,
+                  ),
                 ),
                 margin: EdgeInsets.fromLTRB(
                   24.0,
@@ -80,12 +86,19 @@ class _CustomerDemandState extends State<CustomerDemand> {
               height: 80.0,
             ),
             RaisedButton(
-              child: Text('Reserve'),
+              color: Colors.black,
+              splashColor: Colors.white,
+              elevation: 0.0,
+              highlightElevation: 0.0,
+              child: Text(
+                'Reserve',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => seatSelection(),
+                    builder: (context) => SeatSelection(),
                   ),
                 );
               },

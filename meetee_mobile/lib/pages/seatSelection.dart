@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-class seatSelection extends StatefulWidget {
+class SeatSelection extends StatefulWidget {
   @override
-  _seatSelectionState createState() => _seatSelectionState();
+  _SeatSelectionState createState() => _SeatSelectionState();
 }
 
-class _seatSelectionState extends State<seatSelection> {
+class _SeatSelectionState extends State<SeatSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Seat selection'),
       ),
