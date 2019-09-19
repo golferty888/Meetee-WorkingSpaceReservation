@@ -6,6 +6,7 @@ class FacilityType {
   String typeName;
   Color primaryColor;
   int secondaryColorCode;
+  String price;
 
   FacilityType(
     this.words,
@@ -13,5 +14,6 @@ class FacilityType {
     this.typeName,
     this.primaryColor,
     this.secondaryColorCode,
+    this.price,
   );
 }

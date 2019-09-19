@@ -19,21 +19,24 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       'images/person.svg',
       'Single seat',
       Colors.yellow[800],
-      0xFFffdd94,
+      0xFFFAD74E,
+      '',
     ),
     FacilityType(
       'Mate\nTeamwork\nCollaboration',
       'images/meeting.svg',
       'Meeting room',
       Colors.red[800],
-      0xFFffa0a0,
+      0xFFFF8989,
+      '',
     ),
     FacilityType(
       'Strategy\nDiscussion\nCooperation',
       'images/strategy.svg',
       'Playground room',
       Colors.deepPurple,
-      0xFFccabd8,
+      0xFF92D2FC,
+      '',
     ),
   ];
 
