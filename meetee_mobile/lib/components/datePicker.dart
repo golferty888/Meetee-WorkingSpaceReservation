@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 
 class DatePicker extends StatefulWidget {
   final int primaryColor;
+  final ValueChanged<DateTime> returnDate;
 
-  DatePicker({Key key, @required this.primaryColor}) : super(key: key);
+  DatePicker({Key key, @required this.primaryColor, this.returnDate})
+      : super(key: key);
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -18,13 +20,27 @@ class _DatePickerState extends State<DatePicker> {
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
+//        initialDate: now.add(Duration(days: 5)),
+//        firstDate: now.add(Duration(days: 5)),
         initialDate: now,
-        firstDate: DateTime(2019, 8),
+        firstDate: now,
         lastDate: DateTime(2022));
     if (picked != null && picked != now)
       setState(() {
         now = picked;
       });
+  }
+
+  _onSelected(int index) {
+    setState(() => _selectedIndex = index);
+    print(index);
+    widget.returnDate(
+      DateTime.now().add(
+        Duration(
+          days: _selectedIndex,
+        ),
+      ),
+    );
   }
 
   @override
@@ -62,23 +78,37 @@ class _DatePickerState extends State<DatePicker> {
               selectedDate(today + 2),
               selectedDate(today + 3),
               selectedDate(today + 4),
-              InkWell(
-//                onTap: () => _selectDate(context),
-                child: Icon(
-                  Icons.calendar_today,
-                  size: 24.0,
+              Container(
+                decoration: BoxDecoration(
+                  color: _selectedIndex != null && _selectedIndex == 6
+                      ? Color(widget.primaryColor)
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: InkWell(
+                  onTap: () => _selectDate(context),
+                  child: Icon(
+                    Icons.calendar_today,
+                    size: 24.0,
+                  ),
                 ),
               )
+//              Container(
+//                padding: const EdgeInsets.all(0.0),
+//                child: IconButton(
+//                  padding: EdgeInsets.all(0.0),
+//                  icon: Icon(
+//                    Icons.calendar_today,
+//                    size: 24.0,
+//                  ),
+//                  onPressed: () => _selectDate(context),
+//                ),
+//              )
             ],
           ),
         ],
       ),
     );
-  }
-
-  _onSelected(int index) {
-    setState(() => _selectedIndex = index);
-    print(index);
   }
 
   Widget selectedDateWithText(index, text, width) {

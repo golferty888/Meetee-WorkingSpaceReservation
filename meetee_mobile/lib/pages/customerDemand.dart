@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
-import 'package:meetee_mobile/module/facilityType.dart';
+import 'package:meetee_mobile/model/facilityType.dart';
+import 'package:meetee_mobile/model/reservation.dart';
 
 import 'package:meetee_mobile/components/datePicker.dart';
 import 'package:meetee_mobile/components/timePicker.dart';
-import 'package:meetee_mobile/pages/seatSelection.dart';
 
 class CustomerDemand extends StatefulWidget {
   final FacilityType facilityType;
@@ -18,6 +22,68 @@ class CustomerDemand extends StatefulWidget {
 }
 
 class _CustomerDemandState extends State<CustomerDemand> {
+  String unavailableSeatURL = 'http://18.139.12.132:9000/check/unavailable/all';
+
+  String startDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
+  String startTime = DateFormat("HH:00:00").format(DateTime.now());
+  String endTime = DateFormat("HH:00:00").format(
+    DateTime.now().add(
+      Duration(hours: 1),
+    ),
+  );
+
+  _updateStartDate(DateTime startDate) {
+    String formatted = DateFormat("yyyy-MM-dd").format(startDate);
+    setState(() {
+      this.startDate = formatted;
+    });
+  }
+
+  _updateStartTime(int startTime) {
+    String formatted = TimeOfDay(hour: startTime, minute: 0)
+            .toString()
+            .split('(')[1]
+            .split(')')[0] +
+        ':00';
+    setState(() {
+      this.startTime = formatted;
+    });
+  }
+
+  _updateEndTime(int endTime) {
+    String formatted = TimeOfDay(hour: endTime, minute: 0)
+            .toString()
+            .split('(')[1]
+            .split(')')[0] +
+        ':00';
+    setState(() {
+      this.endTime = formatted;
+    });
+  }
+
+  Future<dynamic> getAllSeat() async {
+    final response = await http.post(
+      'http://18.139.12.132:9000/check/unavailable/all',
+      body: {
+        "startDate": startDate,
+        "startTime": startTime,
+        "endTime": endTime,
+        "endDate": startDate,
+      },
+//      body: {
+//        "startDate": "November 11, 2019",
+//        "startTime": "08:00:00",
+//        "endTime": "09:00:00",
+//        "endDate": "November 11, 2019"
+//      },
+    );
+    if (response.statusCode == 200) {
+      return print(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +106,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
       ),
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             GestureDetector(
               onTap: () => Navigator.pop(context),
@@ -77,13 +143,25 @@ class _CustomerDemandState extends State<CustomerDemand> {
             ),
             DatePicker(
               primaryColor: widget.facilityType.secondaryColorCode,
+              returnDate: _updateStartDate,
             ),
             TimePicker(
               primaryColor: widget.facilityType.primaryColor,
               secondaryColor: widget.facilityType.secondaryColorCode,
+              returnStartTime: _updateStartTime,
+              returnEndTime: _updateEndTime,
             ),
-            SizedBox(
-              height: 80.0,
+//            SizedBox(
+//              height: 80.0,
+//            ),
+            Text(
+              startDate.toString(),
+            ),
+            Text(
+              startTime,
+            ),
+            Text(
+              endTime,
             ),
             RaisedButton(
               color: Colors.black,
@@ -95,12 +173,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SeatSelection(),
-                  ),
-                );
+                getAllSeat();
               },
             ),
             SizedBox(),

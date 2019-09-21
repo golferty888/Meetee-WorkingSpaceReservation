@@ -3,16 +3,39 @@ import 'package:flutter/material.dart';
 class TimePicker extends StatefulWidget {
   final int secondaryColor;
   final Color primaryColor;
+  final ValueChanged<int> returnStartTime;
+  final ValueChanged<int> returnEndTime;
 
-  TimePicker(
-      {Key key, @required this.primaryColor, @required this.secondaryColor})
-      : super(key: key);
+  TimePicker({
+    Key key,
+    @required this.primaryColor,
+    @required this.secondaryColor,
+    this.returnStartTime,
+    this.returnEndTime,
+  }) : super(key: key);
   @override
   _TimePickerState createState() => _TimePickerState();
 }
 
 class _TimePickerState extends State<TimePicker> {
-  RangeValues _values = RangeValues(9, 10);
+  static double hourNow = TimeOfDay.now().hour.toDouble();
+  RangeValues _values = RangeValues(
+    hourNow + 1,
+    hourNow + 2,
+  );
+
+  @override
+  void initState() {
+    print('sdfsf');
+    if (hourNow + 1 > 22) {
+      _values = RangeValues(
+        8,
+        9,
+      );
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,19 +55,20 @@ class _TimePickerState extends State<TimePicker> {
             ),
           ),
           RangeSlider(
-              activeColor: widget.primaryColor,
-              inactiveColor: Color(widget.secondaryColor),
-              values: _values,
+            activeColor: widget.primaryColor,
+            inactiveColor: Color(widget.secondaryColor),
+            values: _values,
 //              labels: '${_values.round()}',
-              labels: RangeLabels(
-                '${_values.start.round()}',
-                '${_values.end.round()}',
-              ),
-              min: 8,
-              max: 22,
-              divisions: 14,
-              onChanged: (RangeValues values) {
-                setState(() {
+            labels: RangeLabels(
+              '${_values.start.round()}',
+              '${_values.end.round()}',
+            ),
+            min: 8,
+            max: 22,
+            divisions: 14,
+            onChanged: (RangeValues values) {
+              setState(
+                () {
                   if (values.end - values.start >= 1) {
                     _values = values;
                   } else {
@@ -54,8 +78,18 @@ class _TimePickerState extends State<TimePicker> {
                       _values = RangeValues(_values.end - 1, _values.end);
                     }
                   }
-                });
-              }),
+                },
+              );
+            },
+            onChangeEnd: (RangeValues values) {
+              widget.returnStartTime(
+                _values.start.round(),
+              );
+              widget.returnEndTime(
+                _values.end.round(),
+              );
+            },
+          ),
         ],
       ),
     );
