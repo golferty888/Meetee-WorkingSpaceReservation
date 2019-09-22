@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION meeteenew.notify_event() RETURNS TRIGGER AS $$
             INSERT INTO meeteenew.reserv_audit SELECT 'Update', now(), user, NEW.facility_id, NEW.user_id, NEW.start_time, NEW.end_time, NEW.status;
         ELSIF (TG_OP = 'DELETE') THEN
             record = OLD;
-            INSERT INTO meeteenew.reserv_audit SELECT 'Delete', now(), user, NEW.facility_id, NEW.user_id, NEW.start_time, NEW.end_time, NEW.status;
+            INSERT INTO meeteenew.reserv_audit SELECT 'Delete', now(), user, OLD.facility_id, OLD.user_id, OLD.start_time, OLD.end_time, OLD.status;
         END IF;
 
         payload = json_build_object('table', TG_TABLE_NAME,
