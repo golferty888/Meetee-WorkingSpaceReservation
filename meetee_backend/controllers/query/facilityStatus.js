@@ -12,7 +12,7 @@ exports.checkStatusEachFacilityClass = (request, response) => {
 
     const facilityInClassQuery =
         knex('meeteenew.facility as fac')
-        .select('fac.id as facId', 'fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as categoryId')
+        .select('fac.id as facId', 'fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as cateId')
         .join('meeteenew.facility_category as cate', 'fac.facility_category_id', '=', 'cate.id')
         .join('meeteenew.facility_class as class', 'cate.facility_class_id', '=', 'class.id')
         .where('class.id', '=', classId)
@@ -21,7 +21,7 @@ exports.checkStatusEachFacilityClass = (request, response) => {
     const unavailableQuery =
         knex('meeteenew.reservation as resv')
         .distinct('resv.facility_id as facId')
-        .select('fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as categoryId')
+        .select('fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as cateId')
         .join('meeteenew.facility as fac', 'resv.facility_id', '=', 'fac.id')
         .join('meeteenew.facility_category as cate', 'fac.facility_category_id', '=', 'cate.id')
         .join('meeteenew.facility_class as class', 'cate.facility_class_id', '=', 'class.id')
@@ -58,13 +58,13 @@ exports.checkStatusAllFacilities = (request, response) => {
 
     const allFacilityQuery =
         knex('meeteenew.facility as fac')
-        .select('fac.id as facId', 'fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as categoryId')
+        .select('fac.id as facId', 'fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as cateId')
         .orderBy('facId');
 
     const unavailableQuery =
         knex('meeteenew.reservation as resv')
         .distinct('resv.facility_id as facId')
-        .select('fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as categoryId')
+        .select('fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as cateId')
         .join('meeteenew.facility as fac', 'resv.facility_id', '=', 'fac.id')
         .whereNot('resv.status', 'Cancelled')
         .andWhere(function () {
