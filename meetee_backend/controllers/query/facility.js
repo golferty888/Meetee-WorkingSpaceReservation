@@ -30,10 +30,9 @@ exports.getAllFacilityCategory = (request, response) => {
                 }
             }]
         })
-        .then(data => response.json({
-            success: true,
-            data
-        }))
+        .then(data => {
+            response.send(data)
+        })
 }
 
 exports.getFacilityFromClass = (request, response) => {
