@@ -9,11 +9,15 @@ exports.seed = function (knex, Promise) {
       // Inserts seed entries
       return knex(`${schemaName}.${table}`).insert([{
           id: 1,
-          name: 'Room'
+          name: 'Meeting Room'
         },
         {
           id: 2,
           name: 'Seat'
+        },
+        {
+          id: 3,
+          name: 'Seminar Room'
         }
       ]);
     });
