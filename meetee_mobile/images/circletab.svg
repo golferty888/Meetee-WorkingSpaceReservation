@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="8" width="40">
+  <defs>
+    <ellipse id="ellipse-0" opacity="1" rx="4" ry="4" cx="36" cy="4"/>
+    <ellipse id="ellipse-1" opacity="1" rx="4" ry="4" cx="20" cy="4"/>
+    <ellipse id="ellipse-2" opacity="1" rx="4" ry="4" cx="4" cy="4"/>
+  </defs>
+  <g opacity="1">
+    <g opacity="1">
+      <use xlink:href="#ellipse-0" fill="rgb(0,0,0)" fill-opacity="0.25"/>
+    </g>
+    <g opacity="1">
+      <use xlink:href="#ellipse-1" fill="rgb(0,0,0)" fill-opacity="0.25"/>
+    </g>
+    <g opacity="1">
+      <use xlink:href="#ellipse-2" fill="rgb(0,0,0)" fill-opacity="1"/>
+    </g>
+  </g>
+</svg>
