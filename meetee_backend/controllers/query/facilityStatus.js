@@ -54,7 +54,7 @@ exports.checkStatusAllFacilities = (request, response) => {
     const endTime = data.endDate + ' ' + data.endTime
     const status = 'Booked'
     const user_id = data.userId
-    console.log(startTime + ' ' + endTime)
+    console.log("checkStatusAllFac: " + startTime + ' ' + endTime)
 
     const allFacilityQuery =
         knex('meeteenew.facility as fac')
