@@ -67,21 +67,43 @@ server.listen(PORT, URL, () => {
   );
 });
 
-const io = require('socket.io')(server);
+// const io = require('socket.io')(server);
 
-io.on("connection", (socket) => {
-  console.log("userId: " + socket.id + " connected.")
+// io.on("connection", (socket) => {
+//   console.log("userId: " + socket.id + " connected.")
 
-  socket.on("disconnect", socket => {
-    console.log("!userId: " + socket.id + " disconnected.")
+//   socket.on("disconnect", socket => {
+//     console.log("!userId: " + socket.id + " disconnected.")
+//   })
+// })
+
+const WebSocket = require('ws')
+
+const wss = new WebSocket.Server({
+  port: 9999
+})
+
+wss.on('connection', ws => {
+  ws.on('message', message => {
+    console.log(`Receive message => ${message}`)
   })
+  ws.send('Congratulation Gulf, You\'re in the Websocket now!.');
+
+  pgClient.on("notification", async (data) => {
+    const payload1 = data.payload
+    ws.send('DB payload: ' + payload1)
+  })
+
 })
 
-pgClient.on("notification", async (data) => {
-  const payload = data.payload
-  console.log("data.payload: , " + data.payload)
-  io.emit("reservation_trigger", payload)
-})
+// pgClient.on("notification", async (data) => {
+//   const payload = data.payload
+//   console.log("data.payload: , " + data.payload)
+//   ws.on('reserv', (ws, payload) => {
+//     ws.send('payload: ' + payload)
+//   })
+//   // io.emit("reservation_trigger", payload)
+// })
 
 pgClient.on('error', function (err, client) {
   console.log('pg::error', {
