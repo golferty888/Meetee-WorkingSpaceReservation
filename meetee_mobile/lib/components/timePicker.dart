@@ -57,7 +57,6 @@ class _TimePickerState extends State<TimePicker> {
             activeColor: widget.primaryColor,
             inactiveColor: Color(widget.secondaryColor),
             values: _values,
-//              labels: '${_values.round()}',
             labels: RangeLabels(
               '${_values.start.round()}',
               '${_values.end.round()}',

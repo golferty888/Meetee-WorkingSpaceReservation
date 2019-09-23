@@ -46,13 +46,6 @@ class _CustomerDemandState extends State<CustomerDemand> {
         "endTime": endTime,
         "endDate": startDate,
       },
-//      body: {
-//        "classId": '1',
-//        "startDate": "November 11, 2019",
-//        "startTime": "08:00:00",
-//        "endDate": "November 11, 2019",
-//        "endTime": "10:00:00"
-//      },
     );
     print('{\n'
         'classId: ${widget.facilityType.classId},\n'
@@ -68,8 +61,6 @@ class _CustomerDemandState extends State<CustomerDemand> {
         facilitiesList = FacilitiesList.fromJson(jsonData);
       });
       print(jsonData);
-//      print(facilitiesList.facilities);
-//      print(facilitiesList.facilities.length);
     } else {
       print('400');
       throw Exception('Failed to load post');
@@ -127,7 +118,6 @@ class _CustomerDemandState extends State<CustomerDemand> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
-//        automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -148,7 +138,6 @@ class _CustomerDemandState extends State<CustomerDemand> {
             GestureDetector(
               onTap: () => Navigator.pop(context),
               child: Container(
-//              color: Colors.black,
                 height: 88.0,
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -255,7 +244,6 @@ class _CustomerDemandState extends State<CustomerDemand> {
           child: InkWell(
             child: Text(
               'Reserve',
-//              style: TextStyle(color: Colors.white),
               textAlign: TextAlign.center,
             ),
             onTap: () {

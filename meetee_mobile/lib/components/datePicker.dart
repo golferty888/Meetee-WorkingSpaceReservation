@@ -126,8 +126,6 @@ class _DatePickerState extends State<DatePicker> {
         context: context,
         initialDate: initialDate,
         firstDate: DateTime.now().add(Duration(days: 4)),
-//        initialDate: initialDate,
-//        firstDate: DateTime.now().add(Duration(days: -1)),
         lastDate: DateTime(2022));
     if (picked != null) {
       setState(() {

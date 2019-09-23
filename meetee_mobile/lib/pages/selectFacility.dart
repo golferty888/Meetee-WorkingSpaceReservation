@@ -50,7 +50,6 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
-//        automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -67,7 +66,6 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
         child: Swiper(
           itemBuilder: (BuildContext context, int index) {
             return Container(
-//              color: Colors.black,
               height: 384.0,
               width: 256.0,
               decoration: BoxDecoration(
@@ -82,11 +80,9 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
               ),
               margin: EdgeInsets.fromLTRB(0, 0, 0, 48.0),
               padding: EdgeInsets.all(16.0),
-//                    height: 650.0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // make text start LEFT
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

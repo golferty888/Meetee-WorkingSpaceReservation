@@ -34,12 +34,4 @@ class Facility {
       floor: json['floor'],
       cateId: json['cateId'],
       status: json['status']);
-
-//  @override
-//  String toString() {
-//    return 'facId: $facId\nfacCode: $facCode'
-//        '\nfloor: $floor'
-//        '\nfacilityCategoryId: $facilityCategoryId'
-//        '\nstatus: $status';
-//  }
 }

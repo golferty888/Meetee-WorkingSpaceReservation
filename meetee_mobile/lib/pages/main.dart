@@ -6,14 +6,12 @@ import 'package:meetee_mobile/pages/selectFacility.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         accentColor: Color(0xFF49c5b6),
-//        primaryColor: Color(0xFFF2F2F2),
         primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.grey,
         fontFamily: 'Product Sans',
@@ -45,7 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-//          crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
                 height: 160.0,
@@ -72,7 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               RaisedButton(
                 color: Colors.black,
-//                highlightColor: Colors.white,
                 splashColor: Colors.white,
                 elevation: 0.0,
                 highlightElevation: 0.0,
