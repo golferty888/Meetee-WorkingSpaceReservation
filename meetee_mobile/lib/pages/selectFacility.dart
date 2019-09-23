@@ -36,7 +36,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       '3',
       'Strategy\nDiscussion\nCooperation',
       'images/strategy.svg',
-      'Playground room',
+      'Seminar room',
       Colors.deepPurple,
       0xFF92D2FC,
       '',
