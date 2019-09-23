@@ -26,8 +26,7 @@ class _TimePickerState extends State<TimePicker> {
 
   @override
   void initState() {
-    print('sdfsf');
-    if (hourNow + 1 > 22) {
+    if (hourNow + 1 > 22 || hourNow + 1 < 8) {
       _values = RangeValues(
         8,
         9,

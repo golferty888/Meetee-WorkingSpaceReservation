@@ -13,27 +13,42 @@ class DatePicker extends StatefulWidget {
 }
 
 class _DatePickerState extends State<DatePicker> {
-  DateTime now = DateTime.now();
   int today = 0;
   int _selectedIndex = 0;
+  DateTime initialDate = DateTime.now().add(Duration(days: 5));
+  String formattedDate = DateFormat('d MMMM yyyy').format(DateTime.now());
 
-  Future<Null> _selectDate(BuildContext context) async {
+  Future<Null> calendar(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-//        initialDate: now.add(Duration(days: 5)),
-//        firstDate: now.add(Duration(days: 5)),
-        initialDate: now,
-        firstDate: now,
+        initialDate: initialDate,
+        firstDate: DateTime.now().add(Duration(days: 4)),
+//        initialDate: initialDate,
+//        firstDate: DateTime.now().add(Duration(days: -1)),
         lastDate: DateTime(2022));
-    if (picked != null && picked != now)
+    if (picked != null) {
       setState(() {
-        now = picked;
+        initialDate = picked;
+        formattedDate = DateFormat('d MMMM yyyy').format(picked);
+        _selectedIndex = 6;
+        widget.returnDate(picked);
       });
+    }
   }
 
   _onSelected(int index) {
-    setState(() => _selectedIndex = index);
-    print(index);
+    setState(() {
+      _selectedIndex = index;
+      formattedDate = DateFormat('d MMMM yyyy')
+          .format(
+            DateTime.now().add(
+              Duration(
+                days: _selectedIndex,
+              ),
+            ),
+          )
+          .toString();
+    });
     widget.returnDate(
       DateTime.now().add(
         Duration(
@@ -56,13 +71,7 @@ class _DatePickerState extends State<DatePicker> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Select date (${DateFormat('d MMMM yyyy').format(
-                  DateTime.now().add(
-                    Duration(
-                      days: _selectedIndex,
-                    ),
-                  ),
-                ).toString()})',
+            'Select date (' + formattedDate + ')',
             style: TextStyle(
               fontSize: 16.0,
             ),
@@ -74,7 +83,7 @@ class _DatePickerState extends State<DatePicker> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               selectedDateWithText(today, 'Today', 56.0),
-              selectedDateWithText(today + 1, 'Tomorrow', 72.0),
+              selectedDateWithText(today + 1, 'Tomorrow', 80.0),
               selectedDate(today + 2),
               selectedDate(today + 3),
               selectedDate(today + 4),
@@ -85,25 +94,15 @@ class _DatePickerState extends State<DatePicker> {
                       : Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: InkWell(
-                  onTap: () => _selectDate(context),
+                child: GestureDetector(
+                  onTap: () => calendar(context),
                   child: Icon(
-                    Icons.calendar_today,
+//                    Icons.calendar_today,
+                    Icons.more_horiz,
                     size: 24.0,
                   ),
                 ),
               )
-//              Container(
-//                padding: const EdgeInsets.all(0.0),
-//                child: IconButton(
-//                  padding: EdgeInsets.all(0.0),
-//                  icon: Icon(
-//                    Icons.calendar_today,
-//                    size: 24.0,
-//                  ),
-//                  onPressed: () => _selectDate(context),
-//                ),
-//              )
             ],
           ),
         ],
@@ -124,7 +123,14 @@ class _DatePickerState extends State<DatePicker> {
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Center(
-          child: Text(text),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontWeight: _selectedIndex != null && _selectedIndex == index
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+            ),
+          ),
         ),
       ),
     );
@@ -147,6 +153,11 @@ class _DatePickerState extends State<DatePicker> {
             DateFormat('d')
                 .format(DateTime.now().add(Duration(days: index)))
                 .toString(),
+            style: TextStyle(
+              fontWeight: _selectedIndex != null && _selectedIndex == index
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+            ),
           ),
         ),
       ),
