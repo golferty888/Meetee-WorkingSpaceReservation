@@ -136,7 +136,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Reserve seat',
+          'Reserve ${widget.facilityType.typeName.toLowerCase()}',
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -150,9 +150,9 @@ class _CustomerDemandState extends State<CustomerDemand> {
               child: Container(
 //              color: Colors.black,
                 height: 88.0,
-                width: 272.0,
+                width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16.0),
+                  borderRadius: BorderRadius.circular(8.0),
                   color: Color(
                     widget.facilityType.secondaryColorCode,
                   ),
@@ -216,22 +216,23 @@ class _CustomerDemandState extends State<CustomerDemand> {
                     ? 0
                     : facilitiesList.facilities.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8.0),
-                    padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
-                    decoration: BoxDecoration(
-                      color:
-                          facilitiesList.facilities[index].status == 'available'
-                              ? Color(widget.facilityType.secondaryColorCode)
-                              : Colors.grey,
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                    child: Text(
-                      facilitiesList.facilities[index] == null
-                          ? 'null'
-                          : facilitiesList.facilities[index].code.toString(),
-                    ),
-                  );
+                  if (facilitiesList.facilities[index].status == 'available') {
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
+                      decoration: BoxDecoration(
+                        color: Color(widget.facilityType.secondaryColorCode),
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      child: Text(
+                        facilitiesList.facilities[index] == null
+                            ? 'null'
+                            : facilitiesList.facilities[index].code.toString(),
+                      ),
+                    );
+                  } else {
+                    return null;
+                  }
                 },
               ),
             ),
