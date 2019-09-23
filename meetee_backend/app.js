@@ -54,7 +54,7 @@ app.use("*", function (request, response) {
   response.status(404).send('404, Not found');
 });
 
-const connectionString = process.env.POSTGRES_CONNECTION_URL
+const connectionString = process.env.POSTGRES_CONNECTION_PROD_URL
 const pgClient = new pg.Client(connectionString);
 
 pgClient.connect();
