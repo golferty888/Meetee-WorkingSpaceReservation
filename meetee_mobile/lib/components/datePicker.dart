@@ -14,25 +14,21 @@ class DatePicker extends StatefulWidget {
 
 class _DatePickerState extends State<DatePicker> {
   int today = 0;
+  bool timeOut = false;
   int _selectedIndex = 0;
   DateTime initialDate = DateTime.now().add(Duration(days: 5));
   String formattedDate = DateFormat('d MMMM yyyy').format(DateTime.now());
 
-  Future<Null> calendar(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: initialDate,
-        firstDate: DateTime.now().add(Duration(days: 4)),
-//        initialDate: initialDate,
-//        firstDate: DateTime.now().add(Duration(days: -1)),
-        lastDate: DateTime(2022));
-    if (picked != null) {
-      setState(() {
-        initialDate = picked;
-        formattedDate = DateFormat('d MMMM yyyy').format(picked);
-        _selectedIndex = 6;
-        widget.returnDate(picked);
-      });
+  @override
+  void initState() {
+    checkTimeOut();
+    super.initState();
+  }
+
+  checkTimeOut() {
+    if (TimeOfDay.now().hour >= 21) {
+      _selectedIndex = 1;
+      timeOut = true;
     }
   }
 
@@ -58,54 +54,15 @@ class _DatePickerState extends State<DatePicker> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget disabledButton(text, width) {
     return Container(
-      margin: EdgeInsets.fromLTRB(
-        24.0,
-        8.0,
-        24.0,
-        24.0,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Select date (' + formattedDate + ')',
-            style: TextStyle(
-              fontSize: 16.0,
-            ),
-          ),
-          SizedBox(
-            height: 8.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              selectedDateWithText(today, 'Today', 56.0),
-              selectedDateWithText(today + 1, 'Tomorrow', 80.0),
-              selectedDate(today + 2),
-              selectedDate(today + 3),
-              selectedDate(today + 4),
-              Container(
-                decoration: BoxDecoration(
-                  color: _selectedIndex != null && _selectedIndex == 6
-                      ? Color(widget.primaryColor)
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: GestureDetector(
-                  onTap: () => calendar(context),
-                  child: Icon(
-//                    Icons.calendar_today,
-                    Icons.more_horiz,
-                    size: 24.0,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ],
+      height: 24.0,
+      width: width,
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(color: Colors.grey),
+        ),
       ),
     );
   }
@@ -141,7 +98,7 @@ class _DatePickerState extends State<DatePicker> {
       onTap: () => _onSelected(index),
       child: Container(
         height: 24.0,
-        width: 32.0,
+        width: 34.0,
         decoration: BoxDecoration(
           color: _selectedIndex != null && _selectedIndex == index
               ? Color(widget.primaryColor)
@@ -160,6 +117,79 @@ class _DatePickerState extends State<DatePicker> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Future<Null> calendar(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: DateTime.now().add(Duration(days: 4)),
+//        initialDate: initialDate,
+//        firstDate: DateTime.now().add(Duration(days: -1)),
+        lastDate: DateTime(2022));
+    if (picked != null) {
+      setState(() {
+        initialDate = picked;
+        formattedDate = DateFormat('d MMMM yyyy').format(picked);
+        _selectedIndex = 6;
+        widget.returnDate(picked);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(
+        24.0,
+        8.0,
+        24.0,
+        24.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Select date (' + formattedDate + ')',
+            style: TextStyle(
+              fontSize: 16.0,
+            ),
+          ),
+          SizedBox(
+            height: 16.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              timeOut == false
+                  ? selectedDateWithText(today, 'Today', 56.0)
+                  : disabledButton('Today', 56.0),
+              selectedDateWithText(today + 1, 'Tomorrow', 80.0),
+              selectedDate(today + 2),
+              selectedDate(today + 3),
+              selectedDate(today + 4),
+              Container(
+                width: 34.0,
+                decoration: BoxDecoration(
+                  color: _selectedIndex != null && _selectedIndex == 6
+                      ? Color(widget.primaryColor)
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: GestureDetector(
+                  onTap: () => calendar(context),
+                  child: Icon(
+//                    Icons.calendar_today,
+                    Icons.more_horiz,
+                    size: 24.0,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }
