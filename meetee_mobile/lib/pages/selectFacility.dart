@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:meetee_mobile/components/scaleRoute.dart';
 
-import 'package:meetee_mobile/module/facilityType.dart';
+import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/customerDemand.dart';
 import 'package:meetee_mobile/pages/facilityDetail.dart';
 
@@ -15,14 +15,16 @@ class SelectFacilityType extends StatefulWidget {
 class _SelectFacilityTypeState extends State<SelectFacilityType> {
   List<FacilityType> facilityTypeList = [
     FacilityType(
+      '2',
       'Chill\nRelax\nPrivate',
       'images/person.svg',
       'Single seat',
-      Colors.yellow[800],
+      Colors.yellow[900],
       0xFFFAD74E,
       '',
     ),
     FacilityType(
+      '1',
       'Mate\nTeamwork\nCollaboration',
       'images/meeting.svg',
       'Meeting room',
@@ -31,6 +33,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       '',
     ),
     FacilityType(
+      '3',
       'Strategy\nDiscussion\nCooperation',
       'images/strategy.svg',
       'Playground room',

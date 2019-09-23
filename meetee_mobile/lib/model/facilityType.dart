@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FacilityType {
+  String classId;
   String words;
   String imagePath;
   String typeName;
@@ -9,6 +10,7 @@ class FacilityType {
   String price;
 
   FacilityType(
+    this.classId,
     this.words,
     this.imagePath,
     this.typeName,

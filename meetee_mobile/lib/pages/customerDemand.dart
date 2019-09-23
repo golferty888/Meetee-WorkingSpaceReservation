@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import 'package:meetee_mobile/model/facilityType.dart';
-import 'package:meetee_mobile/model/reservation.dart';
+import 'package:meetee_mobile/model/facility.dart';
 
 import 'package:meetee_mobile/components/datePicker.dart';
 import 'package:meetee_mobile/components/timePicker.dart';
@@ -15,20 +15,76 @@ class CustomerDemand extends StatefulWidget {
   final FacilityType facilityType;
   final int index;
 
-  CustomerDemand({Key key, @required this.facilityType, this.index})
-      : super(key: key);
+  CustomerDemand({
+    Key key,
+    @required this.facilityType,
+    this.index,
+  }) : super(key: key);
   @override
   _CustomerDemandState createState() => _CustomerDemandState();
 }
 
 class _CustomerDemandState extends State<CustomerDemand> {
-  String unavailableSeatURL = 'http://18.139.12.132:9000/check/unavailable/all';
+  String getSeatByClassURL = 'http://18.139.12.132:9000/facility/class/status';
+
+  @override
+  void initState() {
+    print('init');
+    getSeatByClass();
+    super.initState();
+  }
+
+  FacilitiesList facilitiesList;
+
+  Future<dynamic> getSeatByClass() async {
+    final response = await http.post(
+      'http://18.139.12.132:9000/facility/class/status',
+      body: {
+        "classId": widget.facilityType.classId,
+        "startDate": startDate,
+        "startTime": startTime,
+        "endTime": endTime,
+        "endDate": startDate,
+      },
+//      body: {
+//        "classId": '1',
+//        "startDate": "November 11, 2019",
+//        "startTime": "08:00:00",
+//        "endDate": "November 11, 2019",
+//        "endTime": "10:00:00"
+//      },
+    );
+    print('{\n'
+        'classId: ${widget.facilityType.classId},\n'
+        'startDate: $startDate,\n'
+        'endDate: $startDate,\n'
+        'startTime: $startTime,\n'
+        'endTime: $endTime,\n'
+        '}');
+    if (response.statusCode == 200) {
+      print('200');
+      final jsonData = json.decode(response.body);
+      setState(() {
+        facilitiesList = FacilitiesList.fromJson(jsonData);
+      });
+      print(jsonData);
+//      print(facilitiesList.facilities);
+//      print(facilitiesList.facilities.length);
+    } else {
+      print('400');
+      throw Exception('Failed to load post');
+    }
+  }
 
   String startDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
-  String startTime = DateFormat("HH:00:00").format(DateTime.now());
-  String endTime = DateFormat("HH:00:00").format(
+  String startTime = DateFormat("HH:00:00").format(
     DateTime.now().add(
       Duration(hours: 1),
+    ),
+  );
+  String endTime = DateFormat("HH:00:00").format(
+    DateTime.now().add(
+      Duration(hours: 2),
     ),
   );
 
@@ -37,6 +93,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
     setState(() {
       this.startDate = formatted;
     });
+    getSeatByClass();
   }
 
   _updateStartTime(int startTime) {
@@ -48,6 +105,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
     setState(() {
       this.startTime = formatted;
     });
+    getSeatByClass();
   }
 
   _updateEndTime(int endTime) {
@@ -59,29 +117,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
     setState(() {
       this.endTime = formatted;
     });
-  }
-
-  Future<dynamic> getAllSeat() async {
-    final response = await http.post(
-      'http://18.139.12.132:9000/check/unavailable/all',
-      body: {
-        "startDate": startDate,
-        "startTime": startTime,
-        "endTime": endTime,
-        "endDate": startDate,
-      },
-//      body: {
-//        "startDate": "November 11, 2019",
-//        "startTime": "08:00:00",
-//        "endTime": "09:00:00",
-//        "endDate": "November 11, 2019"
-//      },
-    );
-    if (response.statusCode == 200) {
-      return print(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load post');
-    }
+    getSeatByClass();
   }
 
   @override
@@ -107,6 +143,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             GestureDetector(
               onTap: () => Navigator.pop(context),
@@ -151,33 +188,79 @@ class _CustomerDemandState extends State<CustomerDemand> {
               returnStartTime: _updateStartTime,
               returnEndTime: _updateEndTime,
             ),
-//            SizedBox(
-//              height: 80.0,
-//            ),
-            Text(
-              startDate.toString(),
-            ),
-            Text(
-              startTime,
-            ),
-            Text(
-              endTime,
-            ),
-            RaisedButton(
-              color: Colors.black,
-              splashColor: Colors.white,
-              elevation: 0.0,
-              highlightElevation: 0.0,
-              child: Text(
-                'Reserve',
-                style: TextStyle(color: Colors.white),
+            Container(
+              margin: EdgeInsets.fromLTRB(
+                24.0,
+                0.0,
+                24.0,
+                16.0,
               ),
-              onPressed: () {
-                getAllSeat();
-              },
+              child: Text(
+                'Select seat',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
             ),
-            SizedBox(),
+            Container(
+              margin: EdgeInsets.fromLTRB(
+                16.0,
+                0.0,
+                0.0,
+                0.0,
+              ),
+              height: 32.0,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: facilitiesList == null
+                    ? 0
+                    : facilitiesList.facilities.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
+                    decoration: BoxDecoration(
+                      color:
+                          facilitiesList.facilities[index].status == 'available'
+                              ? Color(widget.facilityType.secondaryColorCode)
+                              : Colors.grey,
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Text(
+                      facilitiesList.facilities[index] == null
+                          ? 'null'
+                          : facilitiesList.facilities[index].code.toString(),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 16.0),
+          height: 48.0,
+          decoration: BoxDecoration(
+            color: Color(widget.facilityType.secondaryColorCode),
+            image: DecorationImage(
+              image: AssetImage(
+                'images/noise.png',
+              ),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: InkWell(
+            child: Text(
+              'Reserve',
+//              style: TextStyle(color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            onTap: () {
+              getSeatByClass();
+            },
+          ),
         ),
       ),
     );
