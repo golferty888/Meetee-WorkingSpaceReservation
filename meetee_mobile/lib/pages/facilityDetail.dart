@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 
-class facilityDetail extends StatefulWidget {
+class FacilityDetail extends StatefulWidget {
   @override
-  _facilityDetailState createState() => _facilityDetailState();
+  FacilityDetailState createState() => FacilityDetailState();
 }
 
-class _facilityDetailState extends State<facilityDetail> {
+class FacilityDetailState extends State<FacilityDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Facility detail'),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Facility detail',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
     );
   }
