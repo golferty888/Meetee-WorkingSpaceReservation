@@ -2,7 +2,7 @@
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/gulfz/Developer/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/gulfz/Desktop/University/Senior_Project/Meetee-WorkingSpaceReservation/meetee_mobile"
-export "FLUTTER_TARGET=/Users/gulfz/Desktop/University/Senior_Project/Meetee-WorkingSpaceReservation/meetee_mobile/lib/pages/main.dart"
+export "FLUTTER_TARGET=/Users/gulfz/Desktop/University/Senior_Project/Meetee-WorkingSpaceReservation/meetee_mobile/lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "FLUTTER_FRAMEWORK_DIR=/Users/gulfz/Developer/flutter/bin/cache/artifacts/engine/ios"
