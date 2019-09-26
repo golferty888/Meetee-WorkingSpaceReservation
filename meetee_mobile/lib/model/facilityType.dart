@@ -7,8 +7,7 @@ class FacilityType {
   String typeName;
   Color primaryColor;
   int secondaryColorCode;
-  int numberOfSize;
-  List sizes;
+  Map categories;
 
   FacilityType(
     this.classId,
@@ -17,7 +16,6 @@ class FacilityType {
     this.typeName,
     this.primaryColor,
     this.secondaryColorCode,
-    this.numberOfSize,
-    this.sizes,
+    this.categories,
   );
 }

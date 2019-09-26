@@ -21,8 +21,10 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       'Single seat',
       Colors.yellow[900],
       0xFFFAD74E,
-      2,
-      ['Single seat', 'Sofa'],
+      {
+        'Single seat': '4',
+        'Sofa': '5',
+      },
     ),
     FacilityType(
       '1',
@@ -31,8 +33,11 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       'Meeting room',
       Colors.red[800],
       0xFFFF8989,
-      3,
-      ['S', 'M', 'L'],
+      {
+        'S': '1',
+        'M': '2',
+        'L': '3',
+      },
     ),
     FacilityType(
       '3',
@@ -41,8 +46,9 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       'Seminar room',
       Colors.deepPurple,
       0xFF92D2FC,
-      1,
-      ['Grand seminar room'],
+      {
+        'Grand seminar room': '6',
+      },
     ),
   ];
 

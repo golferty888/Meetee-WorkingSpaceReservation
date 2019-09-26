@@ -1,9 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'dart:convert';
 
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/model/facility.dart';
@@ -25,7 +25,7 @@ class CustomerDemand extends StatefulWidget {
 }
 
 class _CustomerDemandState extends State<CustomerDemand> {
-  String getSeatByClassURL = 'http://18.139.12.132:9000/facility/class/status';
+  String getSeatByCateURL = 'http://18.139.12.132:9000/facility/cate/status';
 
   @override
   void initState() {
@@ -36,11 +36,13 @@ class _CustomerDemandState extends State<CustomerDemand> {
 
   FacilitiesList facilitiesList;
 
-  Future<dynamic> getSeatByClass() async {
+  Future<dynamic> getSeatByCategory() async {
+    print('getSeatByClass');
+    print(this._selectedCateId);
     final response = await http.post(
-      'http://18.139.12.132:9000/facility/class/status',
+      getSeatByCateURL,
       body: {
-        "classId": widget.facilityType.classId,
+        "cateId": _selectedCateId,
         "startDate": startDate,
         "startTime": startTime,
         "endTime": endTime,
@@ -84,7 +86,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
     setState(() {
       this.startDate = formatted;
     });
-    getSeatByClass();
+    getSeatByCategory();
   }
 
   _updateStartTime(int startTime) {
@@ -96,7 +98,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
     setState(() {
       this.startTime = formatted;
     });
-    getSeatByClass();
+    getSeatByCategory();
   }
 
   _updateEndTime(int endTime) {
@@ -108,7 +110,156 @@ class _CustomerDemandState extends State<CustomerDemand> {
     setState(() {
       this.endTime = formatted;
     });
-    getSeatByClass();
+    getSeatByCategory();
+  }
+
+  List categoryNameList;
+  List categoryIdList;
+  String _selectedCateId;
+  String _selectedCateName;
+
+  List<Widget> _buildCateList() {
+    List<Widget> cateBox = [];
+
+    widget.facilityType.categories.forEach((cateName, cateId) {
+      cateBox.add(
+        _buildCate(cateName),
+      );
+    });
+
+    return cateBox;
+  }
+
+  _onSelectedCate(String selectedCate) {
+    setState(() {
+      this._selectedCateName = selectedCate;
+      this._selectedCateId =
+          widget.facilityType.categories[selectedCate].toString();
+      getSeatByCategory();
+    });
+    print('cateName: ' + this._selectedCateName);
+    print('cateId: ' + this._selectedCateId);
+  }
+
+  Widget _buildCate(String cate) {
+    return GestureDetector(
+      onTap: () => _onSelectedCate(cate),
+      child: Container(
+        padding: EdgeInsets.all(8.0),
+        margin: EdgeInsets.only(
+          right: 16.0,
+        ),
+        decoration: BoxDecoration(
+          color: _selectedCateName != null && _selectedCateName == cate
+              ? Color(widget.facilityType.secondaryColorCode)
+              : Colors.grey[300],
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: 11),
+          child: Text(
+            cate.toString(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: _selectedCateName == cate
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  int _selectedFacility = 0;
+
+  _onSelectedFac(int index) {
+    setState(() {
+      this._selectedFacility = index;
+    });
+    print(this._selectedFacility);
+  }
+
+  Widget _buildSelectedFacility(selectedFacility) {
+//    if (widget.facilityType
+//            .categories[facilitiesList.facilities[index].cateId - 1] ==
+//        selectedCate) {
+    return GestureDetector(
+      onTap: () => _onSelectedFac(selectedFacility),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.fromLTRB(
+          16.0,
+          8.0,
+          16.0,
+          8.0,
+        ),
+        decoration: BoxDecoration(
+          color:
+              _selectedFacility != null && _selectedFacility == selectedFacility
+                  ? Color(widget.facilityType.secondaryColorCode)
+                  : Colors.grey[300],
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        child: Text(
+          facilitiesList.facilities[selectedFacility] == null
+              ? 'null'
+              : facilitiesList.facilities[selectedFacility].code.toString(),
+          style: TextStyle(
+            fontWeight: _selectedFacility == selectedFacility
+                ? FontWeight.bold
+                : FontWeight.normal,
+          ),
+        ),
+      ),
+    );
+//    } else {
+//      return null;
+//    }
+  }
+
+  double _bottomButtonHeight = 48.0;
+  bool _isSubmit = false;
+
+  onSubmit() {
+    setState(() {
+      _bottomButtonHeight =
+          MediaQuery.of(context).size.height - AppBar().preferredSize.height;
+      _isSubmit = true;
+    });
+  }
+
+  _buildSubmit() {
+    if (_isSubmit) {
+      return Center(
+        child: Column(
+          children: <Widget>[
+            Center(
+              child: Text('eieieieeiie'),
+            ),
+            Center(
+              child: Text('eieieieeiie'),
+            ),
+            Center(
+              child: Text('eieieieeiie'),
+            ),
+            Center(
+              child: Text('eieieieeiie'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        width: MediaQuery.of(context).size.width,
+        height: 48,
+        child: Text(
+          'Reserve',
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
   }
 
   @override
@@ -131,127 +282,139 @@ class _CustomerDemandState extends State<CustomerDemand> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: <Widget>[
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Container(
-                height: 88.0,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: Color(
-                    widget.facilityType.secondaryColorCode,
-                  ),
-                  image: DecorationImage(
-                    image: AssetImage(
-                      'images/noise.png',
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                DatePicker(
+                  primaryColor: widget.facilityType.secondaryColorCode,
+                  returnDate: _updateStartDate,
+                ),
+                TimePicker(
+                  primaryColor: widget.facilityType.primaryColor,
+                  secondaryColor: widget.facilityType.secondaryColorCode,
+                  returnStartTime: _updateStartTime,
+                  returnEndTime: _updateEndTime,
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 16.0),
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(
+                      24.0,
+                      0.0,
+                      24.0,
+                      0.0,
                     ),
-                    fit: BoxFit.fill,
+//                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      'Select type',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
                 ),
-                margin: EdgeInsets.fromLTRB(
-                  24.0,
-                  0.0,
-                  24.0,
-                  16.0,
-                ),
-                padding: EdgeInsets.all(16.0),
-                child: Hero(
-                  tag: 'facilityType' + widget.index.toString(),
-                  child: SvgPicture.asset(
-                    widget.facilityType.imagePath,
+                Container(
+                  margin: EdgeInsets.only(bottom: 16.0),
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(
+                      24.0,
+                      0.0,
+                      24.0,
+                      16.0,
+                    ),
+//                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      children: _buildCateList(),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            DatePicker(
-              primaryColor: widget.facilityType.secondaryColorCode,
-              returnDate: _updateStartDate,
-            ),
-            TimePicker(
-              primaryColor: widget.facilityType.primaryColor,
-              secondaryColor: widget.facilityType.secondaryColorCode,
-              returnStartTime: _updateStartTime,
-              returnEndTime: _updateEndTime,
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(
-                24.0,
-                0.0,
-                24.0,
-                16.0,
-              ),
-              child: Text(
-                'Select seat',
-                style: TextStyle(
-                  fontSize: 16.0,
+                Container(
+                  margin: EdgeInsets.fromLTRB(
+                    24.0,
+                    0.0,
+                    24.0,
+                    16.0,
+                  ),
+                  child: Text(
+                    'Select seat',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
                 ),
-              ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(
+                    16.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                  ),
+                  height: 32.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: facilitiesList == null
+                        ? 0
+                        : facilitiesList.facilities.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (facilitiesList.facilities[index].status ==
+                          'available') {
+                        return _buildSelectedFacility(index);
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(
-                16.0,
-                0.0,
-                0.0,
-                0.0,
-              ),
-              height: 32.0,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: facilitiesList == null
-                    ? 0
-                    : facilitiesList.facilities.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (facilitiesList.facilities[index].status == 'available') {
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8.0),
-                      padding: EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
-                      decoration: BoxDecoration(
-                        color: Color(widget.facilityType.secondaryColorCode),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      child: Text(
-                        facilitiesList.facilities[index] == null
-                            ? 'null'
-                            : facilitiesList.facilities[index].code.toString(),
-                      ),
-                    );
-                  } else {
-                    return null;
-                  }
-                },
+            Positioned(
+              bottom: 0.0,
+              right: 0.0,
+              left: 0.0,
+              child: AnimatedContainer(
+                height: _bottomButtonHeight,
+                duration: Duration(milliseconds: 600),
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(0.0),
+                  ),
+                  color: Color(widget.facilityType.secondaryColorCode),
+                  onPressed: () {
+                    onSubmit();
+                  },
+                  child: _buildSubmit(),
+                ),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 16.0),
-          height: 48.0,
-          decoration: BoxDecoration(
-            color: Color(widget.facilityType.secondaryColorCode),
-            image: DecorationImage(
-              image: AssetImage(
-                'images/noise.png',
-              ),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: InkWell(
-            child: Text(
-              'Reserve',
-              textAlign: TextAlign.center,
-            ),
-            onTap: () {
-              getSeatByClass();
-            },
-          ),
-        ),
-      ),
+//      bottomNavigationBar: BottomAppBar(
+//        child: Container(
+//          padding: EdgeInsets.symmetric(vertical: 16.0),
+//          height: 48.0,
+//          decoration: BoxDecoration(
+//            color: Color(widget.facilityType.secondaryColorCode),
+//            image: DecorationImage(
+//              image: AssetImage(
+//                'images/noise.png',
+//              ),
+//              fit: BoxFit.fill,
+//            ),
+//          ),
+//          child: InkWell(
+//            child: Text(
+//              'Reserve',
+//              textAlign: TextAlign.center,
+//            ),
+//            onTap: () {
+//            },
+//          ),
+//        ),
+//      ),
     );
   }
 }
