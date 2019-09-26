@@ -135,6 +135,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
       this._selectedCateId =
           widget.facilityType.categories[selectedCate].toString();
       getSeatByCategory();
+      _selectedFacility = 0;
     });
     print('cateName: ' + this._selectedCateName);
     print('cateId: ' + this._selectedCateId);
