@@ -12,11 +12,14 @@
     "migrate:rollback": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js",
     "seed:make": "cross-env NODE_ENV=development knex seed:make --knexfile config/knexfile.js",
     "seed:run": "cross-env NODE_ENV=development knex seed:run --knexfile config/knexfile.js",
-    "pgmigration": "node node_modules/db-migrate/bin/db-migrate down && node node_modules/db-migrate/bin/db-migrate up && npm run dev",
+    "pgmd": "cross-env NODE_ENV=production node node_modules/db-migrate/bin/db-migrate down && node node_modules/db-migrate/bin/db-migrate up && npm run dev",
+    "pgmp": "cross-env NODE_ENV=development node node_modules/db-migrate/bin/db-migrate down && node node_modules/db-migrate/bin/db-migrate up && npm start",
+    "pgm": "cross-env POSTGRES_CONNECTION_DEV_URL=postgres://meetee_admin:meetee_admin@meeteedb.cnkpi2hqmiv1.ap-southeast-1.rds.amazonaws.com:5432/meetee node node_modules/db-migrate/bin/db-migrate down && node node_modules/db-migrate/bin/db-migrate up",
     "int2": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js && knex migrate:latest --knexfile config/knexfile.js",
     "int3": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js && knex migrate:latest --knexfile config/knexfile.js && knex seed:run --knexfile config/knexfile.js && npm run pgmigration",
     "prodint3": "cross-env NODE_ENV=production knex migrate:rollback --knexfile config/knexfile.js && cross-env NODE_ENV=production knex migrate:latest --knexfile config/knexfile.js && cross-env NODE_ENV=production knex seed:run --knexfile config/knexfile.js && npm run pgmigration && npm run dev",
-    "dbmax": "npm run int3 && npm run pgmigration"
+    "dbmax": "npm run int3 && npm run pgmigration",
+    "proddbmax": "npm run prodint3 && npm run pgmigration"
   },
   "author": "Tanapat Panakit and Pronsawan",
   "license": "ISC",
