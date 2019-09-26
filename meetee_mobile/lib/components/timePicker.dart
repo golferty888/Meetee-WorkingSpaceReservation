@@ -18,10 +18,10 @@ class TimePicker extends StatefulWidget {
 }
 
 class _TimePickerState extends State<TimePicker> {
-  static double hourNow = TimeOfDay.now().hour.toDouble();
+  double hourNow = TimeOfDay.now().hour.toDouble();
   RangeValues _values = RangeValues(
-    hourNow + 1,
-    hourNow + 2,
+    TimeOfDay.now().hour.toDouble() + 1,
+    TimeOfDay.now().hour.toDouble() + 2,
   );
 
   @override
