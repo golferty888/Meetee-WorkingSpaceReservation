@@ -15,6 +15,7 @@ module.exports = {
             charset: 'utf8',
             timezone: '+07'
         },
+        pg_connection: 'postgres://meetee_admin:meetee_admin@127.0.0.1:5432/meeteedb',
         pool: {
             afterCreate: function (connection, callback) {
                 connection.query(`SET timezone = 'UTC-07';`, function (err) {
@@ -33,6 +34,7 @@ module.exports = {
             database: process.env.DB_NAME,
             timezone: '+07'
         },
+        pg_connection: `postgres://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
         pool: {
             afterCreate: function (connection, callback) {
                 connection.query(`SET timezone = 'UTC-07';`, function (err) {
