@@ -164,6 +164,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
               fontWeight: _selectedCateName == cate
                   ? FontWeight.bold
                   : FontWeight.normal,
+              fontSize: 16.0,
             ),
           ),
         ),
@@ -209,6 +210,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
             fontWeight: _selectedFacility == selectedFacility
                 ? FontWeight.bold
                 : FontWeight.normal,
+            fontSize: 16.0,
           ),
         ),
       ),
@@ -311,7 +313,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
                     child: Text(
                       'Select type',
                       style: TextStyle(
-                        fontSize: 16.0,
+                        fontSize: 20.0,
                       ),
                     ),
                   ),
@@ -339,9 +341,9 @@ class _CustomerDemandState extends State<CustomerDemand> {
                     16.0,
                   ),
                   child: Text(
-                    'Select seat',
+                    'Select facility',
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 20.0,
                     ),
                   ),
                 ),

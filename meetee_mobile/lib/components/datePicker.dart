@@ -61,7 +61,10 @@ class _DatePickerState extends State<DatePicker> {
       child: Center(
         child: Text(
           text,
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 16.0,
+          ),
         ),
       ),
     );
@@ -86,6 +89,7 @@ class _DatePickerState extends State<DatePicker> {
               fontWeight: _selectedIndex != null && _selectedIndex == index
                   ? FontWeight.bold
                   : FontWeight.normal,
+              fontSize: 16.0,
             ),
           ),
         ),
@@ -114,6 +118,7 @@ class _DatePickerState extends State<DatePicker> {
               fontWeight: _selectedIndex != null && _selectedIndex == index
                   ? FontWeight.bold
                   : FontWeight.normal,
+              fontSize: 16.0,
             ),
           ),
         ),
@@ -152,7 +157,7 @@ class _DatePickerState extends State<DatePicker> {
           Text(
             'Select date (' + formattedDate + ')',
             style: TextStyle(
-              fontSize: 16.0,
+              fontSize: 20.0,
             ),
           ),
           SizedBox(
@@ -162,9 +167,9 @@ class _DatePickerState extends State<DatePicker> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               timeOut == false
-                  ? selectedDateWithText(today, 'Today', 56.0)
+                  ? selectedDateWithText(today, 'Today', 64.0)
                   : disabledButton('Today', 56.0),
-              selectedDateWithText(today + 1, 'Tomorrow', 80.0),
+              selectedDateWithText(today + 1, 'Tomorrow', 88.0),
               selectedDate(today + 2),
               selectedDate(today + 3),
               selectedDate(today + 4),

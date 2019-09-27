@@ -50,7 +50,7 @@ class _TimePickerState extends State<TimePicker> {
           Text(
             'Select time (${_values.start.round()}.00 - ${_values.end.round()}.00)',
             style: TextStyle(
-              fontSize: 16.0,
+              fontSize: 20.0,
             ),
           ),
           RangeSlider(
