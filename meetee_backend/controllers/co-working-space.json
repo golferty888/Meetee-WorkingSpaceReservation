@@ -1,12 +1,12 @@
 {
     "amount": {
-        "ms": 3,
-        "mm": 3,
+        "ms": 4,
+        "mm": 4,
         "ml": 1,
         "sm": 1,
-        "ns_center": 10,
-        "ns_bar": 10,
-        "sf_single": 6,
-        "sf_twin": 3
+        "ch_single": 10,
+        "ch_bar_table": 9,
+        "sf_single": 5,
+        "sf_twin": 4
     }
 }
