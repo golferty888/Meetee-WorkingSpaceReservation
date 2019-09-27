@@ -107,13 +107,12 @@ exports.checkStatusEachFacilityClass = (request, response) => {
 
 exports.checkStatusAllFacilities = (request, response) => {
     const data = request.body
-    console.log("--> Request facility/all/statas: " + JSON.stringify(data))
+    console.log("--> Request facility/all/status: " + JSON.stringify(data))
     const startDate = data.startDate;
     const startTime = data.startDate + ' ' + data.startTime
     const endTime = data.endDate + ' ' + data.endTime
     const status = 'Booked'
     const user_id = data.userId
-    console.log("checkStatusAllFac: " + startTime + ' ' + endTime)
 
     const allFacilityQuery =
         knex('meeteenew.facility as fac')
@@ -151,7 +150,6 @@ exports.checkStatusAllFacilities = (request, response) => {
 }
 
 function assignStatusFacList(facList) {
-    console.log("FacList Length: " + facList.length)
     for (i = 0; i < facList.length; i++) {
         facList[i] = Object.assign(facList[i], {
             status: "available"
@@ -160,7 +158,6 @@ function assignStatusFacList(facList) {
 }
 
 function updateStatusFacList(facAll, facUna) {
-    console.log("UnavailableList: " + JSON.stringify(facUna))
     for (i = 0; i < facUna.length; i++) {
         for (j = 0; j < facAll.length; j++) {
             if (facUna[i].code == facAll[j].code) {
