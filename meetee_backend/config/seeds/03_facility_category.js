@@ -11,7 +11,7 @@ exports.seed = function (knex, Promise) {
           id: 1,
           name: 'Meeting Room S',
           code: 'MS',
-          capacity: '4',
+          capacity: 4,
           price: 120,
           facility_class_id: 1
         },
@@ -19,7 +19,7 @@ exports.seed = function (knex, Promise) {
           id: 2,
           name: 'Meeting Room M',
           code: 'MM',
-          capacity: '8',
+          capacity: 8,
           price: 250,
           facility_class_id: 1
         },
@@ -27,35 +27,50 @@ exports.seed = function (knex, Promise) {
           id: 3,
           name: 'Meeting Room L',
           code: 'ML',
-          capacity: '12',
+          capacity: 12,
           price: 400,
           facility_class_id: 1
         },
         {
           id: 4,
-          name: 'Normal Seat',
+          name: 'Single Chair',
           code: 'NS',
-          capacity: '1',
+          capacity: 1,
           price: 30,
           facility_class_id: 2
         },
         {
           id: 5,
-          name: 'Sofa',
-          code: 'SF',
-          capacity: '2',
-          price: 60,
+          name: 'Bar Table',
+          code: 'NS',
+          capacity: 1,
+          price: 30,
           facility_class_id: 2
         },
         {
           id: 6,
+          name: 'Single Sofa',
+          code: 'SF',
+          capacity: 1,
+          price: 40,
+          facility_class_id: 2
+        },
+        {
+          id: 7,
+          name: 'Twin Sofa',
+          code: 'SF',
+          capacity: 2,
+          price: 60,
+          facility_class_id: 2
+        },
+        {
+          id: 8,
           name: 'Seminar Room',
           code: 'SM',
-          capacity: '30',
+          capacity: 30,
           price: 950,
           facility_class_id: 3
         }
-
       ]);
     });
 };
