@@ -58,14 +58,14 @@ exports.seed = function (knex, Promise) {
           // code: 'SM-' + i,
           code: i,
           floor: 1,
-          facility_category_id: 6
+          facility_category_id: 8
         })
         runFacId++;
         i++;
       }
-      // Normalseat Single
+      // Single Chair
       i = 1;
-      while (i <= data.amount.ns_center) {
+      while (i <= data.amount.ch_single) {
         facilityList.push({
           id: runFacId,
           // code: 'NSC-' + i,
@@ -76,15 +76,15 @@ exports.seed = function (knex, Promise) {
         runFacId++;
         i++;
       }
-      // Normalseat Longbar
+      // Chair Bar Table
       i = 1;
-      while (i <= data.amount.ns_bar) {
+      while (i <= data.amount.ch_bar_table) {
         facilityList.push({
           id: runFacId,
           // code: 'NSB-' + i,
           code: i,
           floor: 1,
-          facility_category_id: 4
+          facility_category_id: 5
         })
         runFacId++;
         i++;
@@ -97,7 +97,7 @@ exports.seed = function (knex, Promise) {
           // code: 'SFS-' + i,
           code: i,
           floor: 1,
-          facility_category_id: 5
+          facility_category_id: 6
         })
         runFacId++;
         i++;
@@ -110,7 +110,7 @@ exports.seed = function (knex, Promise) {
           // code: 'SFT-' + i,
           code: i,
           floor: 1,
-          facility_category_id: 5
+          facility_category_id: 7
         })
         runFacId++;
         i++;
