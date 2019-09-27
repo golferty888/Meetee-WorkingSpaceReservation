@@ -16,7 +16,8 @@ exports.seed = function (knex, Promise) {
       while (i <= data.amount.ms) {
         facilityList.push({
           id: runFacId,
-          code: 'MS-' + i,
+          // code: 'MS-' + i,
+          code: i,
           floor: 1,
           facility_category_id: 1
         })
@@ -28,7 +29,8 @@ exports.seed = function (knex, Promise) {
       while (i <= data.amount.mm) {
         facilityList.push({
           id: runFacId,
-          code: 'MM-' + i,
+          // code: 'MM-' + i,
+          code: i,
           floor: 1,
           facility_category_id: 2
         })
@@ -40,7 +42,8 @@ exports.seed = function (knex, Promise) {
       while (i <= data.amount.ml) {
         facilityList.push({
           id: runFacId,
-          code: 'ML-' + i,
+          // code: 'ML-' + i,
+          code: i,
           floor: 1,
           facility_category_id: 3
         })
@@ -52,7 +55,8 @@ exports.seed = function (knex, Promise) {
       while (i <= data.amount.sm) {
         facilityList.push({
           id: runFacId,
-          code: 'SM-' + i,
+          // code: 'SM-' + i,
+          code: i,
           floor: 1,
           facility_category_id: 6
         })
@@ -64,7 +68,8 @@ exports.seed = function (knex, Promise) {
       while (i <= data.amount.ns_center) {
         facilityList.push({
           id: runFacId,
-          code: 'NSC-' + i,
+          // code: 'NSC-' + i,
+          code: i,
           floor: 1,
           facility_category_id: 4
         })
@@ -76,7 +81,8 @@ exports.seed = function (knex, Promise) {
       while (i <= data.amount.ns_bar) {
         facilityList.push({
           id: runFacId,
-          code: 'NSB-' + i,
+          // code: 'NSB-' + i,
+          code: i,
           floor: 1,
           facility_category_id: 4
         })
@@ -88,7 +94,8 @@ exports.seed = function (knex, Promise) {
       while (i <= data.amount.sf_single) {
         facilityList.push({
           id: runFacId,
-          code: 'SFS-' + i,
+          // code: 'SFS-' + i,
+          code: i,
           floor: 1,
           facility_category_id: 5
         })
@@ -100,7 +107,8 @@ exports.seed = function (knex, Promise) {
       while (i <= data.amount.sf_twin) {
         facilityList.push({
           id: runFacId,
-          code: 'SFT-' + i,
+          // code: 'SFT-' + i,
+          code: i,
           floor: 1,
           facility_category_id: 5
         })
