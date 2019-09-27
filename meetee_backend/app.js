@@ -46,12 +46,16 @@ app.use("*", function (request, response) {
 });
 
 const pgConnectionString = require('./config/knexfile')[process.env.NODE_ENV].pg_connection
+// const pgConnectionString = "postgres://meetee_admin:meetee_admin@meeteedb.cnkpi2hqmiv1.ap-southeast-1.rds.amazonaws.com:5432/meetee"
 console.log(pgConnectionString)
-const pgClient = new pg.Client(pgConnectionString);
+const pgClient1 = new pg.Client(pgConnectionString);
+const pgClient2 = new pg.Client(pgConnectionString);
 
-pgClient.connect();
+pgClient1.connect();
+pgClient2.connect();
 
-const query = pgClient.query("LISTEN events")
+const query1 = pgClient1.query("LISTEN events")
+const query2 = pgClient2.query("LISTEN events")
 
 server.listen(PORT, URL, () => {
   console.log(
@@ -59,47 +63,67 @@ server.listen(PORT, URL, () => {
   );
 });
 
-const WebSocket = require('ws')
+const io = require('socket.io')(server);
 
+const WebSocket = require('ws')
 const wss = new WebSocket.Server({
   port: 9001
 })
 
+io.on("connection", (socket) => {
+  console.log("userId: " + socket.id + " connected.")
+  socket.emit("test_connection", "Socket.io: socket is connected.")
+
+  socket.on("disconnect", socket => {
+    console.log("!userId: " + socket.id + " disconnected.")
+  })
+})
+
+// wss.on('connection', ws => {
+//   ws.on('message', message => {
+//     console.log(`Receive message => ${message}`)
+//   })
+//   ws.send('Websocket: websocket is connected.');
+// })
+
+wss.on('open', function open() {
+  console.log('connected');
+  wss.send(Date.now());
+});
+
+pgClient1.on("notification", async (data) => {
+  const payload = data.payload
+  console.log("data.payload1: , " + data.payload)
+  io.sockets.emit("reservation_trigger", "reservation_table is updated.")
+})
+
 wss.on('connection', ws => {
+  ws.send('Websocket: websocket is connected.');
   ws.on('message', message => {
     console.log(`Receive message => ${message}`)
   })
-  ws.send('Congratulation Gulf, You\'re in the Websocket now!.');
-
-  pgClient.on("notification", async (data) => {
+  pgClient2.on("notification", async (data) => {
+    console.log("PG Notification in Websocket!!!!")
     const payload = data.payload
-    ws.send('(Websocket) db_payload: ' + payload)
+    ws.send("Websocket: reservation_table is updated.");
   })
-
 })
 
-pgClient.on('error', function (err, client) {
-  console.log('pg::error', {
-    err: err,
-    client: client
-  });
-});
 
-// const io = require('socket.io')(server);
 
-// io.on("connection", (socket) => {
-//   console.log("userId: " + socket.id + " connected.")
-
-//   socket.on("disconnect", socket => {
-//     console.log("!userId: " + socket.id + " disconnected.")
-//   })
-// })
-
-// pgClient.on("notification", async (data) => {
+// pgClient.on("notification", (data) => {
 //   const payload = data.payload
-//   console.log("data.payload: , " + data.payload)
-//   ws.on('reserv', (ws, payload) => {
-//     ws.send('payload: ' + payload)
+//   console.log("data.payload2: , " + data.payload)
+//   wss.on('connection', ws => {
+//     ws.send("reservation_table is updated.")
 //   })
-//   // io.emit("reservation_trigger", payload)
 // })
+
+
+
+// pgClient.on('error', function (err, client) {
+//   console.log('pg::error', {
+//     err: err,
+//     client: client
+//   });
+// });
