@@ -57,18 +57,19 @@ pgClient2.connect();
 const query1 = pgClient1.query("LISTEN events")
 const query2 = pgClient2.query("LISTEN events")
 
-server.listen(PORT, URL, () => {
-  console.log(
-    `✔ Listening on PORT: ${server.address().port} > ${process.env.NODE_ENV} > ${server.address().address}`
-  );
-});
+
 
 const io = require('socket.io')(server);
 
 const WebSocket = require('ws')
+// const wss = new WebSocket.Server({
+//   port: 9001
+// })
 const wss = new WebSocket.Server({
+  server: server,
   port: 9001
 })
+
 
 io.on("connection", (socket) => {
   console.log("userId: " + socket.id + " connected.")
@@ -109,6 +110,23 @@ wss.on('connection', ws => {
   })
 })
 
+server.listen(PORT, URL, () => {
+  console.log(
+    `✔ Listening on PORT: ${server.address().port} > ${process.env.NODE_ENV} > ${server.address().address}`
+  );
+});
+
+server.on('upgrade', function (req, socket) {
+  if (req.headers['upgrade'] !== 'websocket') {
+    socket.end('HTTP/1.1 400 Bad Request');
+    return;
+  }
+  const acceptKey = req.headers['sec-websocket-key']
+  console.log("acceptKey: " + acceptKey)
+  // Read the websocket key provided by the client: const acceptKey = req.headers['sec-websocket-key']; 
+  // Generate the response value to use in the response: const hash = generateAcceptValue(acceptKey); 
+  // Write the HTTP response into an array of response lines: const responseHeaders = [ 'HTTP/1.1 101 Web Socket Protocol Handshake', 'Upgrade: WebSocket', 'Connection: Upgrade', `Sec-WebSocket-Accept: ${hash}` ]; // Write the response back to the client socket, being sure to append two // additional newlines so that the browser recognises the end of the response // header and doesn't continue to wait for more header data: socket.write(responseHeaders.join('\r\n') + '\r\n\r\n');
+});
 
 
 // pgClient.on("notification", (data) => {
