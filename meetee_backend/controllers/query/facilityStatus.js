@@ -12,7 +12,7 @@ exports.checkStatusEachFacilityCategory = (request, response) => {
 
     const facilityListInCategory =
         knex('meeteenew.facility as fac')
-        .select('fac.id as facId', 'fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as cateId')
+        .select('fac.id as facId', 'fac.code as code', 'fac.floor as floor', 'cate.id as cateId', 'cate.name as cateName')
         .join('meeteenew.facility_category as cate', 'fac.facility_category_id', '=', 'cate.id')
         .where('cate.id', '=', cateId)
         .orderBy('facId')
@@ -24,7 +24,7 @@ exports.checkStatusEachFacilityCategory = (request, response) => {
     const unavailableQuery =
         knex('meeteenew.reservation as resv')
         .distinct('resv.facility_id as facId')
-        .select('fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as cateId')
+        .select('fac.code as code', 'fac.floor as floor', 'cate.id as cateId', 'cate.name as cateName')
         .join('meeteenew.facility as fac', 'resv.facility_id', '=', 'fac.id')
         .join('meeteenew.facility_category as cate', 'fac.facility_category_id', '=', 'cate.id')
         .where('cate.id', '=', cateId)
@@ -66,7 +66,7 @@ exports.checkStatusEachFacilityClass = (request, response) => {
 
     const facilityInClassQuery =
         knex('meeteenew.facility as fac')
-        .select('fac.id as facId', 'fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as cateId')
+        .select('fac.id as facId', 'fac.code as code', 'fac.floor as floor', 'cate.id as cateId', 'cate.name as cateName')
         .join('meeteenew.facility_category as cate', 'fac.facility_category_id', '=', 'cate.id')
         .join('meeteenew.facility_class as class', 'cate.facility_class_id', '=', 'class.id')
         .where('class.id', '=', classId)
@@ -75,7 +75,7 @@ exports.checkStatusEachFacilityClass = (request, response) => {
     const unavailableQuery =
         knex('meeteenew.reservation as resv')
         .distinct('resv.facility_id as facId')
-        .select('fac.code as code', 'fac.floor as floor', 'fac.facility_category_id as cateId')
+        .select('fac.code as code', 'fac.floor as floor', 'cate.id as cateId', 'cate.name as cateName')
         .join('meeteenew.facility as fac', 'resv.facility_id', '=', 'fac.id')
         .join('meeteenew.facility_category as cate', 'fac.facility_category_id', '=', 'cate.id')
         .join('meeteenew.facility_class as class', 'cate.facility_class_id', '=', 'class.id')
