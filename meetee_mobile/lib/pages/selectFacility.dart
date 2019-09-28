@@ -22,8 +22,26 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       Colors.yellow[900],
       0xFFFAD74E,
       {
-        'Single seat': '4',
-        'Sofa': '5',
+        'Single chair': {
+          'cateId': '4',
+          'capacity': 1,
+          'price': 30,
+        },
+        'Bar chair': {
+          'cateId': '5',
+          'capacity': 1,
+          'price': 30,
+        },
+        'Single sofa': {
+          'cateId': '6',
+          'capacity': 1,
+          'price': 40,
+        },
+        'Twin sofa': {
+          'cateId': '7',
+          'capacity': 2,
+          'price': 60,
+        },
       },
     ),
     FacilityType(
@@ -34,9 +52,21 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       Colors.red[800],
       0xFFFF8989,
       {
-        'S': '1',
-        'M': '2',
-        'L': '3',
+        'Small': {
+          'cateId': '1',
+          'capacity': 4,
+          'price': 120,
+        },
+        'Medium': {
+          'cateId': '2',
+          'capacity': 8,
+          'price': 250,
+        },
+        'Large': {
+          'cateId': '3',
+          'capacity': 12,
+          'price': 400,
+        },
       },
     ),
     FacilityType(
@@ -47,7 +77,11 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       Colors.deepPurple,
       0xFF92D2FC,
       {
-        'Grand seminar room': '6',
+        'Hall room': {
+          'cateId': '8',
+          'capacity': 30,
+          'price': 950,
+        },
       },
     ),
   ];
@@ -158,9 +192,9 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
               context,
               MaterialPageRoute(
                 builder: (context) => CustomerDemand(
-                  facilityType: facilityTypeList[index],
-                  index: index,
-                ),
+                    facilityType: facilityTypeList[index],
+                    index: index,
+                    subType: index == 0 ? 'seat' : 'room'),
               ),
             );
           },

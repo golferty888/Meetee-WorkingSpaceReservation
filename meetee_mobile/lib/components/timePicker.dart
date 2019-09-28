@@ -5,6 +5,8 @@ class TimePicker extends StatefulWidget {
   final Color primaryColor;
   final ValueChanged<int> returnStartTime;
   final ValueChanged<int> returnEndTime;
+  final double titleFontSize;
+  final double valueFontSize;
 
   TimePicker({
     Key key,
@@ -12,6 +14,8 @@ class TimePicker extends StatefulWidget {
     @required this.secondaryColor,
     this.returnStartTime,
     this.returnEndTime,
+    this.titleFontSize,
+    this.valueFontSize,
   }) : super(key: key);
   @override
   _TimePickerState createState() => _TimePickerState();
@@ -50,43 +54,64 @@ class _TimePickerState extends State<TimePicker> {
           Text(
             'Select time (${_values.start.round()}.00 - ${_values.end.round()}.00)',
             style: TextStyle(
-              fontSize: 20.0,
+              fontSize: widget.titleFontSize,
             ),
           ),
-          RangeSlider(
-            activeColor: widget.primaryColor,
-            inactiveColor: Color(widget.secondaryColor),
-            values: _values,
-            labels: RangeLabels(
-              '${_values.start.round()}',
-              '${_values.end.round()}',
-            ),
-            min: 8,
-            max: 22,
-            divisions: 14,
-            onChanged: (RangeValues values) {
-              setState(
-                () {
-                  if (values.end - values.start >= 1) {
-                    _values = values;
-                  } else {
-                    if (_values.start == values.start) {
-                      _values = RangeValues(_values.start, _values.start + 1);
-                    } else {
-                      _values = RangeValues(_values.end - 1, _values.end);
-                    }
-                  }
-                },
-              );
-            },
-            onChangeEnd: (RangeValues values) {
-              widget.returnStartTime(
-                _values.start.round(),
-              );
-              widget.returnEndTime(
-                _values.end.round(),
-              );
-            },
+          Row(
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: Text(
+                  _values.start.round().toString(),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+              Flexible(
+                flex: 16,
+                child: RangeSlider(
+                  activeColor: widget.primaryColor,
+                  inactiveColor: Color(widget.secondaryColor),
+                  values: _values,
+                  labels: RangeLabels(
+                    '${_values.start.round()}',
+                    '${_values.end.round()}',
+                  ),
+                  min: 8,
+                  max: 22.0,
+                  divisions: 14,
+                  onChanged: (RangeValues values) {
+                    setState(
+                      () {
+                        if (values.end - values.start >= 1) {
+                          _values = values;
+                        } else {
+                          if (_values.start == values.start) {
+                            _values =
+                                RangeValues(_values.start, _values.start + 1);
+                          } else {
+                            _values = RangeValues(_values.end - 1, _values.end);
+                          }
+                        }
+                      },
+                    );
+                  },
+                  onChangeEnd: (RangeValues values) {
+                    widget.returnStartTime(
+                      _values.start.round(),
+                    );
+                    widget.returnEndTime(
+                      _values.end.round(),
+                    );
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  '22',
+                ),
+              ),
+            ],
           ),
         ],
       ),

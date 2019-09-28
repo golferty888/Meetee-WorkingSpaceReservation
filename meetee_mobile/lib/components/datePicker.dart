@@ -4,9 +4,16 @@ import 'package:intl/intl.dart';
 class DatePicker extends StatefulWidget {
   final int primaryColor;
   final ValueChanged<DateTime> returnDate;
+  final double titleFontSize;
+  final double valueFontSize;
 
-  DatePicker({Key key, @required this.primaryColor, this.returnDate})
-      : super(key: key);
+  DatePicker({
+    Key key,
+    @required this.primaryColor,
+    this.returnDate,
+    this.titleFontSize,
+    this.valueFontSize,
+  }) : super(key: key);
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -63,7 +70,7 @@ class _DatePickerState extends State<DatePicker> {
           text,
           style: TextStyle(
             color: Colors.grey,
-            fontSize: 16.0,
+            fontSize: widget.valueFontSize,
           ),
         ),
       ),
@@ -79,7 +86,7 @@ class _DatePickerState extends State<DatePicker> {
         decoration: BoxDecoration(
           color: _selectedIndex != null && _selectedIndex == index
               ? Color(widget.primaryColor)
-              : Colors.white,
+              : null,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Center(
@@ -89,7 +96,7 @@ class _DatePickerState extends State<DatePicker> {
               fontWeight: _selectedIndex != null && _selectedIndex == index
                   ? FontWeight.bold
                   : FontWeight.normal,
-              fontSize: 16.0,
+              fontSize: widget.valueFontSize,
             ),
           ),
         ),
@@ -106,7 +113,7 @@ class _DatePickerState extends State<DatePicker> {
         decoration: BoxDecoration(
           color: _selectedIndex != null && _selectedIndex == index
               ? Color(widget.primaryColor)
-              : Colors.white,
+              : null,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Center(
@@ -118,7 +125,7 @@ class _DatePickerState extends State<DatePicker> {
               fontWeight: _selectedIndex != null && _selectedIndex == index
                   ? FontWeight.bold
                   : FontWeight.normal,
-              fontSize: 16.0,
+              fontSize: widget.valueFontSize,
             ),
           ),
         ),
@@ -157,7 +164,7 @@ class _DatePickerState extends State<DatePicker> {
           Text(
             'Select date (' + formattedDate + ')',
             style: TextStyle(
-              fontSize: 20.0,
+              fontSize: widget.titleFontSize,
             ),
           ),
           SizedBox(
@@ -178,7 +185,7 @@ class _DatePickerState extends State<DatePicker> {
                 decoration: BoxDecoration(
                   color: _selectedIndex != null && _selectedIndex == 6
                       ? Color(widget.primaryColor)
-                      : Colors.white,
+                      : null,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: GestureDetector(
