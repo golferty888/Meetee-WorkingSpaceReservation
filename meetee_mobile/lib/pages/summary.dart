@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:meetee_mobile/components/customDialog.dart';
 
 class Summary extends StatefulWidget {
   final int colorCode;
@@ -30,10 +33,31 @@ class Summary extends StatefulWidget {
 
 class _SummaryState extends State<Summary> {
   final String userId = '1';
+  final String reserveURL = 'http://18.139.12.132:9000/reserve';
 
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<dynamic> reserveSeat() async {
+    final response = await http.post(
+      reserveURL,
+      body: {
+        "userId": userId,
+        "facId": widget.facId,
+        "startDate": widget.startDate,
+        "startTime": widget.startTime,
+        "endTime": widget.endTime,
+        "endDate": widget.endDate,
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      print(jsonData);
+    } else {
+      throw Exception('Failed to load post');
+    }
   }
 
   @override
@@ -254,7 +278,18 @@ class _SummaryState extends State<Summary> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   color: Color(widget.colorCode),
-                  onPressed: () {},
+                  onPressed: () {
+                    reserveSeat();
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => CustomDialog(
+                        title: "Success",
+                        description:
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                        buttonText: "Okay",
+                      ),
+                    );
+                  },
                   child: Container(
                     margin: EdgeInsets.symmetric(
                       horizontal: 24.0,
