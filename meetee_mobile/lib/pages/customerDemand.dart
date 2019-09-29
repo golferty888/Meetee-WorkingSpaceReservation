@@ -123,12 +123,20 @@ class _CustomerDemandState extends State<CustomerDemand> {
     if (this.startDate == DateFormat("yyyy-MM-dd").format(DateTime.now())) {
       setState(() {
         _isToday = true;
-        print('isToday: _isToday = ' + _isToday.toString());
+        startTime = DateFormat("HH:00:00").format(
+          DateTime.now().add(
+            Duration(hours: 1),
+          ),
+        );
+        endTime = DateFormat("HH:00:00").format(
+          DateTime.now().add(
+            Duration(hours: 2),
+          ),
+        );
       });
     } else {
       setState(() {
         _isToday = false;
-        print('isNotToday: _isToday = ' + _isToday.toString());
       });
     }
   }

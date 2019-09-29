@@ -46,6 +46,10 @@ class _TimePickerState extends State<TimePicker> {
   @override
   Widget build(BuildContext context) {
     if (widget.isToday) {
+      _values = RangeValues(
+        TimeOfDay.now().hour.toDouble() + 1,
+        TimeOfDay.now().hour.toDouble() + 2,
+      );
       _minTick = TimeOfDay.now().hour.toDouble() + 1.0;
       _divisionTick = 21 - TimeOfDay.now().hour;
     } else {
