@@ -35,7 +35,6 @@ class _TimePickerState extends State<TimePicker> {
   @override
   void initState() {
     if (hourNow + 1 > 21 || hourNow + 1 < 8) {
-      print('not today');
       _values = RangeValues(
         8,
         10,
@@ -47,11 +46,6 @@ class _TimePickerState extends State<TimePicker> {
   @override
   Widget build(BuildContext context) {
     if (widget.isToday) {
-      print('is today');
-//      _values = RangeValues(
-//        TimeOfDay.now().hour.toDouble() + 1,
-//        TimeOfDay.now().hour.toDouble() + 2,
-//      );
       if (TimeOfDay.now().hour >= 0 && TimeOfDay.now().hour < 8) {
         _values = RangeValues(
           8,

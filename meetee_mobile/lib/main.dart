@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meetee_mobile/pages/customerDemand.dart';
 
 import 'package:meetee_mobile/pages/history.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
@@ -16,6 +17,10 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Product Sans',
       ),
       home: MyHomePage(),
+      routes: <String, WidgetBuilder>{
+        '/customerDemand': (BuildContext context) => CustomerDemand(),
+        '/selectFacility': (BuildContext context) => SelectFacilityType(),
+      },
     );
   }
 }

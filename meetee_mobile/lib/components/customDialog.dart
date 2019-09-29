@@ -1,86 +1,95 @@
 import 'package:flutter/material.dart';
-
-class Consts {
-  Consts._();
-
-  static const double padding = 16.0;
-  static const double avatarRadius = 66.0;
-}
+import 'package:meetee_mobile/pages/history.dart';
+import 'package:meetee_mobile/pages/selectFacility.dart';
 
 class CustomDialog extends StatelessWidget {
-  final String title, description, buttonText;
-  final Image image;
+  final String title, buttonTextLeft, buttonTextRight;
+  final int colorCode;
 
   CustomDialog({
+    @required this.colorCode,
     @required this.title,
-    @required this.description,
-    @required this.buttonText,
-    this.image,
+    @required this.buttonTextLeft,
+    @required this.buttonTextRight,
   });
 
   dialogContent(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(
-            top: Consts.avatarRadius + Consts.padding,
-            bottom: Consts.padding,
-            left: Consts.padding,
-            right: Consts.padding,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // To make the card compact
+        children: <Widget>[
+          IconTheme(
+            data: IconThemeData(color: Colors.green),
+            child: Icon(
+              Icons.check_circle_outline,
+              size: 112.0,
+            ),
           ),
-          margin: EdgeInsets.only(top: Consts.avatarRadius),
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(Consts.padding),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
-              ),
-            ],
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              SizedBox(height: 24.0),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: FlatButton(
+              Flexible(
+                child: OutlineButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  borderSide: BorderSide(
+                    color: Colors.grey[600],
+                  ),
                   onPressed: () {
-                    Navigator.of(context).pop(); // To close the dialog
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SelectFacilityType(),
+                      ),
+                    );
                   },
-                  child: Text(buttonText),
+                  child: Text(
+                    buttonTextLeft,
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+              ),
+              Flexible(
+                child: RaisedButton(
+                  elevation: 0.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  color: Color(colorCode),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HistoryPage(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    buttonTextRight,
+                    style: TextStyle(
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-        Positioned(
-          left: Consts.padding,
-          right: Consts.padding,
-          child: CircleAvatar(
-            backgroundColor: Colors.blueAccent,
-            radius: Consts.avatarRadius,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -88,10 +97,10 @@ class CustomDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Consts.padding),
+        borderRadius: BorderRadius.circular(16.0),
       ),
       elevation: 0.0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       child: dialogContent(context),
     );
   }

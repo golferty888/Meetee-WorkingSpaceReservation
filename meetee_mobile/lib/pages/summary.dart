@@ -168,7 +168,7 @@ class _SummaryState extends State<Summary> {
                                   5,
                                 )}',
                                 style: TextStyle(
-                                  fontSize: 18.0,
+                                  fontSize: 17.50,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -272,6 +272,9 @@ class _SummaryState extends State<Summary> {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 16.0,
+                ),
                 RaisedButton(
                   elevation: 0.0,
                   shape: RoundedRectangleBorder(
@@ -279,14 +282,14 @@ class _SummaryState extends State<Summary> {
                   ),
                   color: Color(widget.colorCode),
                   onPressed: () {
-                    reserveSeat();
+//                    reserveSeat();
                     showDialog(
                       context: context,
                       builder: (BuildContext context) => CustomDialog(
+                        colorCode: widget.colorCode,
                         title: "Success",
-                        description:
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                        buttonText: "Okay",
+                        buttonTextLeft: "KEEP BOOKING",
+                        buttonTextRight: "OK",
                       ),
                     );
                   },

@@ -79,7 +79,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
     );
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-
+      print(jsonData);
       setState(() {
         facilitiesList = FacilitiesList.fromJson(jsonData);
         if (facilitiesList.facilities.length == 0) {
@@ -121,22 +121,10 @@ class _CustomerDemandState extends State<CustomerDemand> {
 
   bool _isToday = true;
   _checkIsToday() {
-    print('check');
     if (this.startDate == DateFormat("yyyy-MM-dd").format(DateTime.now()) &&
         TimeOfDay.now().hour < 21) {
-      print('check today true');
       setState(() {
         _isToday = true;
-//        startTime = DateFormat("HH:00:00").format(
-//          DateTime.now().add(
-//            Duration(hours: 1),
-//          ),
-//        );
-//        endTime = DateFormat("HH:00:00").format(
-//          DateTime.now().add(
-//            Duration(hours: 2),
-//          ),
-//        );
       });
     } else {
       setState(() {
@@ -897,9 +885,14 @@ class _CustomerDemandState extends State<CustomerDemand> {
         endDate: startDate,
         startTime: startTime,
         endTime: endTime,
-        facId: facilitiesList.facilities[_selectedFacility].facId.toString(),
+        facId: facilitiesList.facilities[_selectedFacility].facId.toString() ==
+                null
+            ? '0'
+            : facilitiesList.facilities[_selectedFacility].facId.toString(),
         type: _selectedCateName,
-        code: facilitiesList.facilities[_selectedFacility].code,
+        code: facilitiesList.facilities[_selectedFacility].code == null
+            ? 'errorCode'
+            : facilitiesList.facilities[_selectedFacility].code,
         totalPrice: _totalPrice.toString(),
       ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
