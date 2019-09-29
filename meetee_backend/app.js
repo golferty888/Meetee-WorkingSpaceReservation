@@ -46,8 +46,7 @@ app.use("*", function (request, response) {
   response.status(404).send('404, Not found');
 });
 
-// const pgConnectionString = require('./config/knexfile')[process.env.NODE_ENV].pg_connection
-const pgConnectionString = "postgres://meetee_admin:meetee_admin@meeteedb.cnkpi2hqmiv1.ap-southeast-1.rds.amazonaws.com:5432/meetee"
+const pgConnectionString = process.env.POSTGRES_CONNECTION_URL;
 console.log(pgConnectionString)
 const pgClient1 = new pg.Client(pgConnectionString);
 const pgClient2 = new pg.Client(pgConnectionString);
