@@ -17,7 +17,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
     FacilityType(
       '2',
       'Chill\nRelax\nPrivate',
-      'images/person.svg',
+      'images/facilityType/person.svg',
       'Single seat',
       Colors.yellow[900],
       0xFFFAD74E,
@@ -47,7 +47,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
     FacilityType(
       '1',
       'Mate\nTeamwork\nCollaboration',
-      'images/meeting.svg',
+      'images/facilityType/meeting.svg',
       'Meeting room',
       Colors.red[800],
       0xFFFF8989,
@@ -72,7 +72,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
     FacilityType(
       '3',
       'Strategy\nDiscussion\nCooperation',
-      'images/strategy.svg',
+      'images/facilityType/strategy.svg',
       'Seminar room',
       Colors.deepPurple,
       0xFF92D2FC,
