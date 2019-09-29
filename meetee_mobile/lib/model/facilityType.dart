@@ -8,6 +8,7 @@ class FacilityType {
   Color primaryColor;
   int secondaryColorCode;
   Map categories;
+  List equipment;
 
   FacilityType(
     this.classId,
@@ -17,5 +18,6 @@ class FacilityType {
     this.primaryColor,
     this.secondaryColorCode,
     this.categories,
+    this.equipment,
   );
 }

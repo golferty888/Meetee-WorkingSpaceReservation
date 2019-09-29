@@ -43,6 +43,11 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
           'price': 60,
         },
       },
+      [
+        '1-2 People',
+        'Wi-Fi',
+        'Power bar',
+      ],
     ),
     FacilityType(
       '1',
@@ -68,6 +73,11 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
           'price': 400,
         },
       },
+      [
+        '4-12 people',
+        'Wi-Fi',
+        'Apple TV',
+      ],
     ),
     FacilityType(
       '3',
@@ -83,6 +93,11 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
           'price': 950,
         },
       },
+      [
+        '30 People',
+        'Wi-Fi',
+        'Whiteboard & Pen',
+      ],
     ),
   ];
 
@@ -148,6 +163,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                           style: TextStyle(
                             fontSize: 16.0,
                             fontStyle: FontStyle.italic,
+                            letterSpacing: 1.0,
                           ),
                         ),
                         InkWell(
@@ -176,7 +192,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                             ),
                           ),
                           SizedBox(
-                            height: 24.0,
+                            height: 32.0,
                           ),
                           Text(
                             facilityTypeList[index].typeName,
@@ -188,7 +204,48 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                         ],
                       ),
                     ),
-                    SizedBox()
+                    Container(
+                      height: 26.0,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: facilityTypeList[index].equipment.length,
+                        itemBuilder: (BuildContext context, int index2) {
+                          return Container(
+                            padding: EdgeInsets.fromLTRB(
+                              8.0,
+                              6.5,
+                              8.0,
+                              6.0,
+                            ),
+                            margin: EdgeInsets.only(
+                              right: 8.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(
+                                255,
+                                255,
+                                255,
+                                0.5,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+//                              border: Border.all(color: Colors.black),
+                            ),
+                            child: Text(
+                              facilityTypeList[index]
+                                  .equipment[index2]
+                                  .toString()
+                                  .toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 10.0,
+                                color: Colors.grey[700],
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               );
