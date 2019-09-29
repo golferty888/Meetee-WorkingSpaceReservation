@@ -156,7 +156,7 @@ class _DatePickerState extends State<DatePicker> {
         24.0,
         8.0,
         24.0,
-        24.0,
+        8.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

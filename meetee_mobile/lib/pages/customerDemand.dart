@@ -107,8 +107,25 @@ class _CustomerDemandState extends State<CustomerDemand> {
     setState(() {
       this.startDate = formatted;
     });
+    _checkIsToday();
     getSeatByCategory();
+    _isChangeCate = false;
     _calculateTotalPrice();
+  }
+
+  bool _isToday = true;
+  _checkIsToday() {
+    if (this.startDate == DateFormat("yyyy-MM-dd").format(DateTime.now())) {
+      setState(() {
+        _isToday = true;
+        print('isToday: _isToday = ' + _isToday.toString());
+      });
+    } else {
+      setState(() {
+        _isToday = false;
+        print('isNotToday: _isToday = ' + _isToday.toString());
+      });
+    }
   }
 
   _updateStartTime(int startTime) {
@@ -121,6 +138,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
       this.startTime = formatted;
     });
     getSeatByCategory();
+    _isChangeCate = false;
     _calculateTotalPrice();
   }
 
@@ -134,6 +152,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
       this.endTime = formatted;
     });
     getSeatByCategory();
+    _isChangeCate = false;
     _calculateTotalPrice();
   }
 
@@ -237,7 +256,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
             0.0,
             0.0,
             16.0,
-            16.0,
+            8.0,
           ),
           decoration: BoxDecoration(
             color: _selectedCateName != null && _selectedCateName == cate
@@ -379,6 +398,24 @@ class _CustomerDemandState extends State<CustomerDemand> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 2.5,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Reserve ${widget.facilityType.typeName.toLowerCase()}',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 22.0,
+          ),
+        ),
+      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -393,167 +430,224 @@ class _CustomerDemandState extends State<CustomerDemand> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              ListTile(
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.black,
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                title: Text(
-                  'Reserve ${widget.facilityType.typeName.toLowerCase()}',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22.0,
-                  ),
-                ),
-              ),
-              DatePicker(
-                primaryColor: widget.facilityType.secondaryColorCode,
-                returnDate: _updateStartDate,
-                titleFontSize: titleFontSize,
-                valueFontSize: valueFontSize,
-              ),
-              TimePicker(
-                primaryColor: widget.facilityType.primaryColor,
-                secondaryColor: widget.facilityType.secondaryColorCode,
-                returnStartTime: _updateStartTime,
-                returnEndTime: _updateEndTime,
-                titleFontSize: titleFontSize,
-                valueFontSize: valueFontSize,
+              SizedBox(
+                height: 10.0,
               ),
               Container(
-                margin: EdgeInsets.only(bottom: 16.0),
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(
-                    24.0,
-                    0.0,
-                    24.0,
-                    0.0,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey[100],
                   ),
-//                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(
-                    'Select type ($_selectedCateName)',
-                    style: TextStyle(
-                      fontSize: titleFontSize,
+                ),
+                child: DatePicker(
+                  primaryColor: widget.facilityType.secondaryColorCode,
+                  returnDate: _updateStartDate,
+                  titleFontSize: titleFontSize,
+                  valueFontSize: valueFontSize,
+                ),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey[100],
+                  ),
+                ),
+                child: _isToday
+                    ? TimePicker(
+                        primaryColor: widget.facilityType.primaryColor,
+                        secondaryColor: widget.facilityType.secondaryColorCode,
+                        returnStartTime: _updateStartTime,
+                        returnEndTime: _updateEndTime,
+                        titleFontSize: titleFontSize,
+                        valueFontSize: valueFontSize,
+                        isToday: true,
+                      )
+                    : TimePicker(
+                        primaryColor: widget.facilityType.primaryColor,
+                        secondaryColor: widget.facilityType.secondaryColorCode,
+                        returnStartTime: _updateStartTime,
+                        returnEndTime: _updateEndTime,
+                        titleFontSize: titleFontSize,
+                        valueFontSize: valueFontSize,
+                        isToday: false,
+                      ),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey[100],
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(
+                        0.0,
+                        8,
+                        0.0,
+                        8.0,
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(
+                          24.0,
+                          0.0,
+                          24.0,
+                          0.0,
+                        ),
+                        child: Text(
+                          'Select type',
+                          style: TextStyle(
+                            fontSize: titleFontSize,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    Container(
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(
+                          24.0,
+                          0.0,
+                          24.0,
+                          0.0,
+                        ),
+                        child: Row(
+                          children: _buildCateList(1),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(
+                          24.0,
+                          0.0,
+                          24.0,
+                          4.0,
+                        ),
+                        child: Row(
+                          children: _buildCateList(2),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              SizedBox(
+                height: 8.0,
               ),
               Container(
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(
-                    24.0,
-                    0.0,
-                    24.0,
-                    0.0,
-                  ),
-//                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    children: _buildCateList(1),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey[100],
                   ),
                 ),
-              ),
-              Container(
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(
-                    24.0,
-                    0.0,
-                    24.0,
-                    0.0,
-                  ),
-//                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    children: _buildCateList(2),
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(
-                  24.0,
-                  0.0,
-                  24.0,
-                  16.0,
-                ),
-                child: Text(
-                  '${widget.subType} number',
-                  style: TextStyle(
-                    fontSize: titleFontSize,
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(
-                  16.0,
-                  0.0,
-                  0.0,
-                  0.0,
-                ),
-                height: 32.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: facilitiesList == null ? 0 : _firstRow,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (facilitiesList.facilities[index].status ==
-                        'available') {
-                      return _buildSelectedFacility(index);
-                    } else {
-                      return null;
-                    }
-                  },
-                ),
-              ),
-              _isNeedSecondRow
-                  ? Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(
+                        24.0,
+                        8.0,
+                        24.0,
+                        8.0,
+                      ),
+                      child: Text(
+                        '${widget.subType} number',
+                        style: TextStyle(
+                          fontSize: titleFontSize,
+                        ),
+                      ),
+                    ),
+                    Container(
                       margin: EdgeInsets.fromLTRB(
                         16.0,
-                        16.0,
+                        0.0,
                         0.0,
                         0.0,
                       ),
                       height: 32.0,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: facilitiesList == null
-                            ? 0
-                            : facilitiesList.facilities.length - _firstRow,
+                        itemCount: facilitiesList == null ? 0 : _firstRow,
                         itemBuilder: (BuildContext context, int index) {
-                          if (facilitiesList.facilities[index + 5].status ==
+                          if (facilitiesList.facilities[index].status ==
                               'available') {
-                            return _buildSelectedFacility(index + 5);
+                            return _buildSelectedFacility(index);
                           } else {
                             return null;
                           }
                         },
                       ),
-                    )
-                  : Container(),
+                    ),
+                    _isNeedSecondRow
+                        ? Container(
+                            margin: EdgeInsets.fromLTRB(
+                              16.0,
+                              8.0,
+                              0.0,
+                              12.0,
+                            ),
+                            height: 32.0,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: facilitiesList == null
+                                  ? 0
+                                  : facilitiesList.facilities.length -
+                                      _firstRow,
+                              itemBuilder: (BuildContext context, int index) {
+                                if (facilitiesList
+                                        .facilities[index + 5].status ==
+                                    'available') {
+                                  return _buildSelectedFacility(index + 5);
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                          )
+                        : Container(
+                            margin: EdgeInsets.fromLTRB(
+                              16.0,
+                              0.0,
+                              0.0,
+                              12.0,
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
               Expanded(
                 flex: 180,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(
-                          24.0,
-                          16.0,
-                          0.0,
-                          16.0,
-                        ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.grey[100],
+                    ),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
                         child: Container(
-                          margin: EdgeInsets.symmetric(
-                            vertical: 8.0,
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey[600],
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
+                          padding: EdgeInsets.fromLTRB(
+                            24.0,
+                            8.0,
+                            0.0,
+                            8.0,
                           ),
                           child: _isChangeCate
                               ? FutureBuilder(
@@ -567,144 +661,176 @@ class _CustomerDemandState extends State<CustomerDemand> {
                                       case ConnectionState.active:
                                         return Container();
                                       case ConnectionState.done:
-                                        return SvgPicture.asset(
-                                          'images/facility/${_selectedCateName.toLowerCase()}.svg',
+                                        return Container(
+                                          margin: EdgeInsets.symmetric(
+                                            vertical: 0.0,
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 16.0,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey[200],
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          child: SvgPicture.asset(
+                                            'images/facility/${_selectedCateName.toLowerCase()}.svg',
+                                          ),
                                         );
                                       default:
                                         return Container();
                                     }
                                   },
                                 )
-                              : SvgPicture.asset(
-                                  'images/facility/${_selectedCateName.toLowerCase()}.svg',
+                              : Container(
+                                  margin: EdgeInsets.symmetric(
+                                    vertical: 0.0,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey[200],
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: SvgPicture.asset(
+                                    'images/facility/${_selectedCateName.toLowerCase()}.svg',
+                                  ),
                                 ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Center(
-                        child: _isChangeCate
-                            ? FutureBuilder(
-                                future: _delayData(),
-                                builder: (context, snapshot) {
-                                  switch (snapshot.connectionState) {
-                                    case ConnectionState.none:
-                                      return Container();
-                                    case ConnectionState.waiting:
-                                      return Container();
-                                    case ConnectionState.active:
-                                      return Container();
-                                    case ConnectionState.done:
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            'Capacity:',
-                                            style: TextStyle(
-                                              fontSize: valueFontSize,
-                                              color: Colors.grey[600],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                              16.0,
-                                              2.0,
-                                              0.0,
-                                              8.0,
-                                            ),
-                                            child: Text(
-                                              '$_selectedCapacity person' +
-                                                  '${_selectedCapacity > 1 ? 's' : ''}',
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: _isChangeCate
+                              ? FutureBuilder(
+                                  future: _delayData(),
+                                  builder: (context, snapshot) {
+                                    switch (snapshot.connectionState) {
+                                      case ConnectionState.none:
+                                        return Container();
+                                      case ConnectionState.waiting:
+                                        return Container();
+                                      case ConnectionState.active:
+                                        return Container();
+                                      case ConnectionState.done:
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              'Capacity:',
                                               style: TextStyle(
-                                                fontSize: titleFontSize,
+                                                fontSize: valueFontSize,
+                                                color: Colors.grey[600],
                                               ),
                                             ),
-                                          ),
-                                          Text(
-                                            'Price:',
-                                            style: TextStyle(
-                                              fontSize: valueFontSize,
-                                              color: Colors.grey[600],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(
-                                              16.0,
-                                              2.0,
-                                              0.0,
-                                              0.0,
-                                            ),
-                                            child: Text(
-                                              '$_selectedPrice Baht/hour',
-                                              style: TextStyle(
-                                                fontSize: titleFontSize,
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                16.0,
+                                                2.0,
+                                                0.0,
+                                                8.0,
+                                              ),
+                                              child: Text(
+                                                '$_selectedCapacity person' +
+                                                    '${_selectedCapacity > 1 ? 's' : ''}',
+                                                style: TextStyle(
+                                                  fontSize: titleFontSize,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    default:
-                                      return Container();
-                                  }
-                                },
-                              )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'Capacity:',
-                                    style: TextStyle(
-                                      fontSize: valueFontSize,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                      16.0,
-                                      2.0,
-                                      0.0,
-                                      8.0,
-                                    ),
-                                    child: Text(
-                                      '$_selectedCapacity person' +
-                                          '${_selectedCapacity > 1 ? 's' : ''}',
+                                            Text(
+                                              'Cost:',
+                                              style: TextStyle(
+                                                fontSize: valueFontSize,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                16.0,
+                                                2.0,
+                                                0.0,
+                                                0.0,
+                                              ),
+                                              child: Text(
+                                                '$_selectedPrice Baht/hour',
+                                                style: TextStyle(
+                                                  fontSize: titleFontSize,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      default:
+                                        return Container();
+                                    }
+                                  },
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      'Capacity:',
                                       style: TextStyle(
-                                        fontSize: titleFontSize,
+                                        fontSize: valueFontSize,
+                                        color: Colors.grey[600],
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    'Price:',
-                                    style: TextStyle(
-                                      fontSize: valueFontSize,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                      16.0,
-                                      2.0,
-                                      0.0,
-                                      0.0,
-                                    ),
-                                    child: Text(
-                                      '$_selectedPrice Baht/hour',
-                                      style: TextStyle(
-                                        fontSize: titleFontSize,
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                        16.0,
+                                        2.0,
+                                        0.0,
+                                        8.0,
+                                      ),
+                                      child: Text(
+                                        '$_selectedCapacity person' +
+                                            '${_selectedCapacity > 1 ? 's' : ''}',
+                                        style: TextStyle(
+                                          fontSize: titleFontSize,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                      ),
-                    )
-                  ],
+                                    Text(
+                                      'Cost:',
+                                      style: TextStyle(
+                                        fontSize: valueFontSize,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                        16.0,
+                                        2.0,
+                                        0.0,
+                                        0.0,
+                                      ),
+                                      child: Text(
+                                        '$_selectedPrice Baht/hour',
+                                        style: TextStyle(
+                                          fontSize: titleFontSize,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
+              ),
+              SizedBox(
+                height: 8.0,
               ),
               Container(
                 height: 48.0,

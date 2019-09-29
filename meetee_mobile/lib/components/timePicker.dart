@@ -7,6 +7,7 @@ class TimePicker extends StatefulWidget {
   final ValueChanged<int> returnEndTime;
   final double titleFontSize;
   final double valueFontSize;
+  final bool isToday;
 
   TimePicker({
     Key key,
@@ -16,6 +17,7 @@ class TimePicker extends StatefulWidget {
     this.returnEndTime,
     this.titleFontSize,
     this.valueFontSize,
+    this.isToday,
   }) : super(key: key);
   @override
   _TimePickerState createState() => _TimePickerState();
@@ -27,13 +29,15 @@ class _TimePickerState extends State<TimePicker> {
     TimeOfDay.now().hour.toDouble() + 1,
     TimeOfDay.now().hour.toDouble() + 2,
   );
+  double _minTick;
+  int _divisionTick;
 
   @override
   void initState() {
     if (hourNow + 1 > 21 || hourNow + 1 < 8) {
       _values = RangeValues(
         8,
-        9,
+        10,
       );
     }
     super.initState();
@@ -41,12 +45,19 @@ class _TimePickerState extends State<TimePicker> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isToday) {
+      _minTick = TimeOfDay.now().hour.toDouble() + 1.0;
+      _divisionTick = 21 - TimeOfDay.now().hour;
+    } else {
+      _minTick = 8.0;
+      _divisionTick = 14;
+    }
     return Container(
       margin: EdgeInsets.fromLTRB(
         24.0,
-        0.0,
+        8.0,
         24.0,
-        16.0,
+        4.0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +73,7 @@ class _TimePickerState extends State<TimePicker> {
               Expanded(
                 flex: 1,
                 child: Text(
-                  _values.start.round().toString(),
+                  widget.isToday ? _values.start.round().toString() : '8',
                   textAlign: TextAlign.end,
                 ),
               ),
@@ -76,9 +87,9 @@ class _TimePickerState extends State<TimePicker> {
                     '${_values.start.round()}',
                     '${_values.end.round()}',
                   ),
-                  min: 8,
+                  min: _minTick,
                   max: 22.0,
-                  divisions: 14,
+                  divisions: _divisionTick,
                   onChanged: (RangeValues values) {
                     setState(
                       () {
