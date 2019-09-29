@@ -74,6 +74,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
     );
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
+      print(jsonData);
       setState(() {
         facilitiesList = FacilitiesList.fromJson(jsonData);
         if (facilitiesList.facilities.length == 0) {
@@ -409,7 +410,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Reserve ${widget.facilityType.typeName.toLowerCase()}',
+          'Book ${widget.facilityType.typeName.toLowerCase()}',
           style: TextStyle(
             color: Colors.black,
             fontSize: 22.0,
@@ -747,7 +748,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
                                               ),
                                             ),
                                             Text(
-                                              'Cost:',
+                                              'Price:',
                                               style: TextStyle(
                                                 fontSize: valueFontSize,
                                                 color: Colors.grey[600],
@@ -847,7 +848,9 @@ class _CustomerDemandState extends State<CustomerDemand> {
                   ),
                   color: Color(widget.facilityType.secondaryColorCode),
                   onPressed: () {
-                    Navigator.of(context).push(_createRoute());
+                    Navigator.of(context).push(
+                      _createRoute(),
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -874,6 +877,14 @@ class _CustomerDemandState extends State<CustomerDemand> {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => Summary(
         colorCode: widget.facilityType.secondaryColorCode,
+        startDate: startDate,
+        endDate: startDate,
+        startTime: startTime,
+        endTime: endTime,
+        facId: facilitiesList.facilities[_selectedFacility].facId.toString(),
+        type: _selectedCateName,
+        code: facilitiesList.facilities[_selectedFacility].code,
+        totalPrice: _totalPrice.toString(),
       ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);

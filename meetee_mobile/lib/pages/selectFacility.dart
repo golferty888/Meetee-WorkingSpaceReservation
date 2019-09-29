@@ -101,7 +101,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Select Facility Type',
+          'Select facility type',
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -125,7 +125,12 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                     fit: BoxFit.fill,
                   ),
                 ),
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 48.0),
+                margin: EdgeInsets.fromLTRB(
+                  0,
+                  0,
+                  0,
+                  48.0,
+                ),
                 padding: EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,15 +197,6 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
               margin: EdgeInsets.fromLTRB(0.0, 0, 0.0, 16.0),
             ),
             onTap: (index) {
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                  builder: (context) => CustomerDemand(
-//                      facilityType: facilityTypeList[index],
-//                      index: index,
-//                      subType: index == 0 ? 'Seat' : 'Room'),
-//                ),
-//              );
               Navigator.of(context).push(_createRoute(index));
             },
           ),
