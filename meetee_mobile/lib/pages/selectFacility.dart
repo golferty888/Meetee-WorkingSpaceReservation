@@ -92,7 +92,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0.0,
+        elevation: 2.5,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -105,101 +105,130 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: SafeArea(
-        child: Swiper(
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              height: 384.0,
-              width: 256.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.0),
-                color: Color(
-                  facilityTypeList[index].secondaryColorCode,
-                ),
-                image: DecorationImage(
-                  image: AssetImage('images/noise.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 48.0),
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        facilityTypeList[index].words,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                      InkWell(
-                        child: Icon(
-                          Icons.info_outline,
-                          size: 24.0,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              ScaleRoute(
-                                page: FacilityDetail(),
-                              ));
-                        },
-                      ),
-                    ],
+      body: Padding(
+        padding: EdgeInsets.only(
+          top: 16.0,
+        ),
+        child: SafeArea(
+          child: Swiper(
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                height: 384.0,
+                width: 256.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.0),
+                  color: Color(
+                    facilityTypeList[index].secondaryColorCode,
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Column(
+                  image: DecorationImage(
+                    image: AssetImage('images/noise.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 48.0),
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Hero(
-                          tag: 'facilityType' + index.toString(),
-                          child: SvgPicture.asset(
-                            facilityTypeList[index].imagePath,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 24.0,
-                        ),
                         Text(
-                          facilityTypeList[index].typeName,
+                          facilityTypeList[index].words,
                           style: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                            fontStyle: FontStyle.italic,
                           ),
-                        )
+                        ),
+                        InkWell(
+                          child: Icon(
+                            Icons.info_outline,
+                            size: 24.0,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                ScaleRoute(
+                                  page: FacilityDetail(),
+                                ));
+                          },
+                        ),
                       ],
                     ),
-                  ),
-                  SizedBox()
-                ],
-              ),
-            );
-          },
-          itemCount: facilityTypeList.length,
-          viewportFraction: 0.85,
-          scale: 0.9,
-          pagination: SwiperPagination(
-            margin: EdgeInsets.fromLTRB(0.0, 0, 0.0, 16.0),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: <Widget>[
+                          Hero(
+                            tag: 'facilityType' + index.toString(),
+                            child: SvgPicture.asset(
+                              facilityTypeList[index].imagePath,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 24.0,
+                          ),
+                          Text(
+                            facilityTypeList[index].typeName,
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox()
+                  ],
+                ),
+              );
+            },
+            itemCount: facilityTypeList.length,
+            viewportFraction: 0.85,
+            scale: 0.9,
+            pagination: SwiperPagination(
+              margin: EdgeInsets.fromLTRB(0.0, 0, 0.0, 16.0),
+            ),
+            onTap: (index) {
+//              Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                  builder: (context) => CustomerDemand(
+//                      facilityType: facilityTypeList[index],
+//                      index: index,
+//                      subType: index == 0 ? 'Seat' : 'Room'),
+//                ),
+//              );
+              Navigator.of(context).push(_createRoute(index));
+            },
           ),
-          onTap: (index) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CustomerDemand(
-                    facilityType: facilityTypeList[index],
-                    index: index,
-                    subType: index == 0 ? 'Seat' : 'Room'),
-              ),
-            );
-          },
         ),
       ),
+    );
+  }
+
+  Route _createRoute(index) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => CustomerDemand(
+        facilityType: facilityTypeList[index],
+        index: index,
+        subType: index == 0 ? 'Seat' : 'Room',
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset(0.0, 0.0);
+        var curve = Curves.easeIn;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }

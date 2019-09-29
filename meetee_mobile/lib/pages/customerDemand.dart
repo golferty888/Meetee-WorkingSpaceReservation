@@ -846,7 +846,9 @@ class _CustomerDemandState extends State<CustomerDemand> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   color: Color(widget.facilityType.secondaryColorCode),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(_createRoute());
+                  },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     width: MediaQuery.of(context).size.width,
@@ -865,6 +867,27 @@ class _CustomerDemandState extends State<CustomerDemand> {
           ),
         ),
       ),
+    );
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => Summary(
+        colorCode: widget.facilityType.secondaryColorCode,
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset(0.0, 0.0);
+        var curve = Curves.easeIn;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }
