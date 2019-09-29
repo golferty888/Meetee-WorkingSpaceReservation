@@ -11,7 +11,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        accentColor: Color(0xFF49c5b6),
         primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.grey,
         fontFamily: 'Product Sans',
@@ -45,40 +44,59 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                height: 160.0,
+                height: 320.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('images/meetee_logo.png'),
+//                    fit: BoxFit.contain,
                   ),
                 ),
               ),
               Text(
-                'Meetee,',
-                style: TextStyle(fontSize: 48.0),
+                'Meetee',
+                style: TextStyle(
+                  fontSize: 56.0,
+                  letterSpacing: 2.0,
+                ),
               ),
               Text(
-                'Just a reservation app.'
-                '\nJust a reservation app.'
-                '\nJust a reservation app.'
-                '\nJust a reservation app.',
-                style: TextStyle(fontSize: 24.0),
+                'A place for relaxing.',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  letterSpacing: 2.0,
+                ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
-                height: 48.0,
+                height: 36.0,
               ),
               RaisedButton(
-                color: Colors.black,
-                splashColor: Colors.white,
                 elevation: 0.0,
+                splashColor: Colors.white,
                 highlightElevation: 0.0,
-                child: Text(
-                  'Take a seat',
-                  style: TextStyle(color: Colors.white),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
+                color: Colors.black,
                 onPressed: () {
                   Navigator.of(context).push(_createRoute());
                 },
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  width: 120.0,
+                  child: Text(
+                    'TAKE A SEAT',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
               SizedBox(),
             ],
