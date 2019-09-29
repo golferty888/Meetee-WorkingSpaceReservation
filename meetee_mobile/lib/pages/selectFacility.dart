@@ -102,7 +102,10 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
         ),
         title: Text(
           'Select facility type',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 22.0,
+          ),
         ),
       ),
       body: Padding(
