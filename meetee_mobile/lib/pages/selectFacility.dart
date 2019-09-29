@@ -194,7 +194,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                 builder: (context) => CustomerDemand(
                     facilityType: facilityTypeList[index],
                     index: index,
-                    subType: index == 0 ? 'seat' : 'room'),
+                    subType: index == 0 ? 'Seat' : 'Room'),
               ),
             );
           },
