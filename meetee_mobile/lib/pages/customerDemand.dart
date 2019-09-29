@@ -534,14 +534,56 @@ class _CustomerDemandState extends State<CustomerDemand> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      flex: 3,
+                      flex: 1,
                       child: Container(
                         padding: EdgeInsets.fromLTRB(
+                          24.0,
                           16.0,
-                          16.0,
-                          8.0,
+                          0.0,
                           16.0,
                         ),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: 8.0,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey[600],
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: _isChangeCate
+                              ? FutureBuilder(
+                                  future: _delayData(),
+                                  builder: (context, snapshot) {
+                                    switch (snapshot.connectionState) {
+                                      case ConnectionState.none:
+                                        return Container();
+                                      case ConnectionState.waiting:
+                                        return Container();
+                                      case ConnectionState.active:
+                                        return Container();
+                                      case ConnectionState.done:
+                                        return SvgPicture.asset(
+                                          'images/facility/${_selectedCateName.toLowerCase()}.svg',
+                                        );
+                                      default:
+                                        return Container();
+                                    }
+                                  },
+                                )
+                              : SvgPicture.asset(
+                                  'images/facility/${_selectedCateName.toLowerCase()}.svg',
+                                ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Center(
                         child: _isChangeCate
                             ? FutureBuilder(
                                 future: _delayData(),
@@ -554,146 +596,123 @@ class _CustomerDemandState extends State<CustomerDemand> {
                                     case ConnectionState.active:
                                       return Container();
                                     case ConnectionState.done:
-                                      return SvgPicture.asset(
-                                        'images/facility/${_selectedCateName.toLowerCase()}.svg',
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            'Capacity:',
+                                            style: TextStyle(
+                                              fontSize: valueFontSize,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                              16.0,
+                                              2.0,
+                                              0.0,
+                                              8.0,
+                                            ),
+                                            child: Text(
+                                              '$_selectedCapacity person' +
+                                                  '${_selectedCapacity > 1 ? 's' : ''}',
+                                              style: TextStyle(
+                                                fontSize: titleFontSize,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            'Price:',
+                                            style: TextStyle(
+                                              fontSize: valueFontSize,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                              16.0,
+                                              2.0,
+                                              0.0,
+                                              0.0,
+                                            ),
+                                            child: Text(
+                                              '$_selectedPrice Baht/hour',
+                                              style: TextStyle(
+                                                fontSize: titleFontSize,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       );
                                     default:
                                       return Container();
                                   }
                                 },
                               )
-                            : SvgPicture.asset(
-                                'images/facility/${_selectedCateName.toLowerCase()}.svg',
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    'Capacity:',
+                                    style: TextStyle(
+                                      fontSize: valueFontSize,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(
+                                      16.0,
+                                      2.0,
+                                      0.0,
+                                      8.0,
+                                    ),
+                                    child: Text(
+                                      '$_selectedCapacity person' +
+                                          '${_selectedCapacity > 1 ? 's' : ''}',
+                                      style: TextStyle(
+                                        fontSize: titleFontSize,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Price:',
+                                    style: TextStyle(
+                                      fontSize: valueFontSize,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(
+                                      16.0,
+                                      2.0,
+                                      0.0,
+                                      0.0,
+                                    ),
+                                    child: Text(
+                                      '$_selectedPrice Baht/hour',
+                                      style: TextStyle(
+                                        fontSize: titleFontSize,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: _isChangeCate
-                          ? FutureBuilder(
-                              future: _delayData(),
-                              builder: (context, snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                    return Container();
-                                  case ConnectionState.waiting:
-                                    return Container();
-                                  case ConnectionState.active:
-                                    return Container();
-                                  case ConnectionState.done:
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          'Capacity:',
-                                          style: TextStyle(
-                                            fontSize: valueFontSize,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                            16.0,
-                                            2.0,
-                                            0.0,
-                                            8.0,
-                                          ),
-                                          child: Text(
-                                            '$_selectedCapacity person' +
-                                                '${_selectedCapacity > 1 ? 's' : ''}',
-                                            style: TextStyle(
-                                              fontSize: titleFontSize,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'Price:',
-                                          style: TextStyle(
-                                            fontSize: valueFontSize,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                            16.0,
-                                            2.0,
-                                            0.0,
-                                            0.0,
-                                          ),
-                                          child: Text(
-                                            '$_selectedPrice Baht/hour',
-                                            style: TextStyle(
-                                              fontSize: titleFontSize,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  default:
-                                    return Container();
-                                }
-                              },
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'Capacity:',
-                                  style: TextStyle(
-                                    fontSize: valueFontSize,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                    16.0,
-                                    2.0,
-                                    0.0,
-                                    8.0,
-                                  ),
-                                  child: Text(
-                                    '$_selectedCapacity person' +
-                                        '${_selectedCapacity > 1 ? 's' : ''}',
-                                    style: TextStyle(
-                                      fontSize: titleFontSize,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  'Price:',
-                                  style: TextStyle(
-                                    fontSize: valueFontSize,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                    16.0,
-                                    2.0,
-                                    0.0,
-                                    0.0,
-                                  ),
-                                  child: Text(
-                                    '$_selectedPrice Baht/hour',
-                                    style: TextStyle(
-                                      fontSize: titleFontSize,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                     )
                   ],
                 ),
               ),
               Container(
                 height: 48.0,
-                margin: EdgeInsets.symmetric(
-                  horizontal: 24.0,
+                margin: EdgeInsets.fromLTRB(
+                  24.0,
+                  0.0,
+                  24.0,
+                  24.0,
                 ),
                 child: RaisedButton(
                   elevation: 0.0,
