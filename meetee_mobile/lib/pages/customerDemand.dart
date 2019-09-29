@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:meetee_mobile/pages/summary.dart';
 import 'dart:convert';
 import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/status.dart' as status;
 
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/model/facility.dart';
@@ -32,10 +31,11 @@ class _CustomerDemandState extends State<CustomerDemand> {
   final double titleFontSize = 18.0;
   final double valueFontSize = 14.0;
   final String getSeatByCateURL =
-      'http://18.139.12.132:9000/facility/cate/status';
+      'http://18.139.12.132:9000/facility/cate/status/av';
 
   @override
   void initState() {
+    _connectSocket01();
     categoryNameList = widget.facilityType.categories.keys.toList();
     categoryIdList = widget.facilityType.categories.values.toList();
     _selectedCateName = categoryNameList[0];
@@ -49,19 +49,23 @@ class _CustomerDemandState extends State<CustomerDemand> {
 
   _connectSocket01() async {
     final channel =
-        await IOWebSocketChannel.connect('ws://18.139.12.132:9999/');
+        await IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
     print('connect');
     channel.sink.add("Hello, this is Meetee");
     channel.stream.listen((message) {
       print(message);
+      getSeatByCategory();
     });
-    channel.sink.add("Prepare to say goodbye.");
-    channel.sink.close(status.goingAway);
   }
 
   FacilitiesList facilitiesList;
 
   Future<dynamic> getSeatByCategory() async {
+    print('cateId: $_selectedCateId,\n'
+        'startDate: $startDate,\n'
+        'startTime: $startTime,\n'
+        'endTime: $endTime,\n'
+        'endDate: $startDate,\n');
     final response = await http.post(
       getSeatByCateURL,
       body: {
@@ -74,7 +78,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
     );
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      print(jsonData);
+
       setState(() {
         facilitiesList = FacilitiesList.fromJson(jsonData);
         if (facilitiesList.facilities.length == 0) {
@@ -581,12 +585,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
                         scrollDirection: Axis.horizontal,
                         itemCount: facilitiesList == null ? 0 : _firstRow,
                         itemBuilder: (BuildContext context, int index) {
-                          if (facilitiesList.facilities[index].status ==
-                              'available') {
-                            return _buildSelectedFacility(index);
-                          } else {
-                            return null;
-                          }
+                          return _buildSelectedFacility(index);
                         },
                       ),
                     ),
@@ -606,13 +605,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
                                   : facilitiesList.facilities.length -
                                       _firstRow,
                               itemBuilder: (BuildContext context, int index) {
-                                if (facilitiesList
-                                        .facilities[index + 5].status ==
-                                    'available') {
-                                  return _buildSelectedFacility(index + 5);
-                                } else {
-                                  return null;
-                                }
+                                return _buildSelectedFacility(index + 5);
                               },
                             ),
                           )
@@ -825,7 +818,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
                                   ],
                                 ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
