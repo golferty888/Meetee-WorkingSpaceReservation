@@ -168,7 +168,7 @@ class _SummaryState extends State<Summary> {
                                   5,
                                 )}',
                                 style: TextStyle(
-                                  fontSize: 17.50,
+                                  fontSize: 16.00,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -287,9 +287,9 @@ class _SummaryState extends State<Summary> {
                       context: context,
                       builder: (BuildContext context) => CustomDialog(
                         colorCode: widget.colorCode,
-                        title: "Success",
-                        buttonTextLeft: "KEEP BOOKING",
-                        buttonTextRight: "OK",
+                        title: "Book",
+                        buttonTextLeft: "Keep booking",
+                        buttonTextRight: "Done",
                       ),
                     );
                   },

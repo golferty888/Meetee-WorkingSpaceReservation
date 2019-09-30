@@ -62,11 +62,11 @@ class _CustomerDemandState extends State<CustomerDemand> {
   FacilitiesList facilitiesList;
 
   Future<dynamic> getSeatByCategory() async {
-    print('cateId: $_selectedCateId,\n'
-        'startDate: $startDate,\n'
-        'startTime: $startTime,\n'
-        'endTime: $endTime,\n'
-        'endDate: $startDate,\n');
+//    print('cateId: $_selectedCateId,\n'
+//        'startDate: $startDate,\n'
+//        'startTime: $startTime,\n'
+//        'endTime: $endTime,\n'
+//        'endDate: $startDate,\n');
     final response = await http.post(
       getSeatByCateURL,
       body: {
@@ -79,7 +79,6 @@ class _CustomerDemandState extends State<CustomerDemand> {
     );
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      print(jsonData);
       setState(() {
         facilitiesList = FacilitiesList.fromJson(jsonData);
         if (facilitiesList.facilities.length == 0) {
@@ -243,11 +242,11 @@ class _CustomerDemandState extends State<CustomerDemand> {
       _selectedFacility = 0;
     });
     _calculateTotalPrice();
-    print('cateId: ' + this._selectedCateId);
-    print('cateName: ' + this._selectedCateName);
-    print('catePrice: ' + this._selectedPrice.toString());
-    print('cateCap: ' + this._selectedCapacity.toString());
-    print('Price: ' + this._totalPrice.toString());
+//    print('cateId: ' + this._selectedCateId);
+//    print('cateName: ' + this._selectedCateName);
+//    print('catePrice: ' + this._selectedPrice.toString());
+//    print('cateCap: ' + this._selectedCapacity.toString());
+//    print('Price: ' + this._totalPrice.toString());
   }
 
   Widget _buildCate(String cate) {
@@ -878,6 +877,7 @@ class _CustomerDemandState extends State<CustomerDemand> {
   }
 
   Route _createRoute() {
+    print(facilitiesList);
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => Summary(
         colorCode: widget.facilityType.secondaryColorCode,
@@ -885,12 +885,11 @@ class _CustomerDemandState extends State<CustomerDemand> {
         endDate: startDate,
         startTime: startTime,
         endTime: endTime,
-        facId: facilitiesList.facilities[_selectedFacility].facId.toString() ==
-                null
+        facId: facilitiesList == null
             ? '0'
             : facilitiesList.facilities[_selectedFacility].facId.toString(),
         type: _selectedCateName,
-        code: facilitiesList.facilities[_selectedFacility].code == null
+        code: facilitiesList == null
             ? 'errorCode'
             : facilitiesList.facilities[_selectedFacility].code,
         totalPrice: _totalPrice.toString(),
