@@ -5,13 +5,16 @@ const {
 
 exports.getReservationHistoryList = (request, response) => {
     const id = request.body.userId;
-    knex.select().from('meetee.users as user')
-        .join('meetee.reservation as resv', 'resv.user_id', '=', 'user.id')
+    knex.select('fac.id', 'cate.name', 'fac.code', 'fac.floor', 'resv.start_time', 'resv.end_time', 'resv.status', 'cate.price')
+        .from('meeteenew.user as user')
+        .join('meeteenew.reservation as resv', 'user.id', '=', 'resv.user_id')
+        .join('meeteenew.facility as fac', 'resv.facility_id', '=', 'fac.id')
+        .join('meeteenew.facility_category as cate', 'fac.facility_category_id', '=', 'cate.id')
         .where('user.id', '=', id)
         .orderBy('resv.id', 'desc')
-        .then(results => response.json({
-            results
-        }))
+        .then(data => {
+            response.send(data)
+        })
 }
 
 exports.getReservationHistory = (request, response) => {
@@ -22,8 +25,7 @@ exports.getReservationHistory = (request, response) => {
         .fetch({
             withRelated: ['historyList']
         })
-        .then(data => response.json({
-            successful: true,
-            data
-        }))
+        .then(data => {
+            response.send(data)
+        })
 }
