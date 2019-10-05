@@ -7,31 +7,31 @@ exports.seed = function (knex, Promise) {
   return knex(`${schemaName}.${table}`).del()
     .then(function () {
         // Inserts seed entries
-        const reservList = [];
-        const amountOfFacilities = 22;
-        for (i = 1; i <= amountOfFacilities; i++) {
-          for (j = 1; j <= 30; j++) {
-            reservList.push({
-              facility_id: i,
-              start_time: '2019-11-' + j + ' 08:00:00',
-              end_time: '2019-11-' + j + '  10:00:00',
-              status: 'Booked',
-              user_id: 1
-            })
-          }
-        }
-        for (i = 1; i <= amountOfFacilities; i++) {
-          for (j = 1; j <= 31; j++) {
-            reservList.push({
-              facility_id: i,
-              start_time: '2019-12-' + j + ' 08:00:00',
-              end_time: '2019-12-' + j + '  10:00:00',
-              status: 'Booked',
-              user_id: 1
-            })
-          }
-        }
-        return knex(`${schemaName}.${table}`).insert(reservList);
+        // const reservList = [];
+        // const amountOfFacilities = 22;
+        // for (i = 1; i <= amountOfFacilities; i++) {
+        //   for (j = 1; j <= 30; j++) {
+        //     reservList.push({
+        //       facility_id: i,
+        //       start_time: '2019-11-' + j + ' 08:00:00',
+        //       end_time: '2019-11-' + j + '  10:00:00',
+        //       status: 'Booked',
+        //       user_id: 1
+        //     })
+        //   }
+        // }
+        // for (i = 1; i <= amountOfFacilities; i++) {
+        //   for (j = 1; j <= 31; j++) {
+        //     reservList.push({
+        //       facility_id: i,
+        //       start_time: '2019-12-' + j + ' 08:00:00',
+        //       end_time: '2019-12-' + j + '  10:00:00',
+        //       status: 'Booked',
+        //       user_id: 1
+        //     })
+        //   }
+        // }
+        // return knex(`${schemaName}.${table}`).insert(reservList);
         // for (i = 1; i < 40; i++) {
         //   reservList.push({
         //     facility_id: i,

@@ -9,6 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate:make": "cross-env NODE_ENV=development knex migrate:make --knexfile config/knexfile.js",
     "migrate:latest": "cross-env NODE_ENV=development knex migrate:latest --knexfile config/knexfile.js",
+    "prodmigrate:latest": "cross-env NODE_ENV=production knex migrate:latest --knexfile config/knexfile.js",
     "migrate:rollback": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js",
     "seed:make": "cross-env NODE_ENV=development knex seed:make --knexfile config/knexfile.js",
     "seed:run": "cross-env NODE_ENV=development knex seed:run --knexfile config/knexfile.js",
