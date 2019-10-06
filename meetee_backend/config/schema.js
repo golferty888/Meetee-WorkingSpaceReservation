@@ -1,8 +1,8 @@
 module.exports = {
     name: 'meeteenew',
     table: {
-        user: 'user',
-        facility_class: 'facility_class',
+        user: 'users',
+        facility_class: 'facility_type',
         facility_category: 'facility_category',
         facility: 'facility',
         reserv: 'reservation',
