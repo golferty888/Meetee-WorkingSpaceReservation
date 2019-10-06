@@ -10,12 +10,12 @@ module.exports = {
             host: 'localhost',
             user: 'meetee_admin',
             password: 'meetee_admin',
-            database: 'meeteedb',
+            database: 'sit',
             schema: 'meeteenew',
             charset: 'utf8',
             timezone: '+07'
         },
-        pg_connection: 'postgres://meetee_admin:meetee_admin@127.0.0.1:5432/meeteedb',
+        pg_connection: 'postgres://meetee_admin:meetee_admin@127.0.0.1:5432/sit',
         pool: {
             afterCreate: function (connection, callback) {
                 connection.query(`SET timezone = 'UTC-07';`, function (err) {
