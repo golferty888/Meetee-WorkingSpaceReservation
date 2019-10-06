@@ -9,6 +9,9 @@ CREATE TABLE meeteenew.reserv_audit(
     status      text        NOT NULL
 );
 
+CREATE OR REPLACE FUNCTION meeteenew.price_over_hours(numeric, timestamp, timestamp) RETURNS numeric
+    AS 'SELECT $1 * ((extract (hour from $3) - extract (hour from $2)) :: numeric)' LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION meeteenew.notify_event() RETURNS TRIGGER AS $$
     DECLARE
         record RECORD;
