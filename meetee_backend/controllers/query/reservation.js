@@ -40,14 +40,13 @@ exports.getAllReservations = (request, response) => {
     .fetchAll({
       withRelated: [{
         reservationDetail: function (query) {
-          query.orderBy('facility_id', 'ASC')
+          query.orderBy('facility_id', 'DESC')
         }
       }, 'user']
     })
-    .then(data => response.json({
-      success: true,
-      data
-    }))
+    .then(data => {
+      response.send(data)
+    })
 }
 
 exports.reserv2 = (request, response) => {

@@ -12,10 +12,9 @@ exports.getAllFacility = (request, response) => {
         .fetchAll({
             withRelated: ['facilityCategory']
         })
-        .then(data => response.json({
-            successful: true,
-            data
-        }))
+        .then(data => {
+            response.send(data)
+        })
 }
 
 exports.getAllFacilityCategory = (request, response) => {
