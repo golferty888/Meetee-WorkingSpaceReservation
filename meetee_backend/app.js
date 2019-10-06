@@ -26,50 +26,49 @@ const facility = require('./controllers/query/facility')
 const facStatus = require('./controllers/query/facilityStatus')
 const user = require('./controllers/query/user')
 const reservation = require('./controllers/query/reservation')
-
+// Rest API
+// Getting Room/Seat Information
 app.get('/fac', facility.getAllFacility)
 app.get('/fac/class/:id', facility.getFacilityFromClass)
 app.get('/fac/category/all', facility.getAllFacilityCategory)
-app.post('/user/history', user.getReservationHistoryList)
+// Checking Room/Seat Status
 app.post('/facility/cate/status', facStatus.checkStatusEachFacilityCategory)
 app.post('/facility/cate/status/av', facStatus.checkStatusAvaialableEachFacilityCategory)
 app.post('/facility/class/status', facStatus.checkStatusEachFacilityClass)
 app.post('/facility/all/status', facStatus.checkStatusAllFacilities)
+// Do Reserve Room/Seat
 app.post('/reserve', reservation.reserve)
+// Reservation Information
+app.post('/user/history', user.getReservationHistoryList)
 app.get('/reservations', reservation.getAllReservations)
 
 app.get("/", (request, response) => {
-  response.send("Meetee welcome!");
+  response.send("MeeteeAPI welcome!");
 });
 
 app.use("*", function (request, response) {
   response.status(404).send('404, Not found');
 });
 
+// Postgres Client Connections
 const pgConnectionString = process.env.POSTGRES_CONNECTION_URL;
 console.log(pgConnectionString)
 const pgClient1 = new pg.Client(pgConnectionString);
 const pgClient2 = new pg.Client(pgConnectionString);
-
 pgClient1.connect();
 pgClient2.connect();
 
 const query1 = pgClient1.query("LISTEN events")
 const query2 = pgClient2.query("LISTEN events")
 
-
-
+// Socket.io and WebSocket Connections
 const io = require('socket.io')(server);
-
 const WebSocket = require('ws')
-// const wss = new WebSocket.Server({
-//   port: 9001
-// })
+
 const wss = new WebSocket.Server({
   server: server,
   port: 9001
 })
-
 
 io.on("connection", (socket) => {
   console.log("userId: " + socket.id + " connected.")
@@ -79,13 +78,6 @@ io.on("connection", (socket) => {
     console.log("!userId: " + socket.id + " disconnected.")
   })
 })
-
-// wss.on('connection', ws => {
-//   ws.on('message', message => {
-//     console.log(`Receive message => ${message}`)
-//   })
-//   ws.send('Websocket: websocket is connected.');
-// })
 
 wss.on('open', function open() {
   console.log('connected');
@@ -127,21 +119,3 @@ server.on('upgrade', function (req, socket) {
   // Generate the response value to use in the response: const hash = generateAcceptValue(acceptKey); 
   // Write the HTTP response into an array of response lines: const responseHeaders = [ 'HTTP/1.1 101 Web Socket Protocol Handshake', 'Upgrade: WebSocket', 'Connection: Upgrade', `Sec-WebSocket-Accept: ${hash}` ]; // Write the response back to the client socket, being sure to append two // additional newlines so that the browser recognises the end of the response // header and doesn't continue to wait for more header data: socket.write(responseHeaders.join('\r\n') + '\r\n\r\n');
 });
-
-
-// pgClient.on("notification", (data) => {
-//   const payload = data.payload
-//   console.log("data.payload2: , " + data.payload)
-//   wss.on('connection', ws => {
-//     ws.send("reservation_table is updated.")
-//   })
-// })
-
-
-
-// pgClient.on('error', function (err, client) {
-//   console.log('pg::error', {
-//     err: err,
-//     client: client
-//   });
-// });
