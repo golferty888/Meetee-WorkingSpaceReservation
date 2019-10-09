@@ -20,7 +20,7 @@
     "int2": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js && knex migrate:latest --knexfile config/knexfile.js",
     "int3": "cross-env NODE_ENV=development knex migrate:rollback --knexfile config/knexfile.js && knex migrate:latest --knexfile config/knexfile.js && knex seed:run --knexfile config/knexfile.js && npm run pgmigration",
     "prodint3": "cross-env NODE_ENV=production knex migrate:rollback --knexfile config/knexfile.js && cross-env NODE_ENV=production knex migrate:latest --knexfile config/knexfile.js && cross-env NODE_ENV=production knex seed:run --knexfile config/knexfile.js && npm run pgmigration && npm run dev",
-    "dbmax": "npm run int3 && npm run pgmigration",
+    "dbmax": "npm run int3 && npm run pgmigration && npm run dev",
     "proddbmax": "npm run prodint3 && npm run pgmigration"
   },
   "author": "Tanapat Panakit and Pronsawan",
