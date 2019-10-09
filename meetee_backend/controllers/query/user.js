@@ -4,9 +4,10 @@ const {
 } = require('../../models/user')
 
 exports.getReservationHistoryList = (request, response) => {
+    console.log("getHistory")
     const id = request.body.userId;
-    knex.select('resv.id as reservId' , 'fac.id as facId', 'cate.name', 'fac.code', 'fac.floor', 'resv.start_time', 'resv.end_time', 'resv.status', 'cate.price')
-        .from('meeteenew.user as user')
+    knex('meeteenew.users as user')
+        .select(knex.raw(`resv.id as reservId, fac.id as facId, cate.name, fac.code, fac.floor, resv.start_time, resv.end_time, cate.price as price_per_hour, meeteenew.hour_cal(resv.start_time, resv.end_time) as hour, meeteenew.price_over_hours(cate.price, resv.start_time, resv.end_time) as total_price, resv.status`))
         .join('meeteenew.reservation as resv', 'user.id', '=', 'resv.user_id')
         .join('meeteenew.facility as fac', 'resv.facility_id', '=', 'fac.id')
         .join('meeteenew.facility_category as cate', 'fac.facility_category_id', '=', 'cate.id')
@@ -14,6 +15,9 @@ exports.getReservationHistoryList = (request, response) => {
         .orderBy('resv.id', 'desc')
         .then(data => {
             response.send(data)
+        })
+        .catch(error => {
+            console.log(error)
         })
 }
 
