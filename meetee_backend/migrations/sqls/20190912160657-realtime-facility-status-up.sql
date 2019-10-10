@@ -9,11 +9,20 @@ CREATE TABLE meeteenew.reserv_audit(
     status      text        NOT NULL
 );
 
+CREATE OR REPLACE FUNCTION meeteenew.time_period(timestamp with time zone, timestamp with time zone) RETURNS text AS $$
+    SELECT (date_part('hour', $1) :: text) || ':00 to ' || (date_part('hour', $2) :: text) || ':00';
+    $$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION meeteenew.hour_cal(timestamp with time zone, timestamp with time zone) RETURNS numeric
     AS 'SELECT ((extract (hour from $2) - extract (hour from $1)) :: numeric)' LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION meeteenew.price_over_hours(numeric, timestamp with time zone, timestamp with time zone) RETURNS numeric
     AS 'SELECT $1 * ((extract (hour from $3) - extract (hour from $2)) :: numeric)' LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION meeteenew.get_reserv_history(numeric, timestamp with time zone, timestamp with time zone) 
+    RETURNS TABLE (timePeriod text, hour numeric, priceTotal numeric)
+    AS $$ SELECT meeteenew.time_period($2, $3), meeteenew.hour_cal($2, $3), meeteenew.price_over_hours($1, $2, $3)
+    $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION meeteenew.notify_event() RETURNS TRIGGER AS $$
     DECLARE
