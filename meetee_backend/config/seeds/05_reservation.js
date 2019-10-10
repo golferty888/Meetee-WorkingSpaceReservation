@@ -1,11 +1,39 @@
-const schema = require("../schema")
-const schemaName = schema.name
-const table = schema.table.reserv
+const schema = require("../schema");
+const schemaName = schema.name;
+const table = schema.table.reserv;
 
-exports.seed = function (knex, Promise) {
+exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex(`${schemaName}.${table}`).del()
-    .then(function () {
+  return knex(`${schemaName}.${table}`)
+    .del()
+    .then(
+      function() {
+        const reservList = [];
+        var i = 4;
+        reservList.push({
+          facility_id: i,
+          start_time: "2019-11-17" + " 08:00:00",
+          end_time: "2019-11-17" + "  10:00:00",
+          status: "Booked",
+          user_id: 1
+        });
+        i = 8;
+        reservList.push({
+          facility_id: i,
+          start_time: "2019-11-17" + " 08:00:00",
+          end_time: "2019-11-17" + "  09:00:00",
+          status: "Booked",
+          user_id: 1
+        });
+        i = 17;
+        reservList.push({
+          facility_id: i,
+          start_time: "2019-11-17" + " 08:00:00",
+          end_time: "2019-11-17" + "  11:00:00",
+          status: "Booked",
+          user_id: 1
+        });
+        return knex(`${schemaName}.${table}`).insert(reservList);
         // Inserts seed entries
         // const reservList = [];
         // const amountOfFacilities = 22;
