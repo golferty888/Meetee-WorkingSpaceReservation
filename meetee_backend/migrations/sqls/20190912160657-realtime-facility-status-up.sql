@@ -9,11 +9,18 @@ CREATE TABLE meeteenew.reserv_audit(
     status      text        NOT NULL
 );
 
-CREATE OR REPLACE FUNCTION meeteenew.time_period(timestamp with time zone, timestamp with time zone) RETURNS text AS $$
-    SELECT (date_part('hour', $1) :: text) || ':00 to ' || (date_part('hour', $2) :: text) || ':00';
+CREATE OR REPLACE FUNCTION meeteenew.date_format(timestamp with time zone, timestamp with time zone) 
+    RETURNS text AS $$
+    SELECT to_char($1, 'MonthDD, YYYY');
     $$ LANGUAGE SQL;
 
-CREATE OR REPLACE FUNCTION meeteenew.hour_cal(timestamp with time zone, timestamp with time zone) RETURNS numeric
+CREATE OR REPLACE FUNCTION meeteenew.time_period(timestamp with time zone, timestamp with time zone) 
+    RETURNS text AS $$
+    SELECT to_char($1, 'HH24:MI') || ' - ' || to_char($2, 'HH24:MI');
+    $$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION meeteenew.hour_cal(timestamp with time zone, timestamp with time zone) 
+    RETURNS numeric
     AS 'SELECT ((extract (hour from $2) - extract (hour from $1)) :: numeric)' LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION meeteenew.price_over_hours(numeric, timestamp with time zone, timestamp with time zone) RETURNS numeric
