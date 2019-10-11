@@ -1,3 +1,15 @@
+CREATE TABLE meeteenew.reservation(
+    id          INT GENERATED ALWAYS AS IDENTITY (START WITH 10001) PRIMARY KEY NOT NULL,
+    user_id     INT             NOT NULL,
+    facility_id INT             NOT NULL,
+    start_time  TIMESTAMP WITHOUT TIME ZONE NOT NULL,          
+    end_time    TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    status      VARCHAR(128)    NOT NULL,
+    create_at   TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    FOREIGN KEY(user_id) REFERENCES meeteenew.users(id),
+    FOREIGN KEY(facility_id) REFERENCES meeteenew.facility(id)
+);
+
 CREATE TABLE meeteenew.reserv_audit(
     operation   char(6)     NOT NULL,
     time_stamp  timestamp  NOT NULL,
@@ -64,48 +76,3 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER notify_reservation_event
     AFTER INSERT OR UPDATE OR DELETE ON meeteenew.reservation
     FOR EACH ROW EXECUTE PROCEDURE meeteenew.notify_event();
-
--- CREATE OR REPLACE FUNCTION meeteenew.notify_trigger_delete() 
---     RETURNS trigger AS 
---     $BODY$
---     -- DECLARE
---     BEGIN
---         PERFORM pg_notify('new_delete_data', row_to_json(NEW)::text);
---         RETURN NULL;
---     END;
---     $BODY$
---     LANGUAGE plpgsql VOLATILE;
-
--- CREATE TRIGGER reservation_insert_trigger 
---     AFTER INSERT OR UPDATE ON meeteenew.reservation
---     FOR EACH ROW EXECUTE PROCEDURE meeteenew.notify_trigger();
-
--- CREATE TRIGGER reservation_delete_trigger 
---     AFTER DELETE ON meeteenew.reservation
---     FOR EACH ROW EXECUTE PROCEDURE meeteenew.notify_trigger_delete();
-
--- CREATE OR REPLACE FUNCTION meeteenew.notify_trigger() 
---     RETURNS trigger AS 
---     $BODY$
---     -- DECLARE
---     BEGIN
---         PERFORM pg_notify('new_reserv_data', row_to_json(NEW)::text);
---         RETURN NULL;
---     END;
---     $BODY$
---     LANGUAGE plpgsql VOLATILE;
-
--- CREATE OR REPLACE FUNCTION meeteenew.notify_trigger_update() 
---     RETURNS trigger AS 
---     $BODY$
---     -- DECLARE
---     BEGIN
---         PERFORM pg_notify('new_update_data', row_to_json(NEW)::text);
---         RETURN NULL;
---     END;
---     $BODY$
---     LANGUAGE plpgsql VOLATILE;
-
--- CREATE TRIGGER reservation_update_status_trigger 
---     AFTER UPDATE OF status ON meeteenew.reservation
---     FOR EACH ROW EXECUTE PROCEDURE meeteenew.notify_trigger_update();
