@@ -1,4 +1,4 @@
-var knex = require("../../app").knex;
+var knex = require('../../app').knex;
 const {
   Reservation
 } = require('../../models/reservation')
@@ -11,13 +11,14 @@ exports.reserve = (request, response) => {
   const startTime = request.body.startTime;
   const endTime = request.body.endTime;
   const start_time = startDate + ' ' + startTime;
-  const end_time = endDate + ' ' + endTime;
+  const end_time = startDate + ' ' + endTime;
+  // const end_time = endDate + ' ' + endTime;
   const status = 'Booked';
   console.log('pre: ' + start_time + ' ' + end_time)
 
-  knex("meeteenew.reservation")
+  knex('meeteenew.reservation')
     .returning(
-      "id"
+      'id'
     )
     .insert([{
       user_id: userId,
