@@ -2,11 +2,12 @@ const knex = require('../../config/connection')
 
 exports.checkStatusAvaialableEachFacilityCategory = (request, response) => {
     const data = request.body
-    console.log("--> Request facility/category/status: " + JSON.stringify(data))
+    console.log("--> Request /facility/cate/status/av: " + JSON.stringify(data))
     const cateId = data.cateId
     const startDate = data.startDate
     const startTime = data.startDate + ' ' + data.startTime
-    const endTime = data.endDate + ' ' + data.endTime
+    // const endTime = data.endDate + ' ' + data.endTime
+    const endTime = data.startDate + ' ' + data.endTime
     const status = 'Booked'
     const user_id = data.userId
 
