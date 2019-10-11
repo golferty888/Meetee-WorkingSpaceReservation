@@ -7,7 +7,7 @@ exports.reserve = (request, response) => {
   const userId = request.body.userId;
   const facId = request.body.facId;
   const startDate = request.body.startDate;
-  const endDate = request.body.endDate;
+  // const endDate = request.body.endDate;
   const startTime = request.body.startTime;
   const endTime = request.body.endTime;
   const start_time = startDate + ' ' + startTime;
@@ -15,6 +15,10 @@ exports.reserve = (request, response) => {
   // const end_time = endDate + ' ' + endTime;
   const status = 'Booked';
   console.log('pre: ' + start_time + ' ' + end_time)
+
+  // knex('meeteenew.reservation as resv')
+  //   .select()
+  //   .where()
 
   knex('meeteenew.reservation')
     .returning(
