@@ -282,7 +282,7 @@ class _SummaryState extends State<Summary> {
                   ),
                   color: Color(widget.colorCode),
                   onPressed: () {
-//                    reserveSeat();
+                    reserveSeat();
                     showDialog(
                       context: context,
                       builder: (BuildContext context) => CustomDialog(

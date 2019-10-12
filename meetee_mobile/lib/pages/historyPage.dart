@@ -90,7 +90,7 @@ class _HistoryPageState extends State<HistoryPage> {
           child: Text(
             historiesList.histories[index].status,
             style: TextStyle(
-                color: historiesList.histories[index].status == 'booked'
+                color: historiesList.histories[index].status == 'Booked'
                     ? Colors.green
                     : Colors.red),
           ),

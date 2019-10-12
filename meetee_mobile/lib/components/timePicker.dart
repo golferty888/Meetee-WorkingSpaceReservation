@@ -45,8 +45,12 @@ class _TimePickerState extends State<TimePicker> {
 
   @override
   Widget build(BuildContext context) {
+    bool isChanging = false;
+
     if (widget.isToday) {
+      print('is today = true');
       if (TimeOfDay.now().hour >= 0 && TimeOfDay.now().hour < 8) {
+        print(widget.isToday);
         _values = RangeValues(
           8,
           9,
@@ -54,11 +58,12 @@ class _TimePickerState extends State<TimePicker> {
         _minTick = 8.0;
         _divisionTick = 14;
       } else {
-        _values = RangeValues(
-          TimeOfDay.now().hour.toDouble() + 1,
-          TimeOfDay.now().hour.toDouble() + 2,
-        );
+//        _values = RangeValues(
+////          TimeOfDay.now().hour.toDouble() + 1,
+////          TimeOfDay.now().hour.toDouble() + 2,
+////        );
         _minTick = TimeOfDay.now().hour.toDouble() + 1.0;
+
         _divisionTick = 21 - TimeOfDay.now().hour;
       }
     } else {
@@ -95,7 +100,12 @@ class _TimePickerState extends State<TimePicker> {
                 child: RangeSlider(
                   activeColor: widget.primaryColor,
                   inactiveColor: Color(widget.secondaryColor),
-                  values: _values,
+                  values: _values.start >= _minTick
+                      ? _values
+                      : RangeValues(
+                          TimeOfDay.now().hour.toDouble() + 1,
+                          TimeOfDay.now().hour.toDouble() + 2,
+                        ),
                   labels: RangeLabels(
                     '${_values.start.round()}',
                     '${_values.end.round()}',
@@ -116,6 +126,7 @@ class _TimePickerState extends State<TimePicker> {
                             _values = RangeValues(_values.end - 1, _values.end);
                           }
                         }
+                        isChanging = true;
                       },
                     );
                   },

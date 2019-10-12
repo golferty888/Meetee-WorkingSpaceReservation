@@ -65,10 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               Text(
-                'A place for relaxing.',
+                'We have a space for you.',
                 style: TextStyle(
                   fontSize: 24.0,
-                  letterSpacing: 2.0,
+                  letterSpacing: 1.0,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     horizontal: 24.0,
                   ),
                   padding: EdgeInsets.symmetric(vertical: 16.0),
-                  width: 120.0,
+                  width: 140.0,
                   child: Text(
                     'HISTORY',
                     textAlign: TextAlign.center,
@@ -135,9 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     horizontal: 24.0,
                   ),
                   padding: EdgeInsets.symmetric(vertical: 16.0),
-                  width: 120.0,
+                  width: 140.0,
                   child: Text(
-                    'TAKE A SEAT',
+                    'START BOOKING',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       letterSpacing: 2.0,

@@ -11,6 +11,7 @@ import 'package:meetee_mobile/model/facility.dart';
 
 import 'package:meetee_mobile/components/datePicker.dart';
 import 'package:meetee_mobile/components/timePicker.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class CustomerDemand extends StatefulWidget {
   final FacilityType facilityType;
@@ -32,6 +33,8 @@ class _CustomerDemandState extends State<CustomerDemand> {
   final double valueFontSize = 14.0;
   final String getSeatByCateURL =
       'http://18.139.12.132:9000/facility/cate/status/av';
+  final WebSocketChannel channel =
+      IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
 
   @override
   void initState() {
@@ -48,15 +51,21 @@ class _CustomerDemandState extends State<CustomerDemand> {
     super.initState();
   }
 
-  _connectSocket01() async {
-    final channel =
-        await IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
+  Future _connectSocket01() async {
+//    final channel =
+//        await IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
     print('connect');
     channel.sink.add("Hello, this is Meetee");
     channel.stream.listen((message) {
       print(message);
       getSeatByCategory();
     });
+  }
+
+  @override
+  void dispose() {
+    channel.sink.close();
+    super.dispose();
   }
 
   FacilitiesList facilitiesList;
@@ -121,7 +130,8 @@ class _CustomerDemandState extends State<CustomerDemand> {
   bool _isToday = true;
   _checkIsToday() {
     if (this.startDate == DateFormat("yyyy-MM-dd").format(DateTime.now()) &&
-        TimeOfDay.now().hour < 21) {
+        (TimeOfDay.now().hour < 21 && TimeOfDay.now().hour >= 8)) {
+      print('today');
       setState(() {
         _isToday = true;
       });
