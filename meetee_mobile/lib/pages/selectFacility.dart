@@ -4,6 +4,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:meetee_mobile/components/scaleRoute.dart';
 
 import 'package:meetee_mobile/model/facilityType.dart';
+import 'package:meetee_mobile/pages/bookingPage.dart';
 import 'package:meetee_mobile/pages/customerDemand.dart';
 import 'package:meetee_mobile/pages/facilityDetail.dart';
 
@@ -267,7 +268,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
 
   Route _createRoute(index) {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => CustomerDemand(
+      pageBuilder: (context, animation, secondaryAnimation) => BookingPage(
         facilityType: facilityTypeList[index],
         index: index,
         subType: index == 0 ? 'Seat' : 'Room',
