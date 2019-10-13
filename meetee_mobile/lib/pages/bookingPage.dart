@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meetee_mobile/components/calendarPicker.dart';
+import 'package:meetee_mobile/components/periodPicker.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
 
 class BookingPage extends StatefulWidget {
@@ -54,20 +55,12 @@ class _BookingPageState extends State<BookingPage> {
               Row(
                 children: <Widget>[
                   Expanded(
+                    flex: 1,
                     child: CalendarPicker(),
                   ),
                   Expanded(
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Time'),
-                          Text(
-                            DateTime.now().toString(),
-                          )
-                        ],
-                      ),
-                    ),
+                    flex: 1,
+                    child: PeriodPicker(),
                   ),
                 ],
               )

@@ -76,13 +76,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.3"
+  flutter_picker:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "2194787281e51320095a07662d0c6817a2a7f5ca"
+      url: "git://github.com/yangyxd/flutter_picker.git"
+    source: git
+    version: "1.0.15"
   flutter_svg:
     dependency: "direct main"
     description:
       name: flutter_svg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.1"
+    version: "0.14.2"
   flutter_swiper:
     dependency: "direct main"
     description:
@@ -253,7 +262,7 @@ packages:
       name: web_socket_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.15"
+    version: "1.1.0"
   xml:
     dependency: transitive
     description:
