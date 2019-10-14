@@ -23,6 +23,19 @@ class BookingPage extends StatefulWidget {
   _BookingPageState createState() => _BookingPageState();
 }
 
+Widget _flightShuttleBuilder(
+  BuildContext flightContext,
+  Animation<double> animation,
+  HeroFlightDirection flightDirection,
+  BuildContext fromHeroContext,
+  BuildContext toHeroContext,
+) {
+  return DefaultTextStyle(
+    style: DefaultTextStyle.of(toHeroContext).style,
+    child: toHeroContext.widget,
+  );
+}
+
 class _BookingPageState extends State<BookingPage> {
   List categoryNameList;
 
@@ -150,6 +163,7 @@ class _BookingPageState extends State<BookingPage> {
                           child: Swiper(
                               itemBuilder: (BuildContext context, int index) {
                                 return Hero(
+                                  flightShuttleBuilder: _flightShuttleBuilder,
                                   tag: 'category + ${index.toString()}',
                                   child: Container(
                                     padding: EdgeInsets.all(8.0),

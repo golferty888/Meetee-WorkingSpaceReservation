@@ -22,6 +22,19 @@ class FacilityDetail extends StatefulWidget {
   FacilityDetailState createState() => FacilityDetailState();
 }
 
+Widget _flightShuttleBuilder(
+  BuildContext flightContext,
+  Animation<double> animation,
+  HeroFlightDirection flightDirection,
+  BuildContext fromHeroContext,
+  BuildContext toHeroContext,
+) {
+  return DefaultTextStyle(
+    style: DefaultTextStyle.of(toHeroContext).style,
+    child: toHeroContext.widget,
+  );
+}
+
 class FacilityDetailState extends State<FacilityDetail> {
   @override
   Widget build(BuildContext context) {
@@ -30,6 +43,7 @@ class FacilityDetailState extends State<FacilityDetail> {
       body: Stack(
         children: <Widget>[
           Hero(
+            flightShuttleBuilder: _flightShuttleBuilder,
             tag: 'category + ${widget.index.toString()}',
             child: Container(
               decoration: BoxDecoration(
