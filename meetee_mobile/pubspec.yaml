@@ -52,6 +52,7 @@ flutter:
     - images/
     - images/facility/
     - images/facilityType/
+    - images/category/seat/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

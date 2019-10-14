@@ -45,11 +45,11 @@ class _CalendarPickerState extends State<CalendarPicker> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(24.0, 24.0, 12.0, 12.0),
-      height: 84.0,
+      margin: EdgeInsets.fromLTRB(24.0, 8.0, 12.0, 16.0),
+      height: 72.0,
       child: GestureDetector(
         child: Container(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8.0),
@@ -65,12 +65,12 @@ class _CalendarPickerState extends State<CalendarPicker> {
                 ),
               ),
               SizedBox(
-                height: 8.0,
+                height: 4.0,
               ),
               Text(
                 formattedDate,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                 ),
               ),
             ],

@@ -24,21 +24,25 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       0xFFFAD74E,
       {
         'Single chair': {
+          'cateImage': 'images/category/seat/single_chair.jpg',
           'cateId': '4',
           'capacity': 1,
           'price': 30,
         },
         'Bar chair': {
+          'cateImage': 'images/category/seat/bar_chair.jpg',
           'cateId': '5',
           'capacity': 1,
           'price': 30,
         },
         'Single sofa': {
+          'cateImage': 'images/category/seat/single_sofa.jpg',
           'cateId': '6',
           'capacity': 1,
           'price': 40,
         },
         'Twin sofa': {
+          'cateImage': 'images/category/seat/twin_sofa.jpg',
           'cateId': '7',
           'capacity': 2,
           'price': 60,
