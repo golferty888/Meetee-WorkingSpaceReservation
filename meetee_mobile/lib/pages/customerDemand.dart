@@ -438,14 +438,6 @@ class _CustomerDemandState extends State<CustomerDemand> {
           ),
         ),
         body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                'images/noise.png',
-              ),
-              fit: BoxFit.fill,
-            ),
-          ),
           child: SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,

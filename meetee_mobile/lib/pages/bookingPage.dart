@@ -58,16 +58,7 @@ class _BookingPageState extends State<BookingPage> {
         ),
       ),
       body: Container(
-//        decoration: BoxDecoration(
-//          image: DecorationImage(
-//            image: AssetImage(
-//              'images/noise.png',
-//            ),
-//            fit: BoxFit.fill,
-//          ),
-//            ),
         child: Container(
-//          color: Colors.white,
           child: SafeArea(
             child: Column(
               children: <Widget>[
@@ -76,12 +67,6 @@ class _BookingPageState extends State<BookingPage> {
                     color: Color(
                       widget.facilityType.secondaryColorCode,
                     ),
-//                    image: DecorationImage(
-//                      image: AssetImage(
-//                        'images/noise.png',
-//                      ),
-//                      fit: BoxFit.fill,
-//                    ),
                   ),
                   child: Row(
                     children: <Widget>[
@@ -261,9 +246,6 @@ class _BookingPageState extends State<BookingPage> {
                             itemCount: categoryNameList.length,
                             viewportFraction: 0.7,
                             scale: 0.7,
-//                            pagination: SwiperPagination(
-//                              margin: EdgeInsets.fromLTRB(0.0, 0, 0.0, 16.0),
-//                            ),
                           ),
                         ),
                       ),
