@@ -49,7 +49,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
         },
       },
       [
-        '1-2 People',
+        '1-2 PERSONS',
         'Wi-Fi',
         'Power bar',
       ],
@@ -82,7 +82,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
         },
       },
       [
-        '4-12 people',
+        '4-12 PERSONS',
         'Wi-Fi',
         'Apple TV',
       ],
@@ -103,7 +103,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
         },
       },
       [
-        '30 People',
+        '30 PERSONS',
         'Wi-Fi',
         'Whiteboard & Pen',
       ],

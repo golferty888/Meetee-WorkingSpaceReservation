@@ -6,6 +6,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:meetee_mobile/components/calendarPicker.dart';
 import 'package:meetee_mobile/components/periodPicker.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
+import 'package:meetee_mobile/pages/facilityDetail.dart';
 
 class BookingPage extends StatefulWidget {
   final FacilityType facilityType;
@@ -74,7 +75,8 @@ class _BookingPageState extends State<BookingPage> {
                         child: GestureDetector(
                           onTap: () => Navigator.pop(context),
                           child: Container(
-                            padding: EdgeInsets.fromLTRB(40.0, 8.0, 16.0, 8.0),
+                            padding:
+                                EdgeInsets.fromLTRB(40.0, 16.0, 16.0, 16.0),
                             height: 160.0,
                             child: Hero(
                               tag: 'facilityType' + widget.index.toString(),
@@ -146,107 +148,191 @@ class _BookingPageState extends State<BookingPage> {
                         child: Container(
                           color: Colors.white,
                           child: Swiper(
-                            itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                padding: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                  color: Colors.white,
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      widget.facilityType.categories[
-                                          categoryNameList[index]]["cateImage"],
-                                    ),
-                                    fit: BoxFit.fitHeight,
-                                  ),
-                                ),
-                                margin: EdgeInsets.fromLTRB(
-                                  0,
-                                  16,
-                                  0,
-                                  24.0,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Container(),
-                                    ),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.vertical(
-                                        bottom: Radius.circular(16.0),
-                                      ),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaX: 5.0,
-                                          sigmaY: 5.0,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Hero(
+                                  tag: 'category + ${index.toString()}',
+                                  child: Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      color: Colors.white,
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          widget.facilityType.categories[
+                                                  categoryNameList[index]]
+                                              ["cateImage"],
                                         ),
-                                        child: Container(
-                                          color: Colors.black.withOpacity(0.4),
-                                          padding: EdgeInsets.fromLTRB(
-                                              16.0, 8.0, 8.0, 8.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: <Widget>[
-                                              Text(
-                                                categoryNameList[index],
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  fontSize: 32.0,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              widget.facilityType.categories[
-                                                              categoryNameList[
-                                                                  index]]
-                                                          ["capacity"] >
-                                                      1
-                                                  ? Text(
-                                                      '${widget.facilityType.categories[categoryNameList[index]]["capacity"].toString()} persons',
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: TextStyle(
-                                                        fontSize: 18.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        letterSpacing: 1.5,
-                                                        color: Color(
-                                                          widget.facilityType
-                                                              .secondaryColorCode,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    margin: EdgeInsets.fromLTRB(
+                                      0,
+                                      16,
+                                      0,
+                                      24.0,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Container(),
+                                        ),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.vertical(
+                                            bottom: Radius.circular(16.0),
+                                          ),
+                                          child: BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                              sigmaX: 5.0,
+                                              sigmaY: 5.0,
+                                            ),
+                                            child: Container(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  16.0, 8.0, 8.0, 8.0),
+                                              child: Row(
+//                                                crossAxisAlignment:
+//                                                    CrossAxisAlignment.end,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .stretch,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          categoryNameList[
+                                                              index],
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style: TextStyle(
+                                                            fontSize: 24.0,
+                                                            color: Colors.white,
+//                                                            fontWeight:
+//                                                                FontWeight.bold,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    )
-                                                  : Text(
-                                                      '${widget.facilityType.categories[categoryNameList[index]]["capacity"].toString()} person',
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: TextStyle(
-                                                        fontSize: 18.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        letterSpacing: 1.5,
-                                                        color: Color(
-                                                          widget.facilityType
-                                                              .secondaryColorCode,
-                                                        ),
-                                                      ),
+                                                        widget.facilityType.categories[
+                                                                        categoryNameList[
+                                                                            index]]
+                                                                    [
+                                                                    "capacity"] >
+                                                                1
+                                                            ? Text(
+                                                                '${widget.facilityType.categories[categoryNameList[index]]["capacity"].toString()} persons',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      18.0,
+                                                                  letterSpacing:
+                                                                      1.5,
+                                                                  color: Color(
+                                                                    widget
+                                                                        .facilityType
+                                                                        .secondaryColorCode,
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : Text(
+                                                                '${widget.facilityType.categories[categoryNameList[index]]["capacity"].toString()} person',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      18.0,
+                                                                  letterSpacing:
+                                                                      1.5,
+                                                                  color: Color(
+                                                                    widget
+                                                                        .facilityType
+                                                                        .secondaryColorCode,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                      ],
                                                     ),
-                                            ],
+                                                  ),
+//
+                                                  Container(
+                                                    margin: EdgeInsets.fromLTRB(
+                                                        0.0, 0.0, 16.0, 0.0),
+                                                    width: 1,
+//                                                    height: double.maxFinite,
+                                                    height: 40.0,
+                                                    color: Colors.grey
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                  Container(
+                                                    width: 72.0,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          '฿${widget.facilityType.categories[categoryNameList[index]]["price"].toString()}',
+                                                          style: TextStyle(
+                                                            fontSize: 24.0,
+//                                                            color: Colors.white,
+//                                                            fontWeight:
+//                                                                FontWeight.bold,
+                                                            color: Color(
+                                                              widget
+                                                                  .facilityType
+                                                                  .secondaryColorCode,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '/per hour',
+                                                          style: TextStyle(
+                                                            fontSize: 16.0,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            },
-                            loop: false,
-                            itemCount: categoryNameList.length,
-                            viewportFraction: 0.7,
-                            scale: 0.7,
-                          ),
+                                  ),
+                                );
+                              },
+                              loop: false,
+                              itemCount: categoryNameList.length,
+                              viewportFraction: 0.7,
+                              scale: 0.75,
+                              onTap: (index) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return FacilityDetail(
+                                      index: index,
+                                      imgPath: widget.facilityType.categories[
+                                          categoryNameList[index]]["cateImage"],
+                                      categoryName: categoryNameList[index],
+                                      categoryDetail: widget.facilityType
+                                          .categories[categoryNameList[index]],
+                                      secondaryColor: widget
+                                          .facilityType.secondaryColorCode,
+                                    );
+                                  }),
+                                );
+                              }),
                         ),
                       ),
                     ],
