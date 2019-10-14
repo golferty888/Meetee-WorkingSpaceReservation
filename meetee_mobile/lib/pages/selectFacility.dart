@@ -19,7 +19,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       '2',
       'Chill\nRelax\nPrivate',
       'images/facilityType/person.svg',
-      'Single seat',
+      'Private seat',
       Colors.yellow[900],
       0xFFFAD74E,
       {
@@ -62,17 +62,20 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       Colors.red[800],
       0xFFFF8989,
       {
-        'Small': {
+        'Small room': {
+          'cateImage': 'images/category/room/room_s.jpg',
           'cateId': '1',
           'capacity': 4,
           'price': 120,
         },
-        'Medium': {
+        'Medium room': {
+          'cateImage': 'images/category/room/room_m.jpg',
           'cateId': '2',
           'capacity': 8,
           'price': 250,
         },
-        'Large': {
+        'Large room': {
+          'cateImage': 'images/category/room/room_l.jpg',
           'cateId': '3',
           'capacity': 12,
           'price': 400,
@@ -93,6 +96,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       0xFF92D2FC,
       {
         'Hall room': {
+          'cateImage': 'images/category/seminar/seminar.jpg',
           'cateId': '8',
           'capacity': 30,
           'price': 950,
@@ -112,7 +116,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 2.5,
+        elevation: 0.0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -143,10 +147,10 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                   color: Color(
                     facilityTypeList[index].secondaryColorCode,
                   ),
-                  image: DecorationImage(
-                    image: AssetImage('images/noise.png'),
-                    fit: BoxFit.fill,
-                  ),
+//                  image: DecorationImage(
+//                    image: AssetImage('images/noise.png'),
+//                    fit: BoxFit.fill,
+//                  ),
                 ),
                 margin: EdgeInsets.fromLTRB(
                   0,

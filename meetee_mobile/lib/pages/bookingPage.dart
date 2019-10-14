@@ -38,9 +38,12 @@ class _BookingPageState extends State<BookingPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(
+          widget.facilityType.secondaryColorCode,
+        ),
+        elevation: 0.0,
         title: Text(
-          'Booking',
+          'Booking ${widget.facilityType.typeName.toLowerCase()}',
           style: TextStyle(
             color: Colors.black,
             fontSize: 22.0,
@@ -55,68 +58,66 @@ class _BookingPageState extends State<BookingPage> {
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+//        decoration: BoxDecoration(
 //          image: DecorationImage(
 //            image: AssetImage(
 //              'images/noise.png',
 //            ),
 //            fit: BoxFit.fill,
 //          ),
-            ),
+//            ),
         child: Container(
 //          color: Colors.white,
           child: SafeArea(
             child: Column(
               children: <Widget>[
                 Container(
-                  color: Colors.grey[100],
-                  child: Column(
+                  decoration: BoxDecoration(
+                    color: Color(
+                      widget.facilityType.secondaryColorCode,
+                    ),
+//                    image: DecorationImage(
+//                      image: AssetImage(
+//                        'images/noise.png',
+//                      ),
+//                      fit: BoxFit.fill,
+//                    ),
+                  ),
+                  child: Row(
                     children: <Widget>[
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-//              color: Colors.black,
-                          height: 88.0,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            color: Color(
-                              widget.facilityType.secondaryColorCode,
-                            ),
-//                            image: DecorationImage(
-//                              image: AssetImage(
-//                                'images/noise.png',
-//                              ),
-//                              fit: BoxFit.fill,
-//                            ),
-                          ),
-                          margin: EdgeInsets.fromLTRB(
-                            24.0,
-                            16.0,
-                            24.0,
-                            8.0,
-                          ),
-                          padding: EdgeInsets.all(16.0),
-                          child: Hero(
-                            tag: 'facilityType' + widget.index.toString(),
-                            child: SvgPicture.asset(
-                              widget.facilityType.imagePath,
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(40.0, 8.0, 16.0, 8.0),
+                            height: 160.0,
+                            child: Hero(
+                              tag: 'facilityType' + widget.index.toString(),
+                              child: SvgPicture.asset(
+                                widget.facilityType.imagePath,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: CalendarPicker(),
+                      Expanded(
+                        child: Container(
+                          height: 200.0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: CalendarPicker(),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: PeriodPicker(),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: PeriodPicker(),
-                          ),
-                        ],
-                      ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -127,19 +128,33 @@ class _BookingPageState extends State<BookingPage> {
                       Container(
                         height: 56.0,
                         decoration: BoxDecoration(
-//                          color: Colors.grey,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(32.0),
+                          color: Color(
+                            widget.facilityType.secondaryColorCode,
                           ),
                         ),
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(36.0, 16.0, 0.0, 0.0),
-                          child: Text(
-                            'Select category',
-                            style: TextStyle(
-                              fontSize: 24.0,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(32.0),
                             ),
                           ),
+                          padding: EdgeInsets.fromLTRB(36.0, 20.0, 0.0, 0.0),
+                          child: categoryNameList.length > 1
+                              ? Text(
+                                  'We have ${categoryNameList.length} types of ${widget.facilityType.typeName.toLowerCase()}.',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: Colors.black54,
+                                  ),
+                                )
+                              : Text(
+                                  'We have ${categoryNameList.length} type of ${widget.facilityType.typeName.toLowerCase()}.',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: Colors.black54,
+                                  ),
+                                ),
                         ),
                       ),
                       Expanded(
@@ -164,7 +179,7 @@ class _BookingPageState extends State<BookingPage> {
                                   0,
                                   16,
                                   0,
-                                  48.0,
+                                  24.0,
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,7 +197,9 @@ class _BookingPageState extends State<BookingPage> {
                                           sigmaY: 5.0,
                                         ),
                                         child: Container(
-                                          padding: EdgeInsets.all(8.0),
+                                          color: Colors.black.withOpacity(0.4),
+                                          padding: EdgeInsets.fromLTRB(
+                                              16.0, 8.0, 8.0, 8.0),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.stretch,
@@ -191,24 +208,46 @@ class _BookingPageState extends State<BookingPage> {
                                                 categoryNameList[index],
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
-                                                  fontSize: 40.0,
+                                                  fontSize: 32.0,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                 ),
                                               ),
-                                              Text(
-                                                '${widget.facilityType.categories[categoryNameList[index]]["capacity"].toString()} persons',
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  fontSize: 24.0,
-                                                  fontWeight: FontWeight.bold,
-//                                              color: Colors.white,
-                                                  color: Color(
-                                                    widget.facilityType
-                                                        .secondaryColorCode,
-                                                  ),
-                                                ),
-                                              ),
+                                              widget.facilityType.categories[
+                                                              categoryNameList[
+                                                                  index]]
+                                                          ["capacity"] >
+                                                      1
+                                                  ? Text(
+                                                      '${widget.facilityType.categories[categoryNameList[index]]["capacity"].toString()} persons',
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        letterSpacing: 1.5,
+                                                        color: Color(
+                                                          widget.facilityType
+                                                              .secondaryColorCode,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      '${widget.facilityType.categories[categoryNameList[index]]["capacity"].toString()} person',
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        letterSpacing: 1.5,
+                                                        color: Color(
+                                                          widget.facilityType
+                                                              .secondaryColorCode,
+                                                        ),
+                                                      ),
+                                                    ),
                                             ],
                                           ),
                                         ),
@@ -216,37 +255,9 @@ class _BookingPageState extends State<BookingPage> {
                                     ),
                                   ],
                                 ),
-//                                child: Stack(
-//                                  children: <Widget>[
-//                                    ConstrainedBox(
-//                                      constraints: BoxConstraints.expand(),
-//                                      child: Container(
-//                                        margin: EdgeInsets.fromLTRB(
-//                                          24.0,
-//                                          300.0,
-//                                          24.0,
-//                                          24.0,
-//                                        ),
-//                                        height: 56.0,
-////                                            width: 160.0,
-////                                        decoration: BoxDecoration(
-//                                        color: Colors.grey,
-////                                        ),
-//                                        child: Text(
-//                                          categoryNameList[index],
-//                                          textAlign: TextAlign.right,
-//                                          style: TextStyle(
-//                                            fontSize: 48.0,
-//                                            fontWeight: FontWeight.bold,
-//                                            color: Colors.white,
-//                                          ),
-//                                        ),
-//                                      ),
-//                                    ),
-//                                  ],
-//                                ),
                               );
                             },
+                            loop: false,
                             itemCount: categoryNameList.length,
                             viewportFraction: 0.7,
                             scale: 0.7,
