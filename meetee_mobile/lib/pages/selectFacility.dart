@@ -117,12 +117,15 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 24.0),
+          child: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
-          onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Select facility type',
