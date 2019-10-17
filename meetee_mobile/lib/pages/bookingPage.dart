@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/calendarPicker.dart';
 import 'package:meetee_mobile/components/periodPicker.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
@@ -25,6 +26,44 @@ class BookingPage extends StatefulWidget {
 
 class _BookingPageState extends State<BookingPage> {
   List categoryNameList;
+
+//  String startDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
+  DateTime startDate = DateTime.now();
+  DateTime startTime = DateTime.now().add(
+    Duration(hours: 1),
+  );
+  DateTime endTime = DateTime.now().add(
+    Duration(hours: 2),
+  );
+
+  _updateStartDate(DateTime startDate) {
+//    String formatted = DateFormat("yyyy-MM-dd").format(startDate);
+    setState(() {
+      this.startDate = startDate;
+    });
+  }
+
+  _updateStartTime(DateTime startTime) {
+//    String formatted = TimeOfDay(hour: startTime, minute: 0)
+//            .toString()
+//            .split('(')[1]
+//            .split(')')[0] +
+//        ':00';
+    setState(() {
+      this.startTime = startTime;
+    });
+  }
+
+  _updateEndTime(DateTime endTime) {
+//    String formatted = TimeOfDay(hour: endTime, minute: 0)
+//            .toString()
+//            .split('(')[1]
+//            .split(')')[0] +
+//        ':00';
+    setState(() {
+      this.endTime = endTime;
+    });
+  }
 
   @override
   void initState() {
@@ -98,11 +137,16 @@ class _BookingPageState extends State<BookingPage> {
                             children: <Widget>[
                               Expanded(
                                 flex: 1,
-                                child: CalendarPicker(),
+                                child: CalendarPicker(
+                                  returnDate: _updateStartDate,
+                                ),
                               ),
                               Expanded(
                                 flex: 1,
-                                child: PeriodPicker(),
+                                child: PeriodPicker(
+                                  returnStartTime: _updateStartTime,
+                                  returnEndTime: _updateEndTime,
+                                ),
                               ),
                             ],
                           ),
@@ -390,6 +434,9 @@ class _BookingPageState extends State<BookingPage> {
         categoryName: categoryNameList[index],
         categoryDetail: widget.facilityType.categories[categoryNameList[index]],
         secondaryColor: widget.facilityType.secondaryColorCode,
+        startDate: startDate,
+        startTime: startTime,
+        endTime: endTime,
       ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);

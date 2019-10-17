@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
+import 'package:meetee_mobile/pages/seatMapPage.dart';
 
 class FacilityDetail extends StatefulWidget {
   final int type;
@@ -10,16 +11,22 @@ class FacilityDetail extends StatefulWidget {
   final String categoryName;
   final Map categoryDetail;
   final int secondaryColor;
+  final DateTime startDate;
+  final DateTime startTime;
+  final DateTime endTime;
 
-  FacilityDetail(
-      {Key key,
-      this.type,
-      this.index,
-      this.imgPath,
-      this.categoryName,
-      this.categoryDetail,
-      this.secondaryColor})
-      : super(key: key);
+  FacilityDetail({
+    Key key,
+    this.type,
+    this.index,
+    this.imgPath,
+    this.categoryName,
+    this.categoryDetail,
+    this.secondaryColor,
+    this.startDate,
+    this.startTime,
+    this.endTime,
+  }) : super(key: key);
   @override
   FacilityDetailState createState() => FacilityDetailState();
 }
@@ -46,8 +53,13 @@ class FacilityDetailState extends State<FacilityDetail> {
           ),
           SafeArea(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Container(
+//                  color: Colors.grey,
+                  height: 56.0,
+                ),
                 Expanded(child: Container()),
                 Center(
                   child: Container(
@@ -176,32 +188,45 @@ class FacilityDetailState extends State<FacilityDetail> {
                                       ),
                                       color: Color(widget.secondaryColor),
                                       onPressed: () {
-//                                            Navigator.of(context).push(
-//                                              _createRoute(),
-//                                            );
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SeatMapPage(
+                                              index: widget.index,
+                                              imgPath: widget.imgPath,
+                                              secondaryColor:
+                                                  widget.secondaryColor,
+                                              categoryName: widget.categoryName,
+                                              startDate: widget.startDate,
+                                              startTime: widget.startTime,
+                                              endTime: widget.endTime,
+                                            ),
+                                          ),
+                                        );
                                       },
                                       child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 16.0),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: widget.type == 0
-                                              ? Text(
-                                                  'Select seat'.toUpperCase(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    letterSpacing: 2.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                )
-                                              : Text(
-                                                  'Select room'.toUpperCase(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    letterSpacing: 2.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                )),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 16.0),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: widget.type == 0
+                                            ? Text(
+                                                'Select seat'.toUpperCase(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  letterSpacing: 2.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              )
+                                            : Text(
+                                                'Select room'.toUpperCase(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  letterSpacing: 2.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                      ),
                                     ),
                                   ),
                                 ],

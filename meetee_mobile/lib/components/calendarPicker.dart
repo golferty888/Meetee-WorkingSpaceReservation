@@ -20,7 +20,7 @@ class CalendarPicker extends StatefulWidget {
 
 class _CalendarPickerState extends State<CalendarPicker> {
   DateTime initialDate = DateTime.now();
-  String formattedDate = DateFormat('d, MMMM').format(DateTime.now());
+  String formattedDate = DateFormat('d MMMM').format(DateTime.now());
 
   Future<Null> calendar(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -36,8 +36,8 @@ class _CalendarPickerState extends State<CalendarPicker> {
     if (picked != null) {
       setState(() {
         initialDate = picked;
-        formattedDate = DateFormat('d, MMMM').format(picked);
-//        widget.returnDate(picked);
+        formattedDate = DateFormat('d MMMM').format(picked);
+        widget.returnDate(picked);
       });
     }
   }

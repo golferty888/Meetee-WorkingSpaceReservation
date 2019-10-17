@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 
 class PeriodPicker extends StatefulWidget {
+  final ValueChanged<DateTime> returnStartTime;
+  final ValueChanged<DateTime> returnEndTime;
+
+  PeriodPicker({
+    Key key,
+    this.returnStartTime,
+    this.returnEndTime,
+  }) : super(key: key);
   @override
   _PeriodPickerState createState() => _PeriodPickerState();
 }
