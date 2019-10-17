@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
 
 class FacilityDetail extends StatefulWidget {
+  final int type;
   final int index;
   final String imgPath;
   final String categoryName;
@@ -12,6 +13,7 @@ class FacilityDetail extends StatefulWidget {
 
   FacilityDetail(
       {Key key,
+      this.type,
       this.index,
       this.imgPath,
       this.categoryName,
@@ -179,19 +181,27 @@ class FacilityDetailState extends State<FacilityDetail> {
 //                                            );
                                       },
                                       child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 16.0),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Text(
-                                          'BOOK (30 Baht)',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            letterSpacing: 2.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 16.0),
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: widget.type == 0
+                                              ? Text(
+                                                  'Select seat'.toUpperCase(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    letterSpacing: 2.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                )
+                                              : Text(
+                                                  'Select room'.toUpperCase(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    letterSpacing: 2.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                )),
                                     ),
                                   ),
                                 ],

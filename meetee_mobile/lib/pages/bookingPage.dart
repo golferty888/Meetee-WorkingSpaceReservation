@@ -383,6 +383,7 @@ class _BookingPageState extends State<BookingPage> {
   Route _createRoute(index) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => FacilityDetail(
+        type: widget.index,
         index: index,
         imgPath: widget.facilityType.categories[categoryNameList[index]]
             ["cateImage"],
