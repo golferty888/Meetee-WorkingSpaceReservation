@@ -38,7 +38,7 @@ exports.getAvaialableFacWithAmount = async (request, response) => {
   // const statement2 = `select v1.cateId, count(distinct v1.facId) :: int from meeteenew.view_fac_status as v1
   // where
   // v1.classId = $1 and
-  // (v1.inDate is null or (inDate = $2 and 
+  // (v1.inDate is null or (inDate = $2 and
   // (v1.status = $3 and not ((timestamp '${startTime}', timestamp '${endTime}') overlaps (v1.start_time, v1.end_time))) or
   // (v1.status = $4 and ((timestamp '${startTime}', timestamp '${endTime}') overlaps (v1.start_time, v1.end_time)))))
   // group by v1.cateId
@@ -54,7 +54,8 @@ exports.getAvaialableFacWithAmount = async (request, response) => {
   //   console.log("Query is successful.");
   // });
 
-  // const statement = `select distinct v1.facId, v1.code, v1.floor, v1.cateId ,v1.cateName from meeteenew.view_fac_status as v1
+  // const statement = `select distinct v1.facId, v1.code, v1.floor, v1.cateId ,v1.cateName
+  // from meeteenew.view_fac_status as v1
   // where v1.cateId = $1 and
   // (v1.inDate is null or (inDate = $2 and
   // (v1.status = $3 and not ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (v1.start_time, v1.end_time))) or
@@ -80,59 +81,71 @@ exports.checkStatusAvaialableEachFacilityCategory = async (
   const cateId = data.cateId;
   const startDate = data.startDate;
   const startTime = data.startDate + " " + data.startTime;
-  // const endTime = data.endDate + ' ' + data.endTime
   const endTime = data.startDate + " " + data.endTime;
-  const status = "Booked";
-  const user_id = data.userId;
-  var output = [];
+  const statement = `select distinct v1.facId, v1.code, v1.floor, v1.cateId ,v1.cateName
+  from meeteenew.view_fac_status as v1
+  where cateId = $1 and facId not in
+    (select distinct v1.facId 
+    from meeteenew.view_fac_status as v1
+    where v1.cateId = $1 and
+    (inDate = $2 and
+    (v1.status = $3 and ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (v1.start_time, v1.end_time))) or
+    (v1.status = $4 and not ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (v1.start_time, v1.end_time)))))`;
+  const values = [cateId, startDate, "Booked", "Cancelled"];
+  pool.query(statement, values, (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  });
 
-  const unavailableQuery = knex("meeteenew.reservation as resv")
-    .distinct("resv.facility_id as id")
-    // .select('fac.code as code', 'fac.floor as floor', 'cate.id as cateId', 'cate.name as cateName')
-    .join("meeteenew.facility as fac", "resv.facility_id", "=", "fac.id")
-    .join(
-      "meeteenew.facility_category as cate",
-      "fac.facility_category_id",
-      "=",
-      "cate.id"
-    )
-    .where("cate.id", "=", cateId)
-    .whereNot("resv.status", "Cancelled")
-    .andWhere(function() {
-      this.orWhere(
-        knex.raw(
-          `(TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') OVERLAPS (resv.start_time, resv.end_time)`
-        )
-      );
-    })
-    .orderBy("id");
+  // const unavailableQuery = knex("meeteenew.reservation as resv")
+  //   .distinct("resv.facility_id as id")
+  //   // .select('fac.code as code', 'fac.floor as floor', 'cate.id as cateId', 'cate.name as cateName')
+  //   .join("meeteenew.facility as fac", "resv.facility_id", "=", "fac.id")
+  //   .join(
+  //     "meeteenew.facility_category as cate",
+  //     "fac.facility_category_id",
+  //     "=",
+  //     "cate.id"
+  //   )
+  //   .where("cate.id", "=", cateId)
+  //   .whereNot("resv.status", "Cancelled")
+  //   .andWhere(function() {
+  //     this.orWhere(
+  //       knex.raw(
+  //         `(TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') OVERLAPS (resv.start_time, resv.end_time)`
+  //       )
+  //     );
+  //   })
+  //   .orderBy("id");
 
-  const availableQuery = knex("meeteenew.facility as fac")
-    .select(
-      "fac.id as facId",
-      "fac.code as code",
-      "fac.floor as floor",
-      "cate.id as cateId",
-      "cate.name as cateName"
-    )
-    .join(
-      "meeteenew.facility_category as cate",
-      "fac.facility_category_id",
-      "=",
-      "cate.id"
-    )
-    .where("cate.id", "=", cateId)
-    .andWhere("fac.id", "NOT IN", unavailableQuery)
-    .orderBy("facId")
-    .then(data => {
-      console.log("data: " + JSON.stringify(data));
-      // output = data;
-      response.send(data);
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(400).send("Bad request");
-    });
+  // const availableQuery = knex("meeteenew.facility as fac")
+  //   .select(
+  //     "fac.id as facId",
+  //     "fac.code as code",
+  //     "fac.floor as floor",
+  //     "cate.id as cateId",
+  //     "cate.name as cateName"
+  //   )
+  //   .join(
+  //     "meeteenew.facility_category as cate",
+  //     "fac.cate_id",
+  //     "=",
+  //     "cate.id"
+  //   )
+  //   .where("cate.id", "=", cateId)
+  //   .andWhere("fac.id", "NOT IN", unavailableQuery)
+  //   .orderBy("facId")
+  //   .then(data => {
+  //     console.log("data: " + JSON.stringify(data));
+  //     // output = data;
+  //     response.send(data);
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //     response.status(400).send("Bad request");
+  //   });
 
   // availableQuery.then(data => {
   //   output = data;
