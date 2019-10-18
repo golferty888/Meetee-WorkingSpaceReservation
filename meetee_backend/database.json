@@ -1,5 +1,8 @@
 {
     "dev": {
-            "ENV": "POSTGRES_CONNECTION_URL"
+        "ENV": "POSTGRES_CONNECTION_URL_DEV"
+    },
+    "prod": {
+        "ENV": "POSTGRES_CONNECTION_URL_PROD"
     }
 }
