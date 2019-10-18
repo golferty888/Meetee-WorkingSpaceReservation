@@ -14,7 +14,7 @@ exports.getReservationHistoryList = (request, response) => {
         fac.code, 
         fac.floor, 
         cate.price as price, 
-        meeteenew.date_format(resv.start_time, resv.end_time) as date, 
+        meeteenew.date_format1(resv.start_time) as date, 
         meeteenew.time_period(resv.start_time, resv.end_time) as period, 
         meeteenew.hour_cal(resv.start_time, resv.end_time) as hour, 
         meeteenew.price_over_hours(cate.price, resv.start_time, resv.end_time) as total_price, 
