@@ -11,6 +11,6 @@ create or replace view meeteenew.view_fac_status as
 	join meeteenew.facility_category cate on fac.cate_id = cate.id;
 
 create or replace view meeteenew.view_category_detail as 
-	select cate.id cateId, cate.name cateName, cate.capacity, cate.price, type.id typeId, type.name typeName
+	select cate.id cateId, cate.name cateName, cate.capacity, cate.price, cate.link_url, type.id typeId, type.name typeName
 	from meeteenew.facility_category cate
 	join meeteenew.facility_type type on cate.type_id = type.id;
