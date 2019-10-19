@@ -431,6 +431,8 @@ class _BookingPageState extends State<BookingPage> {
         index: index,
         imgPath: widget.facilityType.categories[categoryNameList[index]]
             ["cateImage"],
+        cateId: widget.facilityType.categories[categoryNameList[index]]
+            ["cateId"],
         categoryName: categoryNameList[index],
         categoryDetail: widget.facilityType.categories[categoryNameList[index]],
         secondaryColor: widget.facilityType.secondaryColorCode,

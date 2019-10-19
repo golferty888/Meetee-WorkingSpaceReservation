@@ -16,7 +16,7 @@ class FacilitiesList {
 class Facility {
   int facId = 0;
   String code = '';
-  String floor = '';
+  int floor = 0;
   int cateId = 0;
   String status = '';
 

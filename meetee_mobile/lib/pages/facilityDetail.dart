@@ -8,6 +8,7 @@ class FacilityDetail extends StatefulWidget {
   final int type;
   final int index;
   final String imgPath;
+  final String cateId;
   final String categoryName;
   final Map categoryDetail;
   final int secondaryColor;
@@ -20,6 +21,7 @@ class FacilityDetail extends StatefulWidget {
     this.type,
     this.index,
     this.imgPath,
+    this.cateId,
     this.categoryName,
     this.categoryDetail,
     this.secondaryColor,
@@ -196,6 +198,7 @@ class FacilityDetailState extends State<FacilityDetail> {
                                               imgPath: widget.imgPath,
                                               secondaryColor:
                                                   widget.secondaryColor,
+                                              cateId: widget.cateId,
                                               categoryName: widget.categoryName,
                                               startDate: widget.startDate,
                                               startTime: widget.startTime,
