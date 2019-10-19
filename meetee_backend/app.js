@@ -27,13 +27,15 @@ app.use(
 );
 
 const facility = require("./controllers/query/facility");
+const equipment = require("./controllers/query/equipment");
 const facStatus = require("./controllers/query/facilityStatus");
 const user = require("./controllers/query/user");
 const reservation = require("./controllers/query/transaction");
 // Rest API
 // Getting Room/Seat Information
 app.get("/fac", facility.getAllFacility);
-app.get("/fac/type/:id", facility.getFacilityFromClass);
+app.get("/fac/type/:id", facility.getFacilityCategoriesFromType);
+app.get("/fac/type/:id/detail", equipment.getFacilityCategoryDetail);
 app.get("/fac/category/all", facility.getAllFacilityCategory);
 // Checking Room/Seat Status
 app.post("/facility/cate/status", facStatus.checkStatusEachFacilityCategory);

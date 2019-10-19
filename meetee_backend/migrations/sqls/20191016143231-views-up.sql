@@ -10,7 +10,13 @@ create or replace view meeteenew.view_fac_status as
 	right join meeteenew.facility fac on line.facility_id = fac.id
 	join meeteenew.facility_category cate on fac.cate_id = cate.id;
 
-create or replace view meeteenew.view_category_detail as 
+create or replace view meeteenew.view_factype_detail as 
 	select cate.id cateId, cate.name cateName, cate.capacity, cate.price, cate.link_url, type.id typeId, type.name typeName
 	from meeteenew.facility_category cate
 	join meeteenew.facility_type type on cate.type_id = type.id;
+
+create or replace view meeteenew.view_faccate_detail as
+	select fe.cate_id cateId, cate."name" cateName, cate.capacity, cate.price, cate.link_url, fe.equipment_id eqid, eq."name" eqName 
+	from meeteenew.facility_has_equipments fe
+	join meeteenew.equipment eq on fe.equipment_id = eq.id
+	join meeteenew.facility_category cate on fe.cate_id = cate.id;
