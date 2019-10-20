@@ -1,35 +1,21 @@
 const { Pool } = require("pg");
-const connectionString = process.env.POSTGRES_CONNECTION_URL;
 const pool = new Pool({
-  connectionString: connectionString
+  connectionString: process.env.POSTGRES_CONNECTION_URL
 });
 
 exports.getFacilityCategoryDetail = (request, response) => {
   const cateId = parseInt(request.params.id);
   console.log("--> Request /fac/type/:id/detail " + "params.id=" + cateId);
-  const queryText = `SELECT * FROM meeteenew.view_faccate_detail as v
-    WHERE cateId = ${cateId}`;
-  pool.query(queryText, (error, results) => {
+  const queryText = `SELECT cateId, cateName, capacity, price, link_url, array_agg(json_build_object('eqid', eqid,'eqname', eqname)) eqList
+    from meeteenew.view_faccate_detail
+    WHERE cateId = $1
+    group by cateId, catename, capacity, price, link_url;`;
+  const queryValue = [cateId];
+  pool.query(queryText, queryValue, (error, results) => {
     const eqList = [];
     if (error) {
-      console.log(error);
-      response.status(500).send('Database Error')
+      response.status(500).send("Database Error");
     }
-    const capacity = results.rows[0].capacity;
-    const price = parseFloat(results.rows[0].price);
-    const linkUrl = results.rows[0].link_url;
-
-    results.rows.forEach(element => {
-      eqList.push(element.eqname);
-    });
-    console.log(eqList);
-    // response.status(200).send(results.rows[0].eqname);
-    response.status(200).send({
-      cateId: cateId,
-      capacity: capacity,
-      price: price,
-      linkUrl: linkUrl,
-      eqList: eqList
-    });
+    response.status(200).send(results.rows[0]);
   });
 };
