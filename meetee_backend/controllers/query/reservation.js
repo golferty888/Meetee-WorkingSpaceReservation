@@ -40,16 +40,17 @@ exports.reserve = (request, response) => {
 
       try {
         for (let i = 0; i < facList.length; i++) {
-          console.log(count);
           const checkRDValues = ["Booked", facList[i]];
           const rowFromCheckRD = await client.query(checkRD, checkRDValues);
           if (rowFromCheckRD.rowCount > 0) {
             checkPass = false;
+            console.log(rowFromCheckRD.rowCount);
+            console.log(rowFromCheckRD.rows);
             throw new Error("RedundancyError");
           }
         }
       } catch (error) {
-        console.log("out......................");
+        console.log(error);
         response.status(500).send("Something went wrong about redundancy.");
         return checkPass;
       }
