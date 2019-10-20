@@ -81,7 +81,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "2194787281e51320095a07662d0c6817a2a7f5ca"
+      resolved-ref: "0b0c2de68fabaf2d7e79ccabfb86e642b822b46f"
       url: "git://github.com/yangyxd/flutter_picker.git"
     source: git
     version: "1.0.15"
@@ -242,6 +242,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.6"
+  transparent_image:
+    dependency: "direct main"
+    description:
+      name: transparent_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   typed_data:
     dependency: transitive
     description:

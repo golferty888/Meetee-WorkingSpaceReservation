@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/seatMapPage.dart';
 
@@ -8,7 +9,7 @@ class FacilityDetail extends StatefulWidget {
   final int type;
   final int index;
   final String imgPath;
-  final String cateId;
+  final int cateId;
   final String categoryName;
   final Map categoryDetail;
   final int secondaryColor;
@@ -42,14 +43,12 @@ class FacilityDetailState extends State<FacilityDetail> {
         children: <Widget>[
           Hero(
             tag: 'category + ${widget.index.toString()}',
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                    widget.imgPath,
-                  ),
-                  fit: BoxFit.cover,
-                ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: Image.network(
+                widget.imgPath,
+                height: double.infinity,
+                fit: BoxFit.cover,
               ),
             ),
           ),

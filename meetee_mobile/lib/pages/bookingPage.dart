@@ -1,9 +1,14 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:intl/intl.dart';
+import 'package:transparent_image/transparent_image.dart';
+
 import 'package:meetee_mobile/components/calendarPicker.dart';
 import 'package:meetee_mobile/components/periodPicker.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
@@ -25,9 +30,6 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
-  List categoryNameList;
-
-//  String startDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
   DateTime startDate = DateTime.now();
   DateTime startTime = DateTime.now().add(
     Duration(hours: 1),
@@ -37,29 +39,18 @@ class _BookingPageState extends State<BookingPage> {
   );
 
   _updateStartDate(DateTime startDate) {
-//    String formatted = DateFormat("yyyy-MM-dd").format(startDate);
     setState(() {
       this.startDate = startDate;
     });
   }
 
   _updateStartTime(DateTime startTime) {
-//    String formatted = TimeOfDay(hour: startTime, minute: 0)
-//            .toString()
-//            .split('(')[1]
-//            .split(')')[0] +
-//        ':00';
     setState(() {
       this.startTime = startTime;
     });
   }
 
   _updateEndTime(DateTime endTime) {
-//    String formatted = TimeOfDay(hour: endTime, minute: 0)
-//            .toString()
-//            .split('(')[1]
-//            .split(')')[0] +
-//        ':00';
     setState(() {
       this.endTime = endTime;
     });
@@ -67,10 +58,263 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   void initState() {
-    categoryNameList = widget.facilityType.categories.keys.toList();
-    print(categoryNameList.length);
-    print(widget.facilityType.categories[categoryNameList[0]]["cateImage"]);
+    print(widget.facilityType.typeId);
+    urlGetCategoryByFacilityType =
+        'http://18.139.12.132:9000/fac/type/${widget.facilityType.typeId}';
     super.initState();
+  }
+
+  String urlGetCategoryByFacilityType;
+  List _categoriesList;
+
+  FutureBuilder _buildFrontPanel() {
+    return FutureBuilder(
+        future: http.get(urlGetCategoryByFacilityType),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return Text('none...');
+            case ConnectionState.active:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            case ConnectionState.done:
+              if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+              _categoriesList = json.decode(snapshot.data.body);
+              print(_categoriesList);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Container(
+                    height: 56.0,
+                    decoration: BoxDecoration(
+                      color: Color(
+                        widget.facilityType.secondaryColorCode,
+                      ),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(32.0),
+                        ),
+                      ),
+                      padding: EdgeInsets.fromLTRB(36.0, 20.0, 0.0, 0.0),
+                      child: _categoriesList.length > 1
+                          ? Text(
+                              'We have ${_categoriesList.length} types of ${widget.facilityType.typeName.toLowerCase()}.',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                color: Colors.black54,
+                              ),
+                            )
+                          : Text(
+                              'We have ${_categoriesList.length} type of ${widget.facilityType.typeName.toLowerCase()}.',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                color: Colors.black54,
+                              ),
+                            ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      color: Colors.white,
+                      child: _buildSwiper(_categoriesList),
+                    ),
+                  ),
+                ],
+              );
+          }
+          return null;
+        });
+  }
+
+  int selectedIndex;
+
+  Swiper _buildSwiper(categoriesMap) {
+    return Swiper(
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          margin: EdgeInsets.fromLTRB(
+            0,
+            16,
+            0,
+            24.0,
+          ),
+          child: _buildCategoryCard(index),
+        );
+      },
+      loop: false,
+      index: selectedIndex == null ? 0 : selectedIndex,
+      itemCount: categoriesMap.length,
+      viewportFraction: 0.7,
+      scale: 0.75,
+      onTap: (index) {
+        Navigator.push(context, MaterialPageRoute(builder: (_) {
+          selectedIndex = index;
+          return FacilityDetail(
+            type: widget.index,
+            index: index,
+            imgPath: categoriesMap[index]["link_url"],
+            cateId: categoriesMap[index]["cateid"],
+            categoryName: categoriesMap[index]["catename"],
+            categoryDetail: categoriesMap[index],
+            secondaryColor: widget.facilityType.secondaryColorCode,
+            startDate: startDate,
+            startTime: startTime,
+            endTime: endTime,
+          );
+        }));
+      },
+    );
+  }
+
+  Stack _buildCategoryCard(index) {
+    return Stack(
+      children: <Widget>[
+        Hero(
+          tag: 'category + ${index.toString()}',
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16.0),
+            child: Container(
+              child: FadeInImage.memoryNetwork(
+                fadeInDuration: Duration(milliseconds: 200),
+                placeholder: kTransparentImage,
+                height: double.infinity,
+                fit: BoxFit.fill,
+                image: _categoriesList[index]["link_url"],
+              ),
+            ),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: Container(),
+            ),
+            Hero(
+              flightShuttleBuilder: (
+                BuildContext flightContext,
+                Animation<double> animation,
+                HeroFlightDirection flightDirection,
+                BuildContext fromHeroContext,
+                BuildContext toHeroContext,
+              ) {
+                return SingleChildScrollView(
+                  child: fromHeroContext.widget,
+                );
+              },
+              tag: 'detail + ${index.toString()}',
+              child: Material(
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(16.0),
+                  ),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 5.0,
+                      sigmaY: 5.0,
+                    ),
+                    child: Container(
+                      color: Colors.black.withOpacity(0.5),
+                      padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Text(
+                                  _categoriesList[index]["catename"].toString(),
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 4.0,
+                                ),
+                                _categoriesList[index]["capacity"] > 1
+                                    ? Text(
+                                        '${_categoriesList[index]["capacity"].toString()} persons',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          letterSpacing: 1.5,
+                                          color: Color(
+                                            widget.facilityType
+                                                .secondaryColorCode,
+                                          ),
+                                        ),
+                                      )
+                                    : Text(
+                                        '${_categoriesList[index]["capacity"].toString()} person',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          letterSpacing: 1.5,
+                                          color: Color(
+                                            widget.facilityType
+                                                .secondaryColorCode,
+                                          ),
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0.0, 0.0, 16.0, 0.0),
+                            width: 1,
+                            height: 44.0,
+                            color: Colors.grey.withOpacity(0.5),
+                          ),
+                          Container(
+                            width: 72.0,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  '฿${_categoriesList[index]["price"].toString()}',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    color: Color(
+                                      widget.facilityType.secondaryColorCode,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 4.0,
+                                ),
+                                Text(
+                                  '/per hour',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -139,6 +383,7 @@ class _BookingPageState extends State<BookingPage> {
                                 flex: 1,
                                 child: CalendarPicker(
                                   returnDate: _updateStartDate,
+                                  primaryColor: null,
                                 ),
                               ),
                               Expanded(
@@ -156,303 +401,13 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                 ),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Container(
-                        height: 56.0,
-                        decoration: BoxDecoration(
-                          color: Color(
-                            widget.facilityType.secondaryColorCode,
-                          ),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(32.0),
-                            ),
-                          ),
-                          padding: EdgeInsets.fromLTRB(36.0, 20.0, 0.0, 0.0),
-                          child: categoryNameList.length > 1
-                              ? Text(
-                                  'We have ${categoryNameList.length} types of ${widget.facilityType.typeName.toLowerCase()}.',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    color: Colors.black54,
-                                  ),
-                                )
-                              : Text(
-                                  'We have ${categoryNameList.length} type of ${widget.facilityType.typeName.toLowerCase()}.',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          color: Colors.white,
-                          child: Swiper(
-                              itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                  margin: EdgeInsets.fromLTRB(
-                                    0,
-                                    16,
-                                    0,
-                                    24.0,
-                                  ),
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Hero(
-                                        tag: 'category + ${index.toString()}',
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(16.0),
-                                            image: DecorationImage(
-                                              image: AssetImage(
-                                                widget.facilityType.categories[
-                                                        categoryNameList[index]]
-                                                    ["cateImage"],
-                                              ),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Expanded(
-                                            child: Container(),
-                                          ),
-                                          Hero(
-                                            flightShuttleBuilder: (
-                                              BuildContext flightContext,
-                                              Animation<double> animation,
-                                              HeroFlightDirection
-                                                  flightDirection,
-                                              BuildContext fromHeroContext,
-                                              BuildContext toHeroContext,
-                                            ) {
-                                              return SingleChildScrollView(
-                                                child: fromHeroContext.widget,
-                                              );
-                                            },
-                                            tag: 'detail + ${index.toString()}',
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                  bottom: Radius.circular(16.0),
-                                                ),
-                                                child: BackdropFilter(
-                                                  filter: ImageFilter.blur(
-                                                    sigmaX: 5.0,
-                                                    sigmaY: 5.0,
-                                                  ),
-                                                  child: Container(
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            16.0,
-                                                            8.0,
-                                                            16.0,
-                                                            16.0),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Expanded(
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .stretch,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                categoryNameList[
-                                                                    index],
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .start,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      20.0,
-                                                                  color: Colors
-                                                                      .white,
-//                                                            fontWeight:
-//                                                                FontWeight.bold,
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 4.0,
-                                                              ),
-                                                              widget.facilityType
-                                                                              .categories[
-                                                                          categoryNameList[
-                                                                              index]]["capacity"] >
-                                                                      1
-                                                                  ? Text(
-                                                                      '${widget.facilityType.categories[categoryNameList[index]]["capacity"].toString()} persons',
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .start,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            18.0,
-                                                                        letterSpacing:
-                                                                            1.5,
-                                                                        color:
-                                                                            Color(
-                                                                          widget
-                                                                              .facilityType
-                                                                              .secondaryColorCode,
-                                                                        ),
-                                                                      ),
-                                                                    )
-                                                                  : Text(
-                                                                      '${widget.facilityType.categories[categoryNameList[index]]["capacity"].toString()} person',
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .start,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            18.0,
-                                                                        letterSpacing:
-                                                                            1.5,
-                                                                        color:
-                                                                            Color(
-                                                                          widget
-                                                                              .facilityType
-                                                                              .secondaryColorCode,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          margin: EdgeInsets
-                                                              .fromLTRB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  16.0,
-                                                                  0.0),
-                                                          width: 1,
-                                                          height: 44.0,
-                                                          color: Colors.grey
-                                                              .withOpacity(0.5),
-                                                        ),
-                                                        Container(
-                                                          width: 72.0,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .end,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                '฿${widget.facilityType.categories[categoryNameList[index]]["price"].toString()}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      20.0,
-//                                                            color: Colors.white,
-//                                                            fontWeight:
-//                                                                FontWeight.bold,
-                                                                  color: Color(
-                                                                    widget
-                                                                        .facilityType
-                                                                        .secondaryColorCode,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 4.0,
-                                                              ),
-                                                              Text(
-                                                                '/per hour',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      16.0,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              loop: false,
-                              itemCount: categoryNameList.length,
-                              viewportFraction: 0.7,
-                              scale: 0.75,
-                              onTap: (index) {
-                                Navigator.of(context).push(_createRoute(index));
-                              }),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+                  child: _buildFrontPanel(),
+                ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Route _createRoute(index) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => FacilityDetail(
-        type: widget.index,
-        index: index,
-        imgPath: widget.facilityType.categories[categoryNameList[index]]
-            ["cateImage"],
-        cateId: widget.facilityType.categories[categoryNameList[index]]
-            ["cateId"],
-        categoryName: categoryNameList[index],
-        categoryDetail: widget.facilityType.categories[categoryNameList[index]],
-        secondaryColor: widget.facilityType.secondaryColorCode,
-        startDate: startDate,
-        startTime: startTime,
-        endTime: endTime,
-      ),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(0.0, 1.0);
-        var end = Offset(0.0, 0.0);
-        var curve = Curves.easeIn;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
     );
   }
 }

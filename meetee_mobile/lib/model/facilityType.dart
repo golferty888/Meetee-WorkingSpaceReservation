@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FacilityType {
-  String classId;
+  String typeId;
   String words;
   String imagePath;
   String typeName;
@@ -11,7 +11,7 @@ class FacilityType {
   List equipment;
 
   FacilityType(
-    this.classId,
+    this.typeId,
     this.words,
     this.imagePath,
     this.typeName,
