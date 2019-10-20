@@ -4,10 +4,6 @@ const pg = require("pg");
 var http = require("http");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-// const knex = require("knex")(
-//   require("./config/knexfile")[process.env.NODE_ENV]
-// );
-// module.exports.knex = knex;
 const { Pool } = require("pg");
 const pgConnectionString = process.env.POSTGRES_CONNECTION_URL;
 const pool = new Pool({

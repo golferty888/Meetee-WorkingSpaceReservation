@@ -5,14 +5,12 @@ const pool = new Pool({
 
 exports.getAvaialableFacWithAmount = async (request, response) => {
   const data = request.body;
-  console.log("--> Request /facility/cate/status/av: " + JSON.stringify(data));
+  console.log("--> Request /facility/cate/xxxxxxxxxxxx: " + JSON.stringify(data));
   const classId = data.classId;
   const cateId = data.cateId;
   const startDate = data.startDate;
   const startTime = data.startDate + " " + data.startTime;
   const endTime = data.startDate + " " + data.endTime;
-
-  var output = [];
 
   const statement1 = `select v1.classId, count(distinct v1.facId) :: int from meeteenew.view_fac_status as v1
   where
@@ -27,9 +25,7 @@ exports.getAvaialableFacWithAmount = async (request, response) => {
     if (error) {
       throw error;
     }
-    output = results.rows;
-    response.status(200).json(output);
-    console.log("Query is successful.");
+    response.status(200).json(results.rows);
   });
 
   // const statement2 = `select v1.cateId, count(distinct v1.facId) :: int from meeteenew.view_fac_status as v1
