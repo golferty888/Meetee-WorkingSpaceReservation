@@ -9,7 +9,8 @@ exports.reserve = (request, response) => {
   const facList = data.facId;
   const start_time = data.startDate + " " + data.startTime;
   const end_time = data.startDate + " " + data.endTime;
-  console.log("request: /reserve " + JSON.stringify(data));
+  console.log("-------------------------------------------------------------");
+  console.log({ request: "POST /reserve", body: JSON.stringify(data) });
 
   const checkRD = `select id from meeteenew.view_reservation as v
             where v.status = $1 and v.facId = $2 and
@@ -34,26 +35,26 @@ exports.reserve = (request, response) => {
 
     client.query("BEGIN", async err => {
       if (shouldAbort(err)) return;
+
       // CHECK REDUNDANCY BOOKING
-      console.log(facList);
+
       try {
         for (let i = 0; i < facList.length; i++) {
           const checkRDValues = ["Booked", facList[i]];
           const rowFromCheckRD = await client.query(checkRD, checkRDValues);
           if (rowFromCheckRD.rowCount > 0) {
-            console.log(rowFromCheckRD.rowCount);
-            console.log(rowFromCheckRD.rows);
+            console.log({ "Redundant resvId": rowFromCheckRD.rows });
             throw new Error("RedundancyError");
           }
         }
       } catch (error) {
         console.log(error);
-        console.log(error.name);
-        console.log(error.message);
         if (error.message == "RedundancyError") {
           response.status(500).send("Something went wrong about redundancy.");
+          return;
         } else {
           response.status(500).send(error);
+          return;
         }
       }
 
@@ -81,7 +82,8 @@ exports.reserve = (request, response) => {
 };
 
 exports.getAllReservations = (request, response) => {
-  console.log("request: " + "/reservations");
+  console.log("-------------------------------------------------------------");
+  console.log({ request: "GET /reservations" });
   const queryText = `select reservId, 
     array_agg(json_build_object('facCode', code, 'floor', floor)) as facList,
     cateName, price :: int, date, period, hour :: int, total_price :: int, status

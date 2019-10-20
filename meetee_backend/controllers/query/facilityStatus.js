@@ -5,7 +5,9 @@ const pool = new Pool({
 
 exports.getAvaialableFacWithAmount = async (request, response) => {
   const data = request.body;
-  console.log("--> Request /facility/cate/xxxxxxxxxxxx: " + JSON.stringify(data));
+  console.log(
+    "--> Request /facility/cate/xxxxxxxxxxxx: " + JSON.stringify(data)
+  );
   const classId = data.classId;
   const cateId = data.cateId;
   const startDate = data.startDate;
@@ -23,7 +25,7 @@ exports.getAvaialableFacWithAmount = async (request, response) => {
 
   pool.query(statement1, values1, (error, results) => {
     if (error) {
-      throw error;
+      response.status(500).send("Database Error");
     }
     response.status(200).json(results.rows);
   });
@@ -70,11 +72,16 @@ exports.checkStatusAvaialableEachFacilityCategory = async (
   response
 ) => {
   const data = request.body;
-  console.log("--> Request /facility/cate/status/av: " + JSON.stringify(data));
+  console.log("-------------------------------------------------------------");
+  console.log({
+    request: "POST /facility/cate/status/av",
+    body: JSON.stringify(data)
+  });
   const cateId = data.cateId;
   const startDate = data.startDate;
   const startTime = data.startDate + " " + data.startTime;
   const endTime = data.startDate + " " + data.endTime;
+  // const statement = `select distinct v1.facId, v1.code, v1.floor, v1.cateId ,v1.cateName
   const statement = `select distinct v1.facId, v1.code, v1.floor, v1.cateId ,v1.cateName
   from meeteenew.view_fac_status as v1
   where cateId = $1 and facId not in
@@ -87,7 +94,7 @@ exports.checkStatusAvaialableEachFacilityCategory = async (
   const values = [cateId, startDate, "Booked", "Cancelled"];
   pool.query(statement, values, (error, results) => {
     if (error) {
-      throw error;
+      response.status(500).send("Database Error");
     }
     response.status(200).json(results.rows);
   });
@@ -95,77 +102,108 @@ exports.checkStatusAvaialableEachFacilityCategory = async (
 
 exports.checkStatusEachFacilityCategory = (request, response) => {
   const data = request.body;
-  console.log("--> Request facility/category/status: " + JSON.stringify(data));
+  console.log("-------------------------------------------------------------");
+  console.log({
+    request: "POST /facility/category/status",
+    body: JSON.stringify(data)
+  });
+  console.log("-------------------------------------------------------------");
   const cateId = data.cateId;
   const startDate = data.startDate;
   const startTime = data.startDate + " " + data.startTime;
-  const endTime = data.endDate + " " + data.endTime;
-  const status = "Booked";
-  const user_id = data.userId;
+  const endTime = data.startDate + " " + data.endTime;
+  const statement = `select distinct facId, cateId, cateName, code, case when start_time is null then 'available' when start_time is not null then 'unavailable' end status
+    from meeteenew.view_fac_status
+    where (cateId = $1 and start_time is null) or (cateId = $1 and  (inDate = $2 and
+    (status = $3 and ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (start_time, end_time))) or
+    (status = $4 and not ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (start_time, end_time)))))
+    order by facId`;
+  const values = [cateId, startDate, "Booked", "Cancelled"];
 
-  const facilityListInCategory = knex("meeteenew.facility as fac")
-    .select(
-      "fac.id as facId",
-      "fac.code as code",
-      "fac.floor as floor",
-      "cate.id as cateId",
-      "cate.name as cateName"
-    )
-    .join(
-      "meeteenew.facility_category as cate",
-      "fac.facility_category_id",
-      "=",
-      "cate.id"
-    )
-    .where("cate.id", "=", cateId)
-    .orderBy("facId")
-    .catch(error => {
+  //  `select distinct facid, cateid, catename, code, case when inDate != '2019-10-20' or indate is null then 'available' when inDate = '2019-10-20' then 'unavailable' end status
+  //   from meeteenew.view_fac_status
+  //   where cateId = 1 and ((start_time is null) or (inDate != '2019-10-20') or (inDate = '2019-10-20' and (status = 'Booked' and ((timestamp '2019-10-20 19:00:00', TIMESTAMP '2019-10-20 20:00:00') overlaps (start_time, end_time)))))
+  //   order by facid;`
+  // const statement1 = `select distinct v1.facId, v1.code, v1.floor, v1.cateId ,v1.cateName
+  // from meeteenew.view_fac_status as v1
+  // where cateId = $1 and facId not in
+  //   (select distinct v1.facId
+  //   from meeteenew.view_fac_status as v1
+  //   where v1.cateId = $1 and
+  //   (inDate = $2 and
+  //   (v1.status = $3 and ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (v1.start_time, v1.end_time))) or
+  //   (v1.status = $4 and not ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (v1.start_time, v1.end_time)))))`;
+  pool.query(statement, values, (error, results) => {
+    if (error) {
       console.log(error);
-      response.status(400).send("Bad request");
-    });
-
-  const unavailableQuery = knex("meeteenew.reservation as resv")
-    .distinct("resv.facility_id as facId")
-    .select(
-      "fac.code as code",
-      "fac.floor as floor",
-      "cate.id as cateId",
-      "cate.name as cateName"
-    )
-    .join("meeteenew.facility as fac", "resv.facility_id", "=", "fac.id")
-    .join(
-      "meeteenew.facility_category as cate",
-      "fac.facility_category_id",
-      "=",
-      "cate.id"
-    )
-    .where("cate.id", "=", cateId)
-    .whereNot("resv.status", "Cancelled")
-    .andWhere(function() {
-      this.orWhere(
-        knex.raw(
-          `(TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') OVERLAPS (resv.start_time, resv.end_time)`
-        )
-      );
-    })
-    .orderBy("facId")
-    .catch(error => {
-      console.log(error);
-      response.status(400).send("Bad request");
-    });
-
-  facilityListInCategory.then(facList => {
-    assignStatusFacList(facList);
-    unavailableQuery
-      .then(facUna => {
-        updateStatusFacList(facList, facUna);
-        response.send(facList);
-      })
-      .catch(error => {
-        console.log(error);
-        response.status(400).send("Bad request");
-      });
+      response.status(500).send("Database Error");
+    }
+    response.status(200).json(results.rows);
   });
+
+  // const facilityListInCategory = knex("meeteenew.facility as fac")
+  //   .select(
+  //     "fac.id as facId",
+  //     "fac.code as code",
+  //     "fac.floor as floor",
+  //     "cate.id as cateId",
+  //     "cate.name as cateName"
+  //   )
+  //   .join(
+  //     "meeteenew.facility_category as cate",
+  //     "fac.facility_category_id",
+  //     "=",
+  //     "cate.id"
+  //   )
+  //   .where("cate.id", "=", cateId)
+  //   .orderBy("facId")
+  //   .catch(error => {
+  //     console.log(error);
+  //     response.status(400).send("Bad request");
+  //   });
+
+  // const unavailableQuery = knex("meeteenew.reservation as resv")
+  //   .distinct("resv.facility_id as facId")
+  //   .select(
+  //     "fac.code as code",
+  //     "fac.floor as floor",
+  //     "cate.id as cateId",
+  //     "cate.name as cateName"
+  //   )
+  //   .join("meeteenew.facility as fac", "resv.facility_id", "=", "fac.id")
+  //   .join(
+  //     "meeteenew.facility_category as cate",
+  //     "fac.facility_category_id",
+  //     "=",
+  //     "cate.id"
+  //   )
+  //   .where("cate.id", "=", cateId)
+  //   .whereNot("resv.status", "Cancelled")
+  //   .andWhere(function() {
+  //     this.orWhere(
+  //       knex.raw(
+  //         `(TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') OVERLAPS (resv.start_time, resv.end_time)`
+  //       )
+  //     );
+  //   })
+  //   .orderBy("facId")
+  //   .catch(error => {
+  //     console.log(error);
+  //     response.status(400).send("Bad request");
+  //   });
+
+  // facilityListInCategory.then(facList => {
+  //   assignStatusFacList(facList);
+  //   unavailableQuery
+  //     .then(facUna => {
+  //       updateStatusFacList(facList, facUna);
+  //       response.send(facList);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //       response.status(400).send("Bad request");
+  //     });
+  // });
 };
 
 exports.checkStatusEachFacilityClass = (request, response) => {

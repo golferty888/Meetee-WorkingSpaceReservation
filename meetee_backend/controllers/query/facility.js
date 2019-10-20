@@ -4,6 +4,9 @@ const pool = new Pool({
 });
 
 exports.getAllFacility = (request, response) => {
+  console.log("-------------------------------------------------------------");
+  console.log({ request: "GET /fac" });
+
   const statement = `select * from meeteenew.facility`;
 
   pool.query(statement, (error, results) => {
@@ -16,8 +19,8 @@ exports.getAllFacility = (request, response) => {
 
 exports.getFacilityCategoriesFromType = (request, response) => {
   const typeId = request.params.id;
-  console.log("--> Request /fac/type/:id: " + "params.id=" + typeId);
-
+  console.log("-------------------------------------------------------------");
+  console.log({ request: "POST /fac/type/:id", param: { typeId: typeId } });
   const statement = `select * from meeteenew.view_factype_detail as v
     where v.typeId = $1`;
   const value = [typeId];

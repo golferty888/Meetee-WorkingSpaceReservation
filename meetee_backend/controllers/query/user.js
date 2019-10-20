@@ -37,7 +37,10 @@ exports.login = (request, response) => {
 };
 
 exports.getReservationHistoryList = (request, response) => {
-  const userId = request.body.userId;
+  const data = request.body;
+  console.log("-------------------------------------------------------------");
+  console.log({ request: "POST /user/history", body: JSON.stringify(data) });
+  const userId = data.userId;
   const queryValue = [userId];
   const queryText = `select reservId, 
     array_agg(json_build_object('facCode', code, 'floor', floor)) as facList,
@@ -49,7 +52,8 @@ exports.getReservationHistoryList = (request, response) => {
   pool.query(queryText, queryValue, (error, results) => {
     if (error) {
       response.status(500).send("Database Error");
+    } else {
+      response.status(200).send(results.rows);
     }
-    response.status(200).send(results.rows);
   });
 };
