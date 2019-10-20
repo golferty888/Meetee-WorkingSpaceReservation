@@ -8,6 +8,11 @@ const knex = require("knex")(
   require("./config/knexfile")[process.env.NODE_ENV]
 );
 module.exports.knex = knex;
+const { Pool } = require("pg");
+const pgConnectionString = process.env.POSTGRES_CONNECTION_URL;
+const pool = new Pool({
+  connectionString: pgConnectionString
+});
 const PORT = process.env.PORT || 9000;
 const URL = process.env.URL;
 
@@ -30,13 +35,13 @@ const facility = require("./controllers/query/facility");
 const equipment = require("./controllers/query/equipment");
 const facStatus = require("./controllers/query/facilityStatus");
 const user = require("./controllers/query/user");
-const reservation = require("./controllers/query/transaction");
+const reservation = require("./controllers/query/reservation");
+const iot = require("./controllers/query/iot");
 // Rest API
 // Getting Room/Seat Information
 app.get("/fac", facility.getAllFacility);
 app.get("/fac/type/:id", facility.getFacilityCategoriesFromType);
 app.get("/fac/type/:id/detail", equipment.getFacilityCategoryDetail);
-app.get("/fac/category/all", facility.getAllFacilityCategory);
 // Checking Room/Seat Status
 app.post("/facility/cate/status", facStatus.checkStatusEachFacilityCategory);
 app.post(
@@ -50,9 +55,39 @@ app.post("/facility/all/status", facStatus.checkStatusAllFacilities);
 app.post("/reserve", reservation.reserve);
 // Reservation Information
 app.post("/user/history", user.getReservationHistoryList);
-// app.get("/reservations", reservation.getAllReservations);
+app.get("/reservations", reservation.getAllReservations);
 // Test PG
 app.post("/test", facStatus.getAvaialableFacWithAmount);
+
+const iotActivateMiddleWare = (request, response, next) => {
+  const userName = request.body.username;
+  // const reservId = request.body.reservId;
+  const queryText = `select reservId, array_agg(json_build_object('facCode', code, 'floor', floor)) as facList 
+    from meeteenew.view_user_history
+    where username = $1 and ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time))
+    group by reservId`;
+  const queryValues = [userName];
+  pool.query(queryText, queryValues, (error, results) => {
+    if (error) {
+      response.status(500).send("Database Error");
+    } else if (results.rowCount == 0) {
+      response.status(400).send("Bad Request");
+    } else {
+      const facCodeList = [];
+      results.rows.forEach(element => {
+        element.faclist.forEach(facItem => {
+          facCodeList.push(facItem.facCode);
+        });
+      });
+      request.facCodeList = facCodeList;
+      next();
+    }
+  });
+  //รับ request {Header: jwt-token} {username: string, reservId: int}
+  //เช็คเวลาที่จองไป query to get date and time-period เพื่อเทียบกับ now() ว่า overlaps กันหรือไม่
+  //true=>next() false=>400 Bad Request
+};
+app.post("/activate", iotActivateMiddleWare, iot.activateIotEquipment);
 
 app.get("/", (request, response) => {
   response.send("MeeteeAPI welcome!");
@@ -63,7 +98,6 @@ app.use("*", function(request, response) {
 });
 
 // Postgres Client Connections
-const pgConnectionString = process.env.POSTGRES_CONNECTION_URL;
 console.log(pgConnectionString);
 const pgClient1 = new pg.Client(pgConnectionString);
 const pgClient2 = new pg.Client(pgConnectionString);
