@@ -1,9 +1,8 @@
 const knex = require("../../config/connection");
 
 const { Pool } = require("pg");
-const connectionString = process.env.POSTGRES_CONNECTION_URL;
 const pool = new Pool({
-  connectionString: connectionString
+  connectionString: process.env.POSTGRES_CONNECTION_URL
 });
 
 exports.getAvaialableFacWithAmount = async (request, response) => {
@@ -98,81 +97,6 @@ exports.checkStatusAvaialableEachFacilityCategory = async (
     }
     response.status(200).json(results.rows);
   });
-
-  // const unavailableQuery = knex("meeteenew.reservation as resv")
-  //   .distinct("resv.facility_id as id")
-  //   // .select('fac.code as code', 'fac.floor as floor', 'cate.id as cateId', 'cate.name as cateName')
-  //   .join("meeteenew.facility as fac", "resv.facility_id", "=", "fac.id")
-  //   .join(
-  //     "meeteenew.facility_category as cate",
-  //     "fac.facility_category_id",
-  //     "=",
-  //     "cate.id"
-  //   )
-  //   .where("cate.id", "=", cateId)
-  //   .whereNot("resv.status", "Cancelled")
-  //   .andWhere(function() {
-  //     this.orWhere(
-  //       knex.raw(
-  //         `(TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') OVERLAPS (resv.start_time, resv.end_time)`
-  //       )
-  //     );
-  //   })
-  //   .orderBy("id");
-
-  // const availableQuery = knex("meeteenew.facility as fac")
-  //   .select(
-  //     "fac.id as facId",
-  //     "fac.code as code",
-  //     "fac.floor as floor",
-  //     "cate.id as cateId",
-  //     "cate.name as cateName"
-  //   )
-  //   .join(
-  //     "meeteenew.facility_category as cate",
-  //     "fac.cate_id",
-  //     "=",
-  //     "cate.id"
-  //   )
-  //   .where("cate.id", "=", cateId)
-  //   .andWhere("fac.id", "NOT IN", unavailableQuery)
-  //   .orderBy("facId")
-  //   .then(data => {
-  //     console.log("data: " + JSON.stringify(data));
-  //     // output = data;
-  //     response.send(data);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //     response.status(400).send("Bad request");
-  //   });
-
-  // availableQuery.then(data => {
-  //   output = data;
-  //   console.log("1: " + output);
-  // });
-
-  // const getCountRows = knex("meeteenew.facility as fac")
-  //   .select()
-  //   .then(data => {
-  //     console.log("2: " + output);
-  //     output = Object.assign(JSON.parse(data), JSON.parse(output));
-
-  //     console.log("3: " + output);
-  //     console.log(output);
-  //     response.send(output);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
-
-  //   getCountRows
-  //     .then(data => {
-  //       response.send(data);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
 };
 
 exports.checkStatusEachFacilityCategory = (request, response) => {

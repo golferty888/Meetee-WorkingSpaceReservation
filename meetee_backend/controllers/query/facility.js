@@ -1,41 +1,17 @@
-const {
-  Facility,
-  FacilityCategory,
-  FacilityClass
-} = require("../../models/facility");
-
 const { Pool } = require("pg");
-const connectionString = process.env.POSTGRES_CONNECTION_URL;
 const pool = new Pool({
-  connectionString: connectionString
+  connectionString: process.env.POSTGRES_CONNECTION_URL
 });
 
 exports.getAllFacility = (request, response) => {
-  Facility.forge()
-    .fetchAll({
-      withRelated: ["facilityCategory"]
-    })
-    .then(data => {
-      response.send(data);
-    });
-};
+  const statement = `select * from meeteenew.facility`;
 
-exports.getAllFacilityCategory = (request, response) => {
-  FacilityCategory.forge()
-    .fetchAll({
-      // columns: ['id'],
-      withRelated: ["facilityClass"],
-      withRelated: [
-        {
-          "equipments.equipment": function(qb) {
-            qb.column("equipment.id", "equipment.name");
-          }
-        }
-      ]
-    })
-    .then(data => {
-      response.send(data);
-    });
+  pool.query(statement, (error, results) => {
+    if (error) {
+      response.status(500).send("Database Error");
+    }
+    response.status(200).json(results.rows);
+  });
 };
 
 exports.getFacilityCategoriesFromType = (request, response) => {
@@ -48,7 +24,7 @@ exports.getFacilityCategoriesFromType = (request, response) => {
 
   pool.query(statement, (error, result) => {
     if (error) {
-      response.status(500).send('Database Error')
+      response.status(500).send("Database Error");
       throw error;
     }
     response.status(200).json(result.rows);

@@ -1,111 +1,94 @@
-var knex = require("../../app").knex;
-const { Reservation } = require("../../models/reservation");
+const { Pool } = require("pg");
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_CONNECTION_URL
+});
 
-exports.reserve = (request, response, callback) => {
-  const userId = request.body.userId;
-  const facId = request.body.facId;
-  const startDate = request.body.startDate;
-  // const endDate = request.body.endDate;
-  const startTime = request.body.startTime;
-  const endTime = request.body.endTime;
-  const start_time = startDate + " " + startTime;
-  const end_time = startDate + " " + endTime;
-  // const end_time = endDate + ' ' + endTime;
-  const status = "Booked";
-  console.log("pre: " + start_time + " " + end_time);
+exports.reserve = (request, response) => {
+  const data = request.body;
+  const userId = data.userId;
+  const facList = data.facId;
+  const start_time = data.startDate + " " + data.startTime;
+  const end_time = data.startDate + " " + data.endTime;
+  console.log("request: " + "/reserve" + data);
 
-  knex("meeteenew.reservation as resv")
-    .select("resv.id")
-    .where("resv.status", "=", status)
-    .andWhere("resv.facility_id", "=", facId)
-    .andWhereRaw(
-      `(TIMESTAMP '${start_time}', TIMESTAMP '${end_time}') OVERLAPS (resv.start_time, resv.end_time)`
-    )
-    .then(data => {
-      console.log("length: " + Object.keys(data).length);
-      if (Object.keys(data).length != 0) {
-        throw new Error("Redundancy");
+  const checkRD = `select id from meeteenew.view_reservation as v
+            where v.status = $1 and v.facId = $2 and
+            (TIMESTAMP '${start_time}', TIMESTAMP '${end_time}') OVERLAPS (v.start_time, v.end_time)`;
+  const insertResv = `INSERT INTO meeteenew.reservation(user_id, start_time, end_time, status) 
+            VALUES($1, $2, $3, $4) RETURNING id`;
+  const insertResvValues = [userId, start_time, end_time, "Booked"];
+
+  pool.connect((err, client, done) => {
+    const shouldAbort = err => {
+      if (err) {
+        console.error("Error in transaction", err.stack);
+        client.query("ROLLBACK", err => {
+          if (err) {
+            console.error("Error rolling back client", err.stack);
+          }
+          done();
+        });
       }
-      insertReserveList();
-    })
-    .catch(error => {
-      console.log(error);
-      response.status(500).send("Sorry, The booking is redundant.");
-    });
+      return !!err;
+    };
 
-  function insertReserveList() {
-    knex("meeteenew.reservation")
-      .returning("id")
-      .insert([
-        {
-          user_id: userId,
-          facility_id: facId,
-          start_time: start_time,
-          end_time: end_time,
-          status: status
+    client.query("BEGIN", async err => {
+      if (shouldAbort(err)) return;
+      var checkPass = true;
+
+      // CHECK REDUNDANCY BOOKING
+
+      try {
+        for (let i = 0; i < facList.length; i++) {
+          console.log(count);
+          const checkRDValues = ["Booked", facList[i]];
+          const rowFromCheckRD = await client.query(checkRD, checkRDValues);
+          if (rowFromCheckRD.rowCount > 0) {
+            checkPass = false;
+            throw new Error("RedundancyError");
+          }
         }
-      ])
-      .then(result => {
-        response.send(result);
-      })
-      .catch(error => {
-        response.send(error);
+      } catch (error) {
+        console.log("out......................");
+        response.status(500).send("Something went wrong about redundancy.");
+        return checkPass;
+      }
+
+      // INSERT ITEMS
+
+      client.query(insertResv, insertResvValues, (err, res) => {
+        if (shouldAbort(err)) return;
+
+        facList.forEach(facId => {
+          const insertResvLine = `INSERT INTO meeteenew.reservation_line(reserve_id, facility_id)
+            VALUES(${res.rows[0].id}, ${facId});`;
+          client.query(insertResvLine, (err, res) => {
+            if (shouldAbort(err)) return;
+          });
+        });
+        client.query("COMMIT", err => {
+          if (err) {
+            console.error("Error committing transaction", err.stack);
+          }
+          response.send("Transaction Done.");
+        });
       });
-  }
+    });
+  });
 };
 
 exports.getAllReservations = (request, response) => {
-  Reservation.forge()
-    .fetchAll({
-      withRelated: [
-        {
-          reservationDetail: function(query) {
-            query.orderBy("facility_id", "DESC");
-          }
-        },
-        "user"
-      ]
-    })
-    .then(data => {
-      response.send(data);
-    });
-};
-
-exports.reserv2 = (request, response) => {
-  const {
-    startDate,
-    startTime,
-    endDate,
-    endTime,
-    userId,
-    facilityList
-  } = request.body;
-  Reservation.forge({
-    start_time: startDate + " " + startTime,
-    end_time: endDate + " " + endTime,
-    status: "Booked",
-    user_id: userId
-  })
-    .save()
-    .tap(reservation =>
-      Promise.map(reservation, facilityList =>
-        reservation.related("reservationDetail.facilities").create(facilityList)
-      )
-    )
-    .then(reservation => {
-      response.json({
-        successful: true,
-        data: {
-          id: reservation.get("id")
-        }
-      });
-    })
-    .catch(error => {
-      response.status(500).json({
-        error: true,
-        data: {
-          message: error.message
-        }
-      });
-    });
+  console.log("request: " + "/reservations");
+  const queryText = `select reservId, 
+    array_agg(json_build_object('facCode', code, 'floor', floor)) as facList,
+    cateName, price :: int, date, period, hour :: int, total_price :: int, status
+    from meeteenew.view_user_history
+    group by reservId, cateName, price, date, period, hour , total_price, status
+    order by reservId desc`;
+  pool.query(queryText, (error, results) => {
+    if (error) {
+      response.status(500).send("Database Error");
+    }
+    response.status(200).send(results.rows);
+  });
 };
