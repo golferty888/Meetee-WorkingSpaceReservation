@@ -66,7 +66,7 @@ app.post("/activate", requireJWTAuth, iotActivate.middleware, iot.activateIotEqu
 // Getting Room/Seat Information
 app.get("/fac", facility.getAllFacility);
 app.get("/fac/type/:id", facility.getFacilityCategoriesFromType);
-app.get("/fac/type/:id/detail", equipment.getFacilityCategoryDetail);
+app.get("/fac/cate/:id", equipment.getFacilityCategoryDetail);
 // Checking Room/Seat Status
 app.post("/facility/cate/status", facStatus.checkStatusEachFacilityCategory);
 app.post(

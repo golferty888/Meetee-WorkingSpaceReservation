@@ -5,7 +5,7 @@ const pool = new Pool({
 
 exports.getFacilityCategoryDetail = (request, response) => {
   const cateId = parseInt(request.params.id);
-  console.log("--> Request /fac/type/:id/detail " + "params.id=" + cateId);
+  console.log("--> Request /fac/cate/:id " + "params.id=" + cateId);
   const statement = `SELECT * from meeteenew.view_faccate_detail
     WHERE cateId = $1`;
   const value = [cateId];
