@@ -9,6 +9,27 @@ const pgConnectionString = process.env.POSTGRES_CONNECTION_URL;
 const pool = new Pool({
   connectionString: pgConnectionString
 });
+const ExtractJwt = require("passport-jwt").ExtractJwt;
+const JwtStrategy = require("passport-jwt").Strategy;
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromHeader("authorization"),
+  secretOrKey: process.env.SECRET
+};
+const jwtAuth = new JwtStrategy(jwtOptions, async (payload, done) => {
+  const statement = `select * from meeteenew.users where username = $1`;
+  const value = [payload.sub];
+  console.log(payload.sub);
+  const userData = await pool.query(statement, value);
+  if (userData.rowCount == 1) {
+    done(null, true);
+  } else {
+    done(null, false);
+  }
+});
+const passport = require("passport");
+passport.use(jwtAuth);
+const requireJWTAuth = passport.authenticate("jwt", { session: false });
+
 const PORT = process.env.PORT || 9000;
 const URL = process.env.URL;
 
@@ -33,6 +54,14 @@ const facStatus = require("./controllers/query/facilityStatus");
 const user = require("./controllers/query/user");
 const reservation = require("./controllers/query/reservation");
 const iot = require("./controllers/query/iot");
+
+const login = require("./controllers/middleware/login");
+const signup = require("./controllers/middleware/signup");
+const iotActivate = require("./controllers/middleware/iotActivate");
+app.post("/signup", signup.middleware, user.signup);
+app.post("/login", login.middleware, user.login);
+app.post("/activate", requireJWTAuth, iotActivate.middleware, iot.activateIotEquipment);
+
 // Rest API
 // Getting Room/Seat Information
 app.get("/fac", facility.getAllFacility);
@@ -55,37 +84,7 @@ app.get("/reservations", reservation.getAllReservations);
 // Test PG
 app.post("/test", facStatus.getAvaialableFacWithAmount);
 
-const iotActivateMiddleWare = (request, response, next) => {
-  const userName = request.body.username;
-  // const reservId = request.body.reservId;
-  const queryText = `select reservId, array_agg(json_build_object('facCode', code, 'floor', floor)) as facList 
-    from meeteenew.view_user_history
-    where username = $1 and ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time))
-    group by reservId`;
-  const queryValues = [userName];
-  pool.query(queryText, queryValues, (error, results) => {
-    if (error) {
-      response.status(500).send("Database Error");
-    } else if (results.rowCount == 0) {
-      response.status(400).send("Bad Request");
-    } else {
-      const facCodeList = [];
-      results.rows.forEach(element => {
-        element.faclist.forEach(facItem => {
-          facCodeList.push(facItem.facCode);
-        });
-      });
-      request.facCodeList = facCodeList;
-      next();
-    }
-  });
-  //รับ request {Header: jwt-token} {username: string, reservId: int}
-  //เช็คเวลาที่จองไป query to get date and time-period เพื่อเทียบกับ now() ว่า overlaps กันหรือไม่
-  //true=>next() false=>400 Bad Request
-};
-app.post("/activate", iotActivateMiddleWare, iot.activateIotEquipment);
-
-app.get("/", (request, response) => {
+app.get("/", requireJWTAuth,(request, response) => {
   response.send("MeeteeAPI welcome!");
 });
 
