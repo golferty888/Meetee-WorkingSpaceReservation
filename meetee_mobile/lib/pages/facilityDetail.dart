@@ -162,7 +162,7 @@ class FacilityDetailState extends State<FacilityDetail> {
                                               ),
                                             ),
                                             Text(
-                                              '/per hour',
+                                              'per hour',
                                               style: TextStyle(
                                                 fontSize: 16.0,
                                                 color: Colors.white,
@@ -202,6 +202,8 @@ class FacilityDetailState extends State<FacilityDetail> {
                                               startDate: widget.startDate,
                                               startTime: widget.startTime,
                                               endTime: widget.endTime,
+                                              price: widget
+                                                  .categoryDetail["price"],
                                             ),
                                           ),
                                         );

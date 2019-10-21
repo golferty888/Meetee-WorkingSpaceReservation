@@ -17,6 +17,7 @@ class SeatMapPage extends StatefulWidget {
   final DateTime startDate;
   final DateTime startTime;
   final DateTime endTime;
+  final int price;
 
   SeatMapPage({
     Key key,
@@ -29,6 +30,7 @@ class SeatMapPage extends StatefulWidget {
     this.startDate,
     this.startTime,
     this.endTime,
+    this.price,
   }) : super(key: key);
   @override
   _SeatMapPageState createState() => _SeatMapPageState();
@@ -37,16 +39,68 @@ class SeatMapPage extends StatefulWidget {
 class _SeatMapPageState extends State<SeatMapPage> {
   @override
   void initState() {
-//    getSeatByCategory();
+    startDateFormatted = DateFormat("dd MMMM").format(widget.startDate);
+    startTimeFormatted = DateFormat("HH:00").format(widget.startTime);
+    endTimeFormatted = DateFormat("HH:00").format(widget.endTime);
 
+    startDateFormattedForApi =
+        DateFormat("yyyy-MM-dd").format(widget.startDate);
     super.initState();
   }
 
-//  FacilitiesList facilitiesList;
   final String getSeatsByCateURL =
       'http://18.139.12.132:9000/facility/cate/status/av';
-  List _seatsList;
+  final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
+  Map<String, String> headers = {"Content-type": "application/json"};
 
+  String startDateFormatted;
+  String startDateFormattedForApi;
+  String startTimeFormatted;
+  String endTimeFormatted;
+  bool _isFetched = false;
+
+  Future<dynamic> reserveSeat() async {
+    String body = '{'
+        '"userId": 1,'
+        '"startDate": "$startDateFormattedForApi",'
+        '"startTime": "$startTimeFormatted",'
+        '"endTime": "$endTimeFormatted",'
+        '"facId": $_selectedSeatList'
+        '}';
+    print('body: ' + body);
+    final response = await http.post(
+      reserveSeatUrl,
+//      body: {
+//        "userId": 1.toString(),
+//        "startDate": "2019-11-17",
+//        "startTime": "08:00:00",
+//        "endTime": "09:00:00",
+//        "facId": [10, 11].toString()
+//      },
+      headers: headers,
+      body: body,
+    );
+    if (response.statusCode == 200) {
+//      final jsonData = json.decode(response.body);
+//      print(jsonData.toString());
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
+  List _selectedSeatList = [];
+  _onSelectedSeat(selectedSeatIndex) {
+    setState(() {
+      if (_selectedSeatList.contains(selectedSeatIndex)) {
+        _selectedSeatList.remove(selectedSeatIndex);
+      } else {
+        _selectedSeatList.add(selectedSeatIndex);
+      }
+    });
+  }
+
+  List _seatsList;
   FutureBuilder _buildGridView() {
     return FutureBuilder(
         future: http.post(
@@ -68,49 +122,57 @@ class _SeatMapPageState extends State<SeatMapPage> {
                 child: CircularProgressIndicator(),
               );
             case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              if (_isFetched == false) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              continue done;
+
+//              return null;
+            done:
             case ConnectionState.done:
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-              print('getSeat: ${json.decode(snapshot.data.body)}');
+//              print('getSeat: ${json.decode(snapshot.data.body)}');
               _seatsList = json.decode(snapshot.data.body);
-              print(_seatsList);
-              return GridView.count(
-                  shrinkWrap: true,
-                  primary: false,
-                  crossAxisCount: 3,
-                  childAspectRatio: 1.5,
-//                itemCount: _seatsList.length,
-//                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                    crossAxisCount: 3),
-//                itemBuilder: (BuildContext context, int index) {
-//                  return Container(
-//                    margin: EdgeInsets.all(8.0),
-//                    decoration: BoxDecoration(
-//                      color: Colors.white,
-//                      borderRadius: BorderRadius.circular(16.0),
-//                    ),
-//                    child: Center(
-//                      child: Text(_seatsList[index]["code"]),
-//                    ),
-//                  );
-//                },
-                  children: List.generate(
-                    _seatsList.length,
-                    (index) {
-                      return Container(
-                        margin: EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Center(
-                          child: Text(_seatsList[index]["code"]),
-                        ),
-                      );
-                    },
-                  ));
+              _isFetched = true;
+//              print(_seatsList);
+              return Padding(
+                padding: EdgeInsets.all(8.0),
+                child: GridView.count(
+                    shrinkWrap: true,
+                    primary: false,
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.7,
+                    children: List.generate(
+                      _seatsList.length,
+                      (index) {
+                        return GestureDetector(
+                          onTap: () =>
+                              _onSelectedSeat(_seatsList[index]["facid"]),
+                          child: Container(
+                            margin: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: _selectedSeatList
+                                      .contains(_seatsList[index]["facid"])
+                                  ? Color(widget.secondaryColor)
+                                  : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Center(
+                              child: Text(
+                                _seatsList[index]["code"],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    )),
+              );
           }
           return null;
         });
@@ -118,10 +180,6 @@ class _SeatMapPageState extends State<SeatMapPage> {
 
   @override
   Widget build(BuildContext context) {
-    String startDateFormatted = DateFormat("dd MMMM").format(widget.startDate);
-    String startTimeFormatted = DateFormat("HH:00").format(widget.startTime);
-    String endTimeFormatted = DateFormat("HH:00").format(widget.endTime);
-
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -152,9 +210,6 @@ class _SeatMapPageState extends State<SeatMapPage> {
               padding: EdgeInsets.only(left: 16.0),
               child: FloatingActionButton(
                 elevation: 0.0,
-//                backgroundColor: Color(
-//                  widget.secondaryColor,
-//                ).withOpacity(0.9),
                 backgroundColor: Colors.transparent,
                 child: Icon(
                   Icons.arrow_back,
@@ -166,15 +221,18 @@ class _SeatMapPageState extends State<SeatMapPage> {
           ),
           Align(
             alignment: Alignment.topCenter,
-            child: SafeArea(
-              child: Container(
-                height: 56.0,
-                child: Center(
-                  child: Text(
-                    'Choose seats',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 22.0,
+            child: Container(
+//              color: Colors.grey,
+              child: SafeArea(
+                child: Container(
+                  height: 56.0,
+                  child: Center(
+                    child: Text(
+                      widget.categoryName,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22.0,
+                      ),
                     ),
                   ),
                 ),
@@ -188,55 +246,187 @@ class _SeatMapPageState extends State<SeatMapPage> {
                 SizedBox(
                   height: 56,
                 ),
-                Container(
+                Expanded(
+//                  height: 400,
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(48.0, 8.0, 0.0, 0.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey[200].withOpacity(0.5),
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    margin: EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 16.0),
+//                    padding: EdgeInsets.all(8.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          widget.categoryName,
-                          style: TextStyle(
-                            color: Color(
-                              widget.secondaryColor,
-                            ),
-                            fontSize: 32.0,
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(8.0)),
+                          ),
+                          padding: EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                '$startDateFormatted',
+                                style: TextStyle(
+                                  color: Color(widget.secondaryColor),
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              Container(
+                                width: 1.0,
+                                height: 16.0,
+                                color: Colors.grey[200].withOpacity(0.5),
+                              ),
+                              Text(
+                                '$startTimeFormatted - $endTimeFormatted',
+                                style: TextStyle(
+                                  color: Color(widget.secondaryColor),
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              Container(
+                                width: 1.0,
+                                height: 16.0,
+                                color: Colors.grey[200].withOpacity(0.5),
+                              ),
+                              Text(
+                                '฿${widget.price}/hour',
+                                style: TextStyle(
+                                  color: Color(widget.secondaryColor),
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Text(
-                          '$startTimeFormatted - $endTimeFormatted, $startDateFormatted',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.0,
+                        _buildGridView(),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.vertical(
+                                bottom: Radius.circular(8.0)),
+                          ),
+                          padding: EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                    height: 16.0,
+                                    width: 24.0,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(4.0),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      'Available',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                    height: 16.0,
+                                    width: 24.0,
+                                    decoration: BoxDecoration(
+                                      color: Color(widget.secondaryColor),
+                                      borderRadius: BorderRadius.circular(4.0),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      'Selected',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                    height: 16.0,
+                                    width: 24.0,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(4.0),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      'Booked',
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                Flexible(
-//                  height: 400,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey[200],
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    margin: EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 16.0),
-                    padding: EdgeInsets.all(8.0),
-                    child: _buildGridView(),
-                  ),
-                ),
-                Expanded(
-                  child: Container(),
-                ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0),
+                  padding: EdgeInsets.symmetric(horizontal: 32.0),
                   child: Image(
                     image: AssetImage('images/map.jpg'),
                   ),
-                )
+                ),
+                Container(
+                  height: 48.0,
+                  margin: EdgeInsets.fromLTRB(
+                    32.0,
+                    16.0,
+                    32.0,
+                    8.0,
+                  ),
+                  child: RaisedButton(
+                    elevation: 0.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    color: Color(widget.secondaryColor),
+                    onPressed: () {
+                      reserveSeat();
+                    },
+                    child: Center(
+                      child: Text(
+                        'BOOK',
+                        style: TextStyle(
+                          letterSpacing: 2.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

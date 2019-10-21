@@ -58,7 +58,6 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   void initState() {
-    print(widget.facilityType.typeId);
     urlGetCategoryByFacilityType =
         'http://18.139.12.132:9000/fac/type/${widget.facilityType.typeId}';
     super.initState();
@@ -70,6 +69,7 @@ class _BookingPageState extends State<BookingPage> {
   FutureBuilder _buildFrontPanel() {
     return FutureBuilder(
         future: http.get(urlGetCategoryByFacilityType),
+        initialData: [],
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -85,7 +85,6 @@ class _BookingPageState extends State<BookingPage> {
             case ConnectionState.done:
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
               _categoriesList = json.decode(snapshot.data.body);
-              print(_categoriesList);
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
@@ -183,7 +182,7 @@ class _BookingPageState extends State<BookingPage> {
             borderRadius: BorderRadius.circular(16.0),
             child: Container(
               child: FadeInImage.memoryNetwork(
-                fadeInDuration: Duration(milliseconds: 200),
+                fadeInDuration: Duration(milliseconds: 100),
                 placeholder: kTransparentImage,
                 height: double.infinity,
                 fit: BoxFit.fill,
