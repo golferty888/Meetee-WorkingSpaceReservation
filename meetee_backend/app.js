@@ -68,12 +68,12 @@ app.get("/fac", facility.getAllFacility);
 app.get("/fac/type/:id", facility.getFacilityCategoriesFromType);
 app.get("/fac/cate/:id", equipment.getFacilityCategoryDetail);
 // Checking Room/Seat Status
-app.post("/facility/cate/status", facStatus.checkStatusEachFacilityCategory);
 app.post(
   "/facility/cate/status/av",
   facStatus.checkStatusAvaialableEachFacilityCategory
 );
-app.post("/facility/class/status", facStatus.checkStatusEachFacilityClass);
+app.post("/facility/cate/status", facStatus.checkStatusEachFacilityCategory);
+app.post("/facility/type/status", facStatus.checkStatusEachFacilityType);
 app.post("/facility/all/status", facStatus.checkStatusAllFacilities);
 // Do Reserve Room/Seat
 // app.post("/reserve", reservation.reserve);
@@ -83,6 +83,7 @@ app.post("/user/history", user.getReservationHistoryList);
 app.get("/reservations", reservation.getAllReservations);
 // Test PG
 app.post("/test", facStatus.getAvaialableFacWithAmount);
+app.post("/testreserve", reservation.testReserve);
 
 app.get("/", requireJWTAuth,(request, response) => {
   response.send("MeeteeAPI welcome!");
