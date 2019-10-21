@@ -1,7 +1,7 @@
-FROM node:10.16.3-alpine
+FROM node:8.16.2-jessie
 WORKDIR /app
 COPY ./package.json /app
 RUN npm install
 COPY . /app
 EXPOSE 9000 9001
-CMD ["npm", "start"]
+CMD ["npm", "start"] 
