@@ -18,20 +18,22 @@ class SeatMapPage extends StatefulWidget {
   final DateTime startTime;
   final DateTime endTime;
   final int price;
+  final int type;
 
-  SeatMapPage({
-    Key key,
+  SeatMapPage(
+      {Key key,
 //        this.type,
-    this.index,
-    this.imgPath,
-    this.categoryName,
-    this.cateId,
-    this.secondaryColor,
-    this.startDate,
-    this.startTime,
-    this.endTime,
-    this.price,
-  }) : super(key: key);
+      this.index,
+      this.imgPath,
+      this.categoryName,
+      this.cateId,
+      this.secondaryColor,
+      this.startDate,
+      this.startTime,
+      this.endTime,
+      this.price,
+      this.type})
+      : super(key: key);
   @override
   _SeatMapPageState createState() => _SeatMapPageState();
 }
@@ -412,18 +414,88 @@ class _SeatMapPageState extends State<SeatMapPage> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     color: Color(widget.secondaryColor),
-                    onPressed: () {
-                      reserveSeat();
-                    },
+                    disabledColor:
+                        Color(widget.secondaryColor).withOpacity(0.5),
+                    onPressed: _selectedSeatList.length == 0
+                        ? null
+                        : () {
+                            reserveSeat();
+                          },
                     child: Center(
-                      child: Text(
-                        'BOOK',
-                        style: TextStyle(
-                          letterSpacing: 2.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
+                      child: _selectedSeatList.length == 0
+                          ? widget.type == 0
+                              ? Text(
+                                  'Please select a seat'.toUpperCase(),
+                                  style: TextStyle(
+                                    letterSpacing: 2.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              : Text(
+                                  'Please select a room'.toUpperCase(),
+                                  style: TextStyle(
+                                    letterSpacing: 2.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'BOOK',
+                                  style: TextStyle(
+                                    letterSpacing: 2.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  ' ${_selectedSeatList.length} ',
+                                  style: TextStyle(
+                                    fontSize: 24.0,
+                                    letterSpacing: 2.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                widget.type == 0
+                                    ? Text(
+                                        'SEAT',
+                                        style: TextStyle(
+                                          letterSpacing: 2.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      )
+                                    : Text(
+                                        'ROOM',
+                                        style: TextStyle(
+                                          letterSpacing: 2.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                _selectedSeatList.length > 1
+                                    ? Text(
+                                        'S',
+                                        style: TextStyle(
+                                          letterSpacing: 2.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      )
+                                    : Text(
+                                        '',
+                                        style: TextStyle(
+                                          letterSpacing: 2.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                              ],
+                            ),
                     ),
                   ),
                 ),

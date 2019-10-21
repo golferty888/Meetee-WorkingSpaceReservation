@@ -204,6 +204,7 @@ class FacilityDetailState extends State<FacilityDetail> {
                                               endTime: widget.endTime,
                                               price: widget
                                                   .categoryDetail["price"],
+                                              type: widget.type,
                                             ),
                                           ),
                                         );
