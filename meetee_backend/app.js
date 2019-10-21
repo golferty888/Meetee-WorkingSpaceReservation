@@ -83,7 +83,7 @@ app.post("/user/history", user.getReservationHistoryList);
 app.get("/reservations", reservation.getAllReservations);
 // Test PG
 app.post("/test", facStatus.getAvaialableFacWithAmount);
-app.post("/testreserve", reservation.testReserve);
+// app.post("/testreserve", reservation.testReserve);
 
 app.get("/", requireJWTAuth,(request, response) => {
   response.send("MeeteeAPI welcome!");
