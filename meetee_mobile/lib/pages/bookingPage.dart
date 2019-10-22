@@ -181,12 +181,17 @@ class _BookingPageState extends State<BookingPage> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16.0),
             child: Container(
-              child: FadeInImage.memoryNetwork(
-                fadeInDuration: Duration(milliseconds: 100),
-                placeholder: kTransparentImage,
-                height: double.infinity,
-                fit: BoxFit.fill,
-                image: _categoriesList[index]["link_url"],
+              height: 500.0,
+//              child: FadeInImage.memoryNetwork(
+//                fadeInDuration: Duration(milliseconds: 100),
+//                placeholder: kTransparentImage,
+//                height: double.infinity,
+//                fit: BoxFit.fill,
+//                image: _categoriesList[index]["link_url"],
+//              ),
+              child: Image.network(
+                _categoriesList[index]["link_url"],
+                fit: BoxFit.cover,
               ),
             ),
           ),
