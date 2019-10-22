@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'dart:convert';
 
 import 'package:meetee_mobile/components/customDialog.dart';
@@ -13,6 +14,8 @@ class Summary extends StatefulWidget {
   final String type;
   final List code;
   final String totalPrice;
+  final String imgPath;
+  final int index;
 
   Summary({
     Key key,
@@ -24,6 +27,8 @@ class Summary extends StatefulWidget {
     this.type,
     this.code,
     this.totalPrice,
+    this.imgPath,
+    this.index,
   }) : super(key: key);
   @override
   _SummaryState createState() => _SummaryState();
@@ -33,9 +38,16 @@ class _SummaryState extends State<Summary> {
   final String userId = '1';
   final String reserveURL = 'http://18.139.12.132:9000/reserve';
 
+  String startDateFormatted;
+  String startTimeFormatted;
+  String endTimeFormatted;
+
   @override
   void initState() {
     super.initState();
+    startDateFormatted = DateFormat("dd MMMM yyy").format(widget.startDate);
+    startTimeFormatted = DateFormat("HH:00").format(widget.startTime);
+    endTimeFormatted = DateFormat("HH:00").format(widget.endTime);
   }
 
   Future<dynamic> reserveSeat() async {
@@ -76,33 +88,32 @@ class _SummaryState extends State<Summary> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-//          color: Color(widget.colorCode),
-          color: Colors.white,
-          image: DecorationImage(
-            image: AssetImage(
-              'images/noise.png',
-            ),
-            fit: BoxFit.fill,
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'images/summary_img.jpg',
-                  width: 250,
-                  fit: BoxFit.fitHeight,
-                ),
-                Container(
-                  width: 240.0,
-                  height: 224.0,
-                  margin: EdgeInsets.only(
-                    top: 24.0,
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                child: Container(),
+              ),
+              Expanded(
+                flex: 3,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0),
+                  child: Image.network(
+                    widget.imgPath,
+                    fit: BoxFit.cover,
                   ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+//                  width: 240.0,
+//                  height: 224.0,
+
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(72.0, 24.0, 32.0, 0.0),
                   child: Column(
                     children: <Widget>[
                       Padding(
@@ -126,7 +137,7 @@ class _SummaryState extends State<Summary> {
                             Expanded(
                               flex: 5,
                               child: Text(
-                                '${widget.startDate}',
+                                '$startDateFormatted',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
@@ -156,19 +167,13 @@ class _SummaryState extends State<Summary> {
                             ),
                             Expanded(
                               flex: 5,
-//                              child: Text(
-//                                '${widget.startTime.substring(
-//                                  0,
-//                                  5,
-//                                )} - ${widget.endTime.substring(
-//                                  0,
-//                                  5,
-//                                )}',
-//                                style: TextStyle(
-//                                  fontSize: 16.00,
-//                                  fontWeight: FontWeight.bold,
-//                                ),
-//                              ),
+                              child: Text(
+                                '$startTimeFormatted - $endTimeFormatted',
+                                style: TextStyle(
+                                  fontSize: 16.00,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             )
                           ],
                         ),
@@ -247,6 +252,37 @@ class _SummaryState extends State<Summary> {
                             Expanded(
                               flex: 4,
                               child: Text(
+                                'Quantity',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Text(
+                                '${widget.code.length}',
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          16.0,
+                          8.0,
+                          16.0,
+                          8.0,
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 4,
+                              child: Text(
                                 'Price',
                                 style: TextStyle(
                                   fontSize: 18.0,
@@ -269,46 +305,49 @@ class _SummaryState extends State<Summary> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 16.0,
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              RaisedButton(
+                elevation: 0.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
-                RaisedButton(
-                  elevation: 0.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  color: Color(widget.colorCode),
-                  onPressed: () {
-                    reserveSeat();
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => CustomDialog(
-                        colorCode: widget.colorCode,
-                        title: "Book",
-                        buttonTextLeft: "Keep booking",
-                        buttonTextRight: "Done",
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 24.0,
+                color: Color(widget.colorCode),
+                onPressed: () {
+                  reserveSeat();
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => CustomDialog(
+                      colorCode: widget.colorCode,
+                      title: "Book",
+                      buttonTextLeft: "Keep booking",
+                      buttonTextRight: "Done",
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    width: MediaQuery.of(context).size.width / 3,
-                    child: Text(
-                      'CONFIRM',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        letterSpacing: 2.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Text(
+                    'CHECK OUT',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              Expanded(
+                child: Container(),
+              ),
+            ],
           ),
         ),
       ),

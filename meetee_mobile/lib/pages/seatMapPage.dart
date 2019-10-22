@@ -469,6 +469,8 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                   type: widget.categoryName,
                                   code: _selectedSeatCode,
                                   totalPrice: _totalPrice.toString(),
+                                  imgPath: widget.imgPath,
+                                  index: widget.index,
                                 ),
                               ),
                             );
@@ -553,7 +555,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                   ' (฿${_totalPrice.toString()})',
                                   style: TextStyle(
                                     letterSpacing: 2.0,
-                                    fontWeight: FontWeight.bold,
+//                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
                                 ),
