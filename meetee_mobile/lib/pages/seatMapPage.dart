@@ -449,19 +449,19 @@ class _SeatMapPageState extends State<SeatMapPage> {
                       child: _selectedSeatList.length == 0
                           ? widget.type == 0
                               ? Text(
-                                  'Please select a seat'.toUpperCase(),
+                                  'Select seats to book'.toUpperCase(),
                                   style: TextStyle(
-                                    letterSpacing: 2.0,
+                                    letterSpacing: 1.5,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                    color: Colors.grey[800],
                                   ),
                                 )
                               : Text(
-                                  'Please select a room'.toUpperCase(),
+                                  'Select rooms to book'.toUpperCase(),
                                   style: TextStyle(
-                                    letterSpacing: 2.0,
+                                    letterSpacing: 1.5,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black54,
+                                    color: Colors.grey[800],
                                   ),
                                 )
                           : Row(
@@ -475,13 +475,16 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                     color: Colors.black,
                                   ),
                                 ),
-                                Text(
-                                  ' ${_selectedSeatList.length} ',
-                                  style: TextStyle(
-                                    fontSize: 24.0,
-                                    letterSpacing: 2.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 4),
+                                  child: Text(
+                                    ' ${_selectedSeatList.length} ',
+                                    style: TextStyle(
+                                      fontSize: 24.0,
+                                      letterSpacing: 2.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
                                 widget.type == 0
