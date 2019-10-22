@@ -25,7 +25,7 @@ CREATE TABLE meeteenew.facility(
 );
 --TYPE
 INSERT INTO meeteenew.facility_type(name) VALUES('Meeting Room');
-INSERT INTO meeteenew.facility_type(name) VALUES('Seat');
+INSERT INTO meeteenew.facility_type(name) VALUES('Private Seat');
 INSERT INTO meeteenew.facility_type(name) VALUES('Seminar Room');
 --CATEGORY
 INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
