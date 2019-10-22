@@ -3,7 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
 
-import 'package:meetee_mobile/components/customDialog.dart';
+import 'package:square_in_app_payments/models.dart';
+import 'package:square_in_app_payments/in_app_payments.dart';
+import 'package:meetee_mobile/config.dart';
 
 class Summary extends StatefulWidget {
   final int colorCode;
@@ -48,6 +50,10 @@ class _SummaryState extends State<Summary> {
     startDateFormatted = DateFormat("dd MMMM yyy").format(widget.startDate);
     startTimeFormatted = DateFormat("HH:00").format(widget.startTime);
     endTimeFormatted = DateFormat("HH:00").format(widget.endTime);
+
+    //    _initSquarePayment();
+
+//    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   Future<dynamic> reserveSeat() async {
@@ -316,16 +322,24 @@ class _SummaryState extends State<Summary> {
                 ),
                 color: Color(widget.colorCode),
                 onPressed: () {
-                  reserveSeat();
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => CustomDialog(
-                      colorCode: widget.colorCode,
-                      title: "Book",
-                      buttonTextLeft: "Keep booking",
-                      buttonTextRight: "Done",
-                    ),
-                  );
+//                  reserveSeat();
+//                  showDialog(
+//                    context: context,
+//                    builder: (BuildContext context) => CustomDialog(
+//                      colorCode: widget.colorCode,
+//                      title: "Book",
+//                      buttonTextLeft: "Keep booking",
+//                      buttonTextRight: "Done",
+//                    ),
+//                  );
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (context) => PaymentPage(),
+//                    ),
+//                  );
+
+                  _onStartCardEntryFlow();
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(
@@ -352,5 +366,40 @@ class _SummaryState extends State<Summary> {
         ),
       ),
     );
+  }
+
+  bool isLoading = true;
+  bool applePayEnabled = false;
+  bool googlePayEnabled = false;
+
+  static final GlobalKey<ScaffoldState> scaffoldKey =
+      GlobalKey<ScaffoldState>();
+
+  Future<void> _onStartCardEntryFlow() async {
+    print('_onStartCardEntryFlow');
+    await InAppPayments.setSquareApplicationId(squareApplicationId);
+    print('afterStartCardEntryFlow');
+    await InAppPayments.startCardEntryFlow(
+        onCardNonceRequestSuccess: _onCardEntryCardNonceRequestSuccess,
+        onCardEntryCancel: _onCancelCardEntryFlow);
+  }
+
+  void _onCancelCardEntryFlow() {
+    print('_onCancelCardEntryFlow');
+    // Handle the cancel callback
+  }
+
+  void _onCardEntryCardNonceRequestSuccess(CardDetails result) async {
+    try {
+      print('success $result');
+      InAppPayments.completeCardEntry(
+          onCardEntryComplete: _onCardEntryComplete);
+    } on Exception catch (ex) {
+      InAppPayments.showCardNonceProcessingError(ex.toString());
+    }
+  }
+
+  void _onCardEntryComplete() {
+    print('_onCardEntryComplete');
   }
 }
