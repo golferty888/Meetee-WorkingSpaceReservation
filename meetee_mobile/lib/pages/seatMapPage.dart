@@ -51,7 +51,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
   }
 
   final String getSeatsByCateURL =
-      'http://18.139.12.132:9000/facility/cate/status/av';
+      'http://18.139.12.132:9000/facility/cate/status';
   final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
   Map<String, String> headers = {"Content-type": "application/json"};
 
@@ -109,10 +109,9 @@ class _SeatMapPageState extends State<SeatMapPage> {
           getSeatsByCateURL,
           body: {
             "cateId": widget.cateId.toString(),
-            "startDate": DateFormat("yyyy-MM-dd").format(widget.startDate),
-            "startTime": DateFormat("HH:00:00").format(widget.startTime),
-            "endTime": DateFormat("HH:00").format(widget.endTime),
-            "endDate": DateFormat("yyyy-MM-dd").format(widget.startDate),
+            "startDate": "$startDateFormattedForApi",
+            "startTime": "$startTimeFormatted",
+            "endTime": "$endTimeFormatted",
           },
         ),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -135,7 +134,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
             done:
             case ConnectionState.done:
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-//              print('getSeat: ${json.decode(snapshot.data.body)}');
+//              print('getSeats: ${json.decode(snapshot.data.body)}');
               _seatsList = json.decode(snapshot.data.body);
               _isFetched = true;
 //              print(_seatsList);
@@ -149,29 +148,50 @@ class _SeatMapPageState extends State<SeatMapPage> {
                     children: List.generate(
                       _seatsList.length,
                       (index) {
-                        return GestureDetector(
-                          onTap: () =>
-                              _onSelectedSeat(_seatsList[index]["facid"]),
-                          child: Container(
-                            margin: EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: _selectedSeatList
-                                      .contains(_seatsList[index]["facid"])
-                                  ? Color(widget.secondaryColor)
-                                  : Colors.grey[200],
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Center(
-                              child: Text(
-                                _seatsList[index]["code"],
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  letterSpacing: 1.5,
+                        return _seatsList[index]["status"] == "available"
+                            ? GestureDetector(
+                                onTap: () =>
+                                    _onSelectedSeat(_seatsList[index]["facid"]),
+                                child: Container(
+                                  margin: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    color: _selectedSeatList.contains(
+                                            _seatsList[index]["facid"])
+                                        ? Color(widget.secondaryColor)
+                                        : Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      _seatsList[index]["code"],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        );
+                              )
+                            : Container(
+                                margin: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  border: Border.all(
+                                    color: Colors.grey[200].withOpacity(0.3),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    _seatsList[index]["code"],
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.3),
+                                      fontWeight: FontWeight.normal,
+                                      letterSpacing: 1.5,
+                                    ),
+                                  ),
+                                ),
+                              );
                       },
                     )),
               );
@@ -370,8 +390,12 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                     height: 16.0,
                                     width: 24.0,
                                     decoration: BoxDecoration(
-                                      color: Colors.grey,
+                                      color: Colors.transparent,
                                       borderRadius: BorderRadius.circular(4.0),
+                                      border: Border.all(
+                                        color:
+                                            Colors.grey[200].withOpacity(0.3),
+                                      ),
                                     ),
                                   ),
                                   Padding(
