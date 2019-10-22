@@ -377,7 +377,7 @@ class _SummaryState extends State<Summary> {
 
   Future<void> _onStartCardEntryFlow() async {
     print('_onStartCardEntryFlow');
-    await InAppPayments.setSquareApplicationId(squareApplicationId);
+//    await InAppPayments.setSquareApplicationId(squareApplicationId);
     print('afterStartCardEntryFlow');
     await InAppPayments.startCardEntryFlow(
         onCardNonceRequestSuccess: _onCardEntryCardNonceRequestSuccess,
@@ -386,7 +386,6 @@ class _SummaryState extends State<Summary> {
 
   void _onCancelCardEntryFlow() {
     print('_onCancelCardEntryFlow');
-    // Handle the cancel callback
   }
 
   void _onCardEntryCardNonceRequestSuccess(CardDetails result) async {
