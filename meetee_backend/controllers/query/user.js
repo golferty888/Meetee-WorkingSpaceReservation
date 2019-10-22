@@ -59,7 +59,7 @@ exports.getReservationHistoryList = (request, response, next) => {
     order by reservId desc`;
   pool.query(queryText, queryValue, (error, results) => {
     try {
-      if (userId == null || !userId.match(/^[0-9]+$/)) {
+      if (userId == null) {
         throw new ErrorHandler(400, "Bad Request");
       } else if (error) {
         console.log(error);
@@ -68,6 +68,7 @@ exports.getReservationHistoryList = (request, response, next) => {
         response.status(200).send(results.rows);
       }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   });

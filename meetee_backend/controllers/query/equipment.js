@@ -13,7 +13,7 @@ exports.getFacilityCategoryDetail = (request, response, next) => {
   const value = [cateId];
   pool.query(statement, value, (error, results) => {
     try {
-      if (cateId == null || !cateId.match(/^[0-9]+$/)) {
+      if (cateId == null) {
         throw new ErrorHandler(400, "Bad Request");
       } else if (error) {
         console.log(error);
