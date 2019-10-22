@@ -852,9 +852,9 @@ class _CustomerDemandState extends State<CustomerDemand> {
                     ),
                     color: Color(widget.facilityType.secondaryColorCode),
                     onPressed: () {
-                      Navigator.of(context).push(
-                        _createRoute(),
-                      );
+//                      Navigator.of(context).push(
+//                        _createRoute(),
+//                      );
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -878,37 +878,37 @@ class _CustomerDemandState extends State<CustomerDemand> {
     );
   }
 
-  Route _createRoute() {
-    print(facilitiesList);
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => Summary(
-        colorCode: widget.facilityType.secondaryColorCode,
-        startDate: startDate,
-        endDate: startDate,
-        startTime: startTime,
-        endTime: endTime,
-        facId: facilitiesList == null
-            ? '0'
-            : facilitiesList.facilities[_selectedFacility].facId.toString(),
-        type: _selectedCateName,
-        code: facilitiesList == null
-            ? 'errorCode'
-            : facilitiesList.facilities[_selectedFacility].code,
-        totalPrice: _totalPrice.toString(),
-      ),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(0.0, 1.0);
-        var end = Offset(0.0, 0.0);
-        var curve = Curves.easeIn;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
+//  Route _createRoute() {
+//    print(facilitiesList);
+//    return PageRouteBuilder(
+//      pageBuilder: (context, animation, secondaryAnimation) => Summary(
+//        colorCode: widget.facilityType.secondaryColorCode,
+//        startDate: startDate,
+//        endDate: startDate,
+//        startTime: startTime,
+//        endTime: endTime,
+//        facId: facilitiesList == null
+//            ? '0'
+//            : facilitiesList.facilities[_selectedFacility].facId.toString(),
+//        type: _selectedCateName,
+//        code: facilitiesList == null
+//            ? 'errorCode'
+//            : facilitiesList.facilities[_selectedFacility].code,
+//        totalPrice: _totalPrice.toString(),
+//      ),
+//      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+//        var begin = Offset(0.0, 1.0);
+//        var end = Offset(0.0, 0.0);
+//        var curve = Curves.easeIn;
+//
+//        var tween =
+//            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+//
+//        return SlideTransition(
+//          position: animation.drive(tween),
+//          child: child,
+//        );
+//      },
+//    );
+//  }
 }

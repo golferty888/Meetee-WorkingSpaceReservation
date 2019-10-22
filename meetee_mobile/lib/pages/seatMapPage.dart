@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:meetee_mobile/pages/summary.dart';
 
 class SeatMapPage extends StatefulWidget {
 //  final int type;
@@ -44,6 +45,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
     startDateFormatted = DateFormat("dd MMMM").format(widget.startDate);
     startTimeFormatted = DateFormat("HH:00").format(widget.startTime);
     endTimeFormatted = DateFormat("HH:00").format(widget.endTime);
+    totalHour = widget.endTime.difference(widget.startTime).inHours;
 
     startDateFormattedForApi =
         DateFormat("yyyy-MM-dd").format(widget.startDate);
@@ -59,6 +61,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
   String startDateFormattedForApi;
   String startTimeFormatted;
   String endTimeFormatted;
+  int totalHour;
   bool _isFetched = false;
 
   Future<dynamic> reserveSeat() async {
@@ -91,14 +94,19 @@ class _SeatMapPageState extends State<SeatMapPage> {
     }
   }
 
+  int _totalPrice = 0;
   List _selectedSeatList = [];
-  _onSelectedSeat(selectedSeatIndex) {
+  List _selectedSeatCode = [];
+  _onSelectedSeat(selectedSeatFacId, selectedSeatCode) {
     setState(() {
-      if (_selectedSeatList.contains(selectedSeatIndex)) {
-        _selectedSeatList.remove(selectedSeatIndex);
+      if (_selectedSeatList.contains(selectedSeatFacId)) {
+        _selectedSeatList.remove(selectedSeatFacId);
+        _selectedSeatCode.remove(selectedSeatCode);
       } else {
-        _selectedSeatList.add(selectedSeatIndex);
+        _selectedSeatList.add(selectedSeatFacId);
+        _selectedSeatCode.add(selectedSeatCode);
       }
+      _totalPrice = (widget.price * totalHour) * _selectedSeatList.length;
     });
   }
 
@@ -150,8 +158,10 @@ class _SeatMapPageState extends State<SeatMapPage> {
                       (index) {
                         return _seatsList[index]["status"] == "available"
                             ? GestureDetector(
-                                onTap: () =>
-                                    _onSelectedSeat(_seatsList[index]["facid"]),
+                                onTap: () => _onSelectedSeat(
+                                  _seatsList[index]["facid"],
+                                  _seatsList[index]["code"],
+                                ),
                                 child: Container(
                                   margin: EdgeInsets.all(8.0),
                                   decoration: BoxDecoration(
@@ -442,8 +452,26 @@ class _SeatMapPageState extends State<SeatMapPage> {
                         Color(widget.secondaryColor).withOpacity(0.5),
                     onPressed: _selectedSeatList.length == 0
                         ? null
-                        : () {
-                            reserveSeat();
+                        :
+//                        () {
+//                            reserveSeat();
+//                          },
+                        () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Summary(
+                                  colorCode: widget.secondaryColor,
+                                  startDate: widget.startDate,
+                                  startTime: widget.startTime,
+                                  endTime: widget.endTime,
+                                  facId: _selectedSeatList,
+                                  type: widget.categoryName,
+                                  code: _selectedSeatCode,
+                                  totalPrice: _totalPrice.toString(),
+                                ),
+                              ),
+                            );
                           },
                     child: Center(
                       child: _selectedSeatList.length == 0
@@ -521,6 +549,14 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                           color: Colors.black,
                                         ),
                                       ),
+                                Text(
+                                  ' (฿${_totalPrice.toString()})',
+                                  style: TextStyle(
+                                    letterSpacing: 2.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ],
                             ),
                     ),

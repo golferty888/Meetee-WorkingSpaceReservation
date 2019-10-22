@@ -6,20 +6,18 @@ import 'package:meetee_mobile/components/customDialog.dart';
 
 class Summary extends StatefulWidget {
   final int colorCode;
-  final String startDate;
-  final String endDate;
-  final String startTime;
-  final String endTime;
-  final String facId;
+  final DateTime startDate;
+  final DateTime startTime;
+  final DateTime endTime;
+  final List facId;
   final String type;
-  final String code;
+  final List code;
   final String totalPrice;
 
   Summary({
     Key key,
     @required this.colorCode,
     this.startDate,
-    this.endDate,
     this.startTime,
     this.endTime,
     this.facId,
@@ -49,7 +47,6 @@ class _SummaryState extends State<Summary> {
         "startDate": widget.startDate,
         "startTime": widget.startTime,
         "endTime": widget.endTime,
-        "endDate": widget.endDate,
       },
     );
     if (response.statusCode == 200) {
@@ -159,19 +156,19 @@ class _SummaryState extends State<Summary> {
                             ),
                             Expanded(
                               flex: 5,
-                              child: Text(
-                                '${widget.startTime.substring(
-                                  0,
-                                  5,
-                                )} - ${widget.endTime.substring(
-                                  0,
-                                  5,
-                                )}',
-                                style: TextStyle(
-                                  fontSize: 16.00,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+//                              child: Text(
+//                                '${widget.startTime.substring(
+//                                  0,
+//                                  5,
+//                                )} - ${widget.endTime.substring(
+//                                  0,
+//                                  5,
+//                                )}',
+//                                style: TextStyle(
+//                                  fontSize: 16.00,
+//                                  fontWeight: FontWeight.bold,
+//                                ),
+//                              ),
                             )
                           ],
                         ),
