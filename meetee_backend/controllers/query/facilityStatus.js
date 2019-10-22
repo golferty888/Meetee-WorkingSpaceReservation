@@ -2,8 +2,9 @@ const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.POSTGRES_CONNECTION_URL
 });
+const { ErrorHandler, handlerError } = require("../../helpers/error");
 
-exports.getAvaialableFacWithAmount = async (request, response) => {
+exports.getAvaialableFacWithAmount = async (request, response, next) => {
   const data = request.body;
   console.log(
     "--> Request /facility/cate/xxxxxxxxxxxx: " + JSON.stringify(data)
@@ -24,10 +25,16 @@ exports.getAvaialableFacWithAmount = async (request, response) => {
   const values1 = [startDate, "Booked", "Cancelled"];
 
   pool.query(statement1, values1, (error, results) => {
-    if (error) {
-      response.status(500).send("Database Error");
+    try {
+      if (error) {
+        console.log(error);
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.status(200).send(results.rows);
+      }
+    } catch (error) {
+      next(error);
     }
-    response.status(200).json(results.rows);
   });
 
   // const statement2 = `select v1.cateId, count(distinct v1.facId) :: int from meeteenew.view_fac_status as v1
@@ -69,7 +76,8 @@ exports.getAvaialableFacWithAmount = async (request, response) => {
 
 exports.checkStatusAvaialableEachFacilityCategory = async (
   request,
-  response
+  response,
+  next
 ) => {
   const data = request.body;
   console.log("-------------------------------------------------------------");
@@ -93,18 +101,31 @@ exports.checkStatusAvaialableEachFacilityCategory = async (
     (v1.status = $4 and not ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (v1.start_time, v1.end_time)))))`;
   const values = [cateId, startDate, "Booked", "Cancelled"];
   pool.query(statement, values, (error, results) => {
-    if (error) {
-      response.status(500).send("Database Error");
+    try {
+      if (
+        cateId == null ||
+        startDate == null ||
+        startTime == null ||
+        endTime == null
+      ) {
+        throw new ErrorHandler(400, "Bad Request");
+      } else if (error) {
+        console.log(error);
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.status(200).send(results.rows);
+      }
+    } catch (error) {
+      next(error);
     }
-    response.status(200).json(results.rows);
   });
 };
 
-exports.checkStatusEachFacilityCategory = (request, response) => {
+exports.checkStatusEachFacilityCategory = (request, response, next) => {
   const data = request.body;
   console.log("-------------------------------------------------------------");
   console.log({
-    request: "POST /facility/category/status",
+    request: "POST /facility/cate/status",
     body: JSON.stringify(data)
   });
   const cateId = data.cateId;
@@ -127,206 +148,22 @@ exports.checkStatusEachFacilityCategory = (request, response) => {
   const values = [cateId, startDate, "Booked", "Cancelled"];
 
   pool.query(statement, values, (error, results) => {
-    if (error) {
-      console.log(error);
-      response.status(500).send("Database Error");
-    }
-    response.status(200).json(results.rows);
-  });
-};
-
-exports.checkStatusEachFacilityType = (request, response) => {
-  const data = request.body;
-  console.log("-------------------------------------------------------------");
-  console.log({
-    request: "POST /facility/type/status",
-    body: JSON.stringify(data)
-  });
-  const classId = data.classId;
-  const startDate = data.startDate;
-  const startTime = data.startDate + " " + data.startTime;
-  const endTime = data.endDate + " " + data.endTime;
-  const status = "Booked";
-  const user_id = data.userId;
-  console.log(startTime + " " + endTime);
-
-  const facilityInClassQuery = knex("meeteenew.facility as fac")
-    .select(
-      "fac.id as facId",
-      "fac.code as code",
-      "fac.floor as floor",
-      "cate.id as cateId",
-      "cate.name as cateName"
-    )
-    .join(
-      "meeteenew.facility_category as cate",
-      "fac.facility_category_id",
-      "=",
-      "cate.id"
-    )
-    .join(
-      "meeteenew.facility_class as class",
-      "cate.facility_class_id",
-      "=",
-      "class.id"
-    )
-    .where("class.id", "=", classId)
-    .orderBy("facId");
-
-  const unavailableQuery = knex("meeteenew.reservation as resv")
-    .distinct("resv.facility_id as facId")
-    .select(
-      "fac.code as code",
-      "fac.floor as floor",
-      "cate.id as cateId",
-      "cate.name as cateName"
-    )
-    .join("meeteenew.facility as fac", "resv.facility_id", "=", "fac.id")
-    .join(
-      "meeteenew.facility_category as cate",
-      "fac.facility_category_id",
-      "=",
-      "cate.id"
-    )
-    .join(
-      "meeteenew.facility_class as class",
-      "cate.facility_class_id",
-      "=",
-      "class.id"
-    )
-    .where("class.id", "=", classId)
-    .whereNot("resv.status", "Cancelled")
-    .andWhere(function() {
-      this.orWhere(
-        knex.raw(
-          `(TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') OVERLAPS (resv.start_time, resv.end_time)`
-        )
-      );
-    })
-    .orderBy("facId")
-    .catch(error => {
-      console.log(error);
-      response.status(400).send("Bad request");
-    });
-
-  facilityInClassQuery.then(facAll => {
-    assignStatusFacList(facAll);
-    unavailableQuery
-      .then(facUna => {
-        updateStatusFacList(facAll, facUna);
-        response.send(facAll);
-      })
-      .catch(error => {
+    try {
+      if (
+        cateId == null ||
+        startDate == null ||
+        startTime == null ||
+        endTime == null
+      ) {
+        throw new ErrorHandler(400, "Bad Request");
+      } else if (error) {
         console.log(error);
-        response.status(400).send("Bad request");
-      });
-  });
-};
-
-exports.checkStatusAllFacilities = (request, response) => {
-  const data = request.body;
-  console.log("--> Request facility/all/status: " + JSON.stringify(data));
-  const startDate = data.startDate;
-  const startTime = data.startDate + " " + data.startTime;
-  const endTime = data.endDate + " " + data.endTime;
-  const status = "Booked";
-  const user_id = data.userId;
-
-  const allFacilityQuery = knex("meeteenew.facility as fac")
-    .select(
-      "fac.id as facId",
-      "fac.code as code",
-      "fac.floor as floor",
-      "fac.facility_category_id as cateId"
-    )
-    .orderBy("facId");
-
-  const unavailableQuery = knex("meeteenew.reservation as resv")
-    .distinct("resv.facility_id as facId")
-    .select(
-      "fac.code as code",
-      "fac.floor as floor",
-      "fac.facility_category_id as cateId"
-    )
-    .join("meeteenew.facility as fac", "resv.facility_id", "=", "fac.id")
-    .whereNot("resv.status", "Cancelled")
-    .andWhere(function() {
-      this.orWhere(
-        knex.raw(
-          `(TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') OVERLAPS (resv.start_time, resv.end_time)`
-        )
-      );
-    })
-    .orderBy("facId")
-    .catch(error => {
-      console.log(error);
-      response.status(400).send("Bad request");
-    });
-
-  allFacilityQuery.then(facAll => {
-    assignStatusFacList(facAll);
-    unavailableQuery
-      .then(facUna => {
-        updateStatusFacList(facAll, facUna);
-        response.send(facAll);
-      })
-      .catch(error => {
-        console.log(error);
-        response.status(400).send("Bad request");
-      });
-  });
-};
-
-function assignStatusFacList(facList) {
-  for (i = 0; i < facList.length; i++) {
-    facList[i] = Object.assign(facList[i], {
-      status: "available"
-    });
-  }
-}
-
-function updateStatusFacList(facAll, facUna) {
-  for (i = 0; i < facUna.length; i++) {
-    for (j = 0; j < facAll.length; j++) {
-      if (facUna[i].code == facAll[j].code) {
-        facAll[j].status = "unavailable";
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.status(200).send(results.rows);
       }
+    } catch (error) {
+      next(error);
     }
-  }
-}
-
-exports.checkUnavailability = (request, response) => {
-  const data = request.body;
-  const cateId = body.cateId;
-  const startDate = data.startDate;
-  const startTime = data.startDate + " " + data.startTime;
-  const endTime = data.endDate + " " + data.endTime;
-  const status = "Booked";
-  const user_id = data.userId;
-  console.log(type);
-  console.log(startTime + " " + endTime);
-
-  const unavailableQuery = knex("meeteenew.reservation as resv")
-    .distinct("resv.facility_id as facId")
-    .select(
-      "facility.code as code",
-      "fac.floor as floor",
-      "fac.facility_category_id as categoryIdd"
-    )
-    .join("meeteenew.facility as fac", "resv.facility_id", "=", "fac.id")
-    .where("facility.facility_category_id", "=", cateId)
-    .andWhereNot("resv.status", "Cancelled")
-    // .andWhere('resv.start_date', '=', startDate)
-    .andWhere(function() {
-      this.orWhere(
-        knex.raw(
-          `(TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') OVERLAPS (resv.start_time, resv.end_time)`
-        )
-      );
-    })
-    .then(data => response.send(data))
-    .catch(error => {
-      console.log(error);
-      response.status(400).send("Bad request");
-    });
+  });
 };

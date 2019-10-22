@@ -2,6 +2,8 @@ const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.POSTGRES_CONNECTION_URL
 });
+const { ErrorHandler, handlerError } = require("../../helpers/error");
+
 const mqtt = require("mqtt");
 const mqttClient = mqtt.connect("mqtt://20.191.141.209");
 exports.activateIotEquipment = (request, response) => {
@@ -10,7 +12,7 @@ exports.activateIotEquipment = (request, response) => {
   const facCodeList = request.facCodeList;
   console.log(facCodeList);
   facCodeList.forEach(facItem => {
-    mqttClient.publish(facItem, "Hello mqtt");
+    mqttClient.publish(facItem, "ON");
   });
   const message = "Activation Success!";
   response.status(200).send({

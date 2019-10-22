@@ -2,8 +2,9 @@ const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.POSTGRES_CONNECTION_URL
 });
+const { ErrorHandler, handlerError } = require("../../helpers/error");
 
-exports.reserve = (request, response) => {
+exports.reserve = (request, response, next) => {
   const data = request.body;
   const userId = data.userId;
   const facList = data.facId;
@@ -12,11 +13,8 @@ exports.reserve = (request, response) => {
   console.log("-------------------------------------------------------------");
   console.log({ request: "POST /reserve", body: JSON.stringify(data) });
 
-  const checkRD = `select id from meeteenew.view_reservation as v
-            where v.status = $1 and v.facId = $2 and
-            (TIMESTAMP '${start_time}', TIMESTAMP '${end_time}') OVERLAPS (v.start_time, v.end_time)`;
   const insertResv = `INSERT INTO meeteenew.reservation(user_id, start_time, end_time, status) 
-            VALUES($1, $2, $3, $4) RETURNING id`;
+    VALUES($1, $2, $3, $4) RETURNING id`;
   const insertResvValues = [userId, start_time, end_time, "Booked"];
 
   pool.connect((err, client, done) => {
@@ -32,37 +30,11 @@ exports.reserve = (request, response) => {
       }
       return !!err;
     };
-
     client.query("BEGIN", async err => {
       if (shouldAbort(err)) return;
 
-      // CHECK REDUNDANCY BOOKING
-
-      try {
-        for (let i = 0; i < facList.length; i++) {
-          const checkRDValues = ["Booked", facList[i]];
-          const rowFromCheckRD = await client.query(checkRD, checkRDValues);
-          if (rowFromCheckRD.rowCount > 0) {
-            console.log({ "Redundant resvId": rowFromCheckRD.rows });
-            throw new Error("RedundancyError");
-          }
-        }
-      } catch (error) {
-        console.log(error);
-        if (error.message == "RedundancyError") {
-          response.status(500).send("Something went wrong about redundancy.");
-          return;
-        } else {
-          response.status(500).send(error);
-          return;
-        }
-      }
-
-      // INSERT ITEMS
-
       client.query(insertResv, insertResvValues, (err, res) => {
         if (shouldAbort(err)) return;
-
         facList.forEach(facId => {
           const insertResvLine = `INSERT INTO meeteenew.reservation_line(reserve_id, facility_id)
             VALUES(${res.rows[0].id}, ${facId});`;
@@ -81,7 +53,7 @@ exports.reserve = (request, response) => {
   });
 };
 
-exports.getAllReservations = (request, response) => {
+exports.getAllReservations = (request, response, next) => {
   console.log("-------------------------------------------------------------");
   console.log({ request: "GET /reservations" });
   const queryText = `select reservId, 
@@ -92,8 +64,9 @@ exports.getAllReservations = (request, response) => {
     order by reservId desc`;
   pool.query(queryText, (error, results) => {
     if (error) {
-      response.status(500).send("Database Error");
+      throw new ErrorHandler(500, "Database Error");
+    } else {
+      response.status(200).send(results.rows);
     }
-    response.status(200).send(results.rows);
   });
 };

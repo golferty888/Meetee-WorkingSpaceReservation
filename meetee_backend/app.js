@@ -9,6 +9,7 @@ const pgConnectionString = process.env.POSTGRES_CONNECTION_URL;
 const pool = new Pool({
   connectionString: pgConnectionString
 });
+const { handlerError, ErrorHandler } = require("./helpers/error");
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const JwtStrategy = require("passport-jwt").Strategy;
 const jwtOptions = {
@@ -53,14 +54,21 @@ const equipment = require("./controllers/query/equipment");
 const facStatus = require("./controllers/query/facilityStatus");
 const user = require("./controllers/query/user");
 const reservation = require("./controllers/query/reservation");
+const test = require("./controllers/query/test");
 const iot = require("./controllers/query/iot");
 
 const login = require("./controllers/middleware/login");
 const signup = require("./controllers/middleware/signup");
+const reserve = require("./controllers/middleware/reserve");
 const iotActivate = require("./controllers/middleware/iotActivate");
 app.post("/signup", signup.middleware, user.signup);
 app.post("/login", login.middleware, user.login);
-app.post("/activate", requireJWTAuth, iotActivate.middleware, iot.activateIotEquipment);
+app.post(
+  "/activate",
+  requireJWTAuth,
+  iotActivate.middleware,
+  iot.activateIotEquipment
+);
 
 // Rest API
 // Getting Room/Seat Information
@@ -73,11 +81,11 @@ app.post(
   facStatus.checkStatusAvaialableEachFacilityCategory
 );
 app.post("/facility/cate/status", facStatus.checkStatusEachFacilityCategory);
-app.post("/facility/type/status", facStatus.checkStatusEachFacilityType);
-app.post("/facility/all/status", facStatus.checkStatusAllFacilities);
+// app.post("/facility/type/status", facStatus.checkStatusEachFacilityType);
+// app.post("/facility/all/status", facStatus.checkStatusAllFacilities);
 // Do Reserve Room/Seat
-// app.post("/reserve", reservation.reserve);
-app.post("/reserve", reservation.reserve);
+app.post("/reserve", reserve.middleWare, reservation.reserve);
+// app.post("/reserve", reserve.middleWare, test.reserve);
 // Reservation Information
 app.post("/user/history", user.getReservationHistoryList);
 app.get("/reservations", reservation.getAllReservations);
@@ -85,12 +93,16 @@ app.get("/reservations", reservation.getAllReservations);
 app.post("/test", facStatus.getAvaialableFacWithAmount);
 // app.post("/testreserve", reservation.testReserve);
 
-app.get("/", requireJWTAuth,(request, response) => {
+app.get("/", requireJWTAuth, (request, response) => {
   response.send("MeeteeAPI welcome!");
 });
 
 app.use("*", function(request, response) {
   response.status(404).send("404, Not found");
+});
+
+app.use((err, req, res, next) => {
+  handlerError(err, res);
 });
 
 // Postgres Client Connections

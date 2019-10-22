@@ -2,22 +2,29 @@ const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.POSTGRES_CONNECTION_URL
 });
+const { ErrorHandler, handlerError } = require("../../helpers/error");
 
-exports.getAllFacility = (request, response) => {
+exports.getAllFacility = (request, response, next) => {
   console.log("-------------------------------------------------------------");
   console.log({ request: "GET /fac" });
 
   const statement = `select * from meeteenew.facility`;
 
   pool.query(statement, (error, results) => {
-    if (error) {
-      response.status(500).send("Database Error");
+    try {
+      if (error) {
+        console.log(error);
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.status(200).send(results.rows);
+      }
+    } catch (error) {
+      next(error);
     }
-    response.status(200).json(results.rows);
   });
 };
 
-exports.getFacilityCategoriesFromType = (request, response) => {
+exports.getFacilityCategoriesFromType = (request, response, next) => {
   const typeId = request.params.id;
   console.log("-------------------------------------------------------------");
   console.log({ request: "POST /fac/type/:id", param: { typeId: typeId } });
@@ -25,11 +32,18 @@ exports.getFacilityCategoriesFromType = (request, response) => {
     where v.typeId = $1`;
   const value = [typeId];
 
-  pool.query(statement, value, (error, result) => {
-    if (error) {
-      response.status(500).send("Database Error");
-      throw error;
+  pool.query(statement, value, (error, results) => {
+    try {
+      if (typeId == null || !typeId.match(/^[0-9]+$/)) {
+        throw new ErrorHandler(400, "Bad Request");
+      } else if (error) {
+        console.log(error);
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.status(200).send(results.rows);
+      }
+    } catch (error) {
+      next(error);
     }
-    response.status(200).json(result.rows);
   });
 };

@@ -2,8 +2,14 @@ const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.POSTGRES_CONNECTION_URL
 });
+const { ErrorHandler, handlerError } = require("../../helpers/error");
 
 exports.middleware = (request, response, next) => {
+  console.log("-------------------------------------------------------------");
+  console.log({
+    request: "POST /activate",
+    body: JSON.stringify(request.body)
+  });
   const userName = request.body.username;
   // const reservId = request.body.reservId;
   const queryText = `select reservId, array_agg(json_build_object('facCode', code, 'floor', floor)) as facList 
@@ -12,19 +18,25 @@ exports.middleware = (request, response, next) => {
       group by reservId`;
   const queryValues = [userName];
   pool.query(queryText, queryValues, (error, results) => {
-    if (error) {
-      response.status(500).send("Database Error");
-    } else if (results.rowCount == 0) {
-      response.status(400).send("You don't have any booking in this time.");
-    } else {
-      const facCodeList = [];
-      results.rows.forEach(element => {
-        element.faclist.forEach(facItem => {
-          facCodeList.push(facItem.facCode);
+    try {
+      if (userName == null) {
+        throw new ErrorHandler(400, "Bad Request");
+      } else if (error) {
+        throw new ErrorHandler(500, "Database Error");
+      } else if (results.rowCount == 0) {
+        throw new ErrorHandler(400, "You don't have any booking in this time.");
+      } else {
+        const facCodeList = [];
+        results.rows.forEach(element => {
+          element.faclist.forEach(facItem => {
+            facCodeList.push(facItem.facCode);
+          });
         });
-      });
-      request.facCodeList = facCodeList;
-      next();
+        request.facCodeList = facCodeList;
+        next();
+      }
+    } catch (error) {
+      next(error);
     }
   });
   //รับ request {Header: jwt-token} {username: string, reservId: int}

@@ -1,4 +1,5 @@
 var knex = require("../../app").knex;
+const { ErrorHandler, handlerError } = require("../../helpers/error");
 
 exports.checkDensityOfRoomtype = (request, response) => {
   const type = request.body.type;

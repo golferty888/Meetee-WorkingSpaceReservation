@@ -2,10 +2,11 @@ const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.POSTGRES_CONNECTION_URL
 });
+const { ErrorHandler, handlerError } = require("../../helpers/error");
 const bcrypt = require("bcrypt");
 const jwt = require("jwt-simple");
 
-exports.signup = (request, response) => {
+exports.signup = (request, response, next) => {
   const round = 2;
   const username = request.body.username;
   const password = request.body.password;
@@ -14,19 +15,26 @@ exports.signup = (request, response) => {
     const statement = `INSERT INTO meeteenew.users (username, password, role) VALUES ($1, $2, $3) RETURNING username, password`;
     const values = [username, hash, "user"];
     pool.query(statement, values, (error, result) => {
-      if (error) {
-        console.log(error);
-        response.status(500).send("Database Error");
+      try {
+        if (username == null || password == null) {
+          throw new ErrorHandler(400, "Bad Request");
+        } else if (error) {
+          console.log(error);
+          throw new ErrorHandler(500, "Database Error");
+        } else {
+          response.status(200).send({
+            message: result.rows[0].username + " Sign up success!",
+            passwordEn: result.rows[0].password
+          });
+        }
+      } catch (error) {
+        next(error);
       }
-      response.status(200).send({
-        message: result.rows[0].username + " Sign up success!",
-        passwordEn: result.rows[0].password
-      });
     });
   });
 };
 
-exports.login = (request, response) => {
+exports.login = (request, response, next) => {
   const payload = {
     sub: request.body.username,
     iat: new Date().getTime()
@@ -36,7 +44,7 @@ exports.login = (request, response) => {
   response.status(200).send({ message: "Login success!", token: cipherText });
 };
 
-exports.getReservationHistoryList = (request, response) => {
+exports.getReservationHistoryList = (request, response, next) => {
   const data = request.body;
   console.log("-------------------------------------------------------------");
   console.log({ request: "POST /user/history", body: JSON.stringify(data) });
@@ -50,10 +58,17 @@ exports.getReservationHistoryList = (request, response) => {
     group by reservId, cateName, price, date, period, hour , total_price, status
     order by reservId desc`;
   pool.query(queryText, queryValue, (error, results) => {
-    if (error) {
-      response.status(500).send("Database Error");
-    } else {
-      response.status(200).send(results.rows);
+    try {
+      if (userId == null || !userId.match(/^[0-9]+$/)) {
+        throw new ErrorHandler(400, "Bad Request");
+      } else if (error) {
+        console.log(error);
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.status(200).send(results.rows);
+      }
+    } catch (error) {
+      next(error);
     }
   });
 };
