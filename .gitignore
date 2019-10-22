@@ -1,2 +1,4 @@
 
 meetee_backend/app\.test\.js
+
+meetee_backend/controllers/query/test.js

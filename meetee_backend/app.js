@@ -54,7 +54,6 @@ const equipment = require("./controllers/query/equipment");
 const facStatus = require("./controllers/query/facilityStatus");
 const user = require("./controllers/query/user");
 const reservation = require("./controllers/query/reservation");
-const test = require("./controllers/query/test");
 const iot = require("./controllers/query/iot");
 
 const login = require("./controllers/middleware/login");
@@ -85,7 +84,6 @@ app.post("/facility/cate/status", facStatus.checkStatusEachFacilityCategory);
 // app.post("/facility/all/status", facStatus.checkStatusAllFacilities);
 // Do Reserve Room/Seat
 app.post("/reserve", reserve.middleWare, reservation.reserve);
-// app.post("/reserve", reserve.middleWare, test.reserve);
 // Reservation Information
 app.post("/user/history", user.getReservationHistoryList);
 app.get("/reservations", reservation.getAllReservations);
