@@ -50,13 +50,8 @@ exports.getReservationHistoryList = (request, response, next) => {
   console.log({ request: "POST /user/history", body: JSON.stringify(data) });
   const userId = data.userId;
   const queryValue = [userId];
-  const queryText = `select reservId, 
-    array_agg(json_build_object('facCode', code, 'floor', floor)) as facList,
-    cateName, price, date, period, hour, total_price, status
-    from meeteenew.view_user_history
-    where userId = $1
-    group by reservId, cateName, price, date, period, hour , total_price, status
-    order by reservId desc`;
+  const queryText = `select * from meeteenew.view_user_history
+    where userId = $1`;
   pool.query(queryText, queryValue, (error, results) => {
     try {
       if (userId == null) {
