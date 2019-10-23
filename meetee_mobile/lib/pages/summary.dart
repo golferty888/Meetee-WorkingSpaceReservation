@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
+import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:meetee_mobile/components/customDialog.dart';
+import 'package:meetee_mobile/main.dart';
 
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
@@ -38,40 +42,50 @@ class Summary extends StatefulWidget {
 
 class _SummaryState extends State<Summary> {
   final String userId = '1';
-  final String reserveURL = 'http://18.139.12.132:9000/reserve';
+  final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
 
+  String startDateFormattedForApi;
   String startDateFormatted;
   String startTimeFormatted;
   String endTimeFormatted;
 
+  Map<String, String> headers = {"Content-type": "application/json"};
+
   @override
   void initState() {
     super.initState();
+    startDateFormattedForApi =
+        DateFormat("yyyy-MM-dd").format(widget.startDate);
     startDateFormatted = DateFormat("dd MMMM yyy").format(widget.startDate);
     startTimeFormatted = DateFormat("HH:00").format(widget.startTime);
     endTimeFormatted = DateFormat("HH:00").format(widget.endTime);
-
-    //    _initSquarePayment();
-
-//    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   Future<dynamic> reserveSeat() async {
+    String body = '{'
+        '"userId": $userId, '
+        '"startDate": "$startDateFormattedForApi", '
+        '"startTime": "$startTimeFormatted", '
+        '"endTime": "$endTimeFormatted", '
+        '"facId": ${widget.facId}'
+        '}';
+    print('body: ' + body);
     final response = await http.post(
-      reserveURL,
-      body: {
-        "userId": userId,
-        "facId": widget.facId,
-        "startDate": widget.startDate,
-        "startTime": widget.startTime,
-        "endTime": widget.endTime,
-      },
+      reserveSeatUrl,
+//      body: {
+//        "userId": 1.toString(),
+//        "startDate": "2019-11-17",
+//        "startTime": "08:00:00",
+//        "endTime": "09:00:00",
+//        "facId": [10, 11].toString()
+//      },
+      headers: headers,
+      body: body,
     );
     if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      print(jsonData);
+      print(response.body);
     } else {
-      throw Exception('Failed to load post');
+      print(response.body);
     }
   }
 
@@ -99,9 +113,8 @@ class _SummaryState extends State<Summary> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Flexible(
-                flex: 1,
-                child: Container(),
+              SizedBox(
+                height: 32,
               ),
               Expanded(
                 flex: 3,
@@ -316,30 +329,38 @@ class _SummaryState extends State<Summary> {
                 height: 16.0,
               ),
               RaisedButton(
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Text(
+                    'Copy fake card id',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: fakeCardId));
+                },
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              RaisedButton(
                 elevation: 0.0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 color: Color(widget.colorCode),
                 onPressed: () {
-//                  reserveSeat();
-//                  showDialog(
-//                    context: context,
-//                    builder: (BuildContext context) => CustomDialog(
-//                      colorCode: widget.colorCode,
-//                      title: "Book",
-//                      buttonTextLeft: "Keep booking",
-//                      buttonTextRight: "Done",
-//                    ),
-//                  );
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => PaymentPage(),
-//                    ),
-//                  );
-
                   _onStartCardEntryFlow();
+//                  _onCardEntryComplete();
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(
@@ -358,8 +379,8 @@ class _SummaryState extends State<Summary> {
                   ),
                 ),
               ),
-              Expanded(
-                child: Container(),
+              SizedBox(
+                height: 32.0,
               ),
             ],
           ),
@@ -377,7 +398,8 @@ class _SummaryState extends State<Summary> {
 
   Future<void> _onStartCardEntryFlow() async {
     print('_onStartCardEntryFlow');
-//    await InAppPayments.setSquareApplicationId(squareApplicationId);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    await InAppPayments.setSquareApplicationId(squareApplicationId);
     print('afterStartCardEntryFlow');
     await InAppPayments.startCardEntryFlow(
         onCardNonceRequestSuccess: _onCardEntryCardNonceRequestSuccess,
@@ -391,6 +413,7 @@ class _SummaryState extends State<Summary> {
   void _onCardEntryCardNonceRequestSuccess(CardDetails result) async {
     try {
       print('success $result');
+      reserveSeat();
       InAppPayments.completeCardEntry(
           onCardEntryComplete: _onCardEntryComplete);
     } on Exception catch (ex) {
@@ -400,5 +423,52 @@ class _SummaryState extends State<Summary> {
 
   void _onCardEntryComplete() {
     print('_onCardEntryComplete');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MyHomePage()),
+    );
+    showDialog(
+        context: context,
+        builder: (_) => FlareGiffyDialog(
+              key: Key('success'),
+              flarePath: 'images/success_end.flr',
+              flareAnimation: 'Wait',
+              title: Text(
+                'Booking completed!'.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              description: Text(
+                'Thank you.\n  Please remind that you must activate  \n  the room to use the facilities privided.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
+              buttonOkColor: Color(widget.colorCode),
+              buttonOkText: Text(
+                'Activate now'.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  letterSpacing: 1.5,
+                  fontSize: 16.0,
+                ),
+              ),
+              buttonCancelText: Text(
+                'Done'.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
+              onOkButtonPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                );
+              },
+            ));
   }
 }

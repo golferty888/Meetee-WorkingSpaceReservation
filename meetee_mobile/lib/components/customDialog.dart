@@ -18,12 +18,6 @@ class CustomDialog extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0),
         color: Colors.white,
-        image: DecorationImage(
-          image: AssetImage(
-            'images/noise.png',
-          ),
-          fit: BoxFit.fill,
-        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -57,12 +51,12 @@ class CustomDialog extends StatelessWidget {
                       color: Colors.grey[700],
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SelectFacilityType(),
-                        ),
-                      );
+//                      Navigator.push(
+//                        context,
+//                        MaterialPageRoute(
+//                          builder: (context) => SelectFacilityType(),
+//                        ),
+//                      );
                     },
                     child: Text(
                       buttonTextLeft,
@@ -80,12 +74,12 @@ class CustomDialog extends StatelessWidget {
                     ),
                     color: Color(colorCode),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HistoryPage(),
-                        ),
-                      );
+//                      Navigator.push(
+//                        context,
+//                        MaterialPageRoute(
+//                          builder: (context) => HistoryPage(),
+//                        ),
+//                      );
                     },
                     child: Text(
                       buttonTextRight,

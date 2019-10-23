@@ -30,6 +30,7 @@ dependencies:
   web_socket_channel: ^1.0.15
   transparent_image: ^1.0.0
   square_in_app_payments: ^1.2.3
+  giffy_dialog: ^1.4.0
   flutter_picker:
     git: git://github.com/yangyxd/flutter_picker.git
 

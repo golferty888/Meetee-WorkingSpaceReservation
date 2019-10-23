@@ -5,7 +5,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
+
 import 'package:meetee_mobile/pages/summary.dart';
 
 class SeatMapPage extends StatefulWidget {
@@ -54,8 +55,6 @@ class _SeatMapPageState extends State<SeatMapPage> {
 
   final String getSeatsByCateURL =
       'http://18.139.12.132:9000/facility/cate/status';
-  final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
-  Map<String, String> headers = {"Content-type": "application/json"};
 
   String startDateFormatted;
   String startDateFormattedForApi;
@@ -63,36 +62,6 @@ class _SeatMapPageState extends State<SeatMapPage> {
   String endTimeFormatted;
   int totalHour;
   bool _isFetched = false;
-
-  Future<dynamic> reserveSeat() async {
-    String body = '{'
-        '"userId": 1,'
-        '"startDate": "$startDateFormattedForApi",'
-        '"startTime": "$startTimeFormatted",'
-        '"endTime": "$endTimeFormatted",'
-        '"facId": $_selectedSeatList'
-        '}';
-    print('body: ' + body);
-    final response = await http.post(
-      reserveSeatUrl,
-//      body: {
-//        "userId": 1.toString(),
-//        "startDate": "2019-11-17",
-//        "startTime": "08:00:00",
-//        "endTime": "09:00:00",
-//        "facId": [10, 11].toString()
-//      },
-      headers: headers,
-      body: body,
-    );
-    if (response.statusCode == 200) {
-//      final jsonData = json.decode(response.body);
-//      print(jsonData.toString());
-      print(response.body);
-    } else {
-      print(response.body);
-    }
-  }
 
   int _totalPrice = 0;
   List _selectedSeatList = [];
