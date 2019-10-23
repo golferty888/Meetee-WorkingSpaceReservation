@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:meetee_mobile/main.dart';
+import 'package:meetee_mobile/pages/activationPage.dart';
 
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
@@ -39,7 +40,7 @@ class Summary extends StatefulWidget {
 }
 
 class _SummaryState extends State<Summary> {
-  final String userId = '1';
+  final String userId = '2';
   final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
 
   String startDateFormattedForApi;
@@ -60,11 +61,18 @@ class _SummaryState extends State<Summary> {
   }
 
   Future<dynamic> reserveSeat() async {
+//    String body = '{'
+//        '"userId": $userId, '
+//        '"startDate": "$startDateFormattedForApi", '
+//        '"startTime": "$startTimeFormatted", '
+//        '"endTime": "$endTimeFormatted", '
+//        '"facId": ${widget.facId}'
+//        '}';
     String body = '{'
         '"userId": $userId, '
         '"startDate": "$startDateFormattedForApi", '
-        '"startTime": "$startTimeFormatted", '
-        '"endTime": "$endTimeFormatted", '
+        '"startTime": "18:00", '
+        '"endTime": "19:00", '
         '"facId": ${widget.facId}'
         '}';
     print('body: ' + body);
@@ -464,7 +472,7 @@ class _SummaryState extends State<Summary> {
               onOkButtonPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                  MaterialPageRoute(builder: (context) => ActivationPage()),
                 );
               },
             ));

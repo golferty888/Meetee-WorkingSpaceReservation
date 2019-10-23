@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:meetee_mobile/main.dart';
 import 'package:meetee_mobile/model/history.dart';
+import 'package:meetee_mobile/pages/activationPage.dart';
 
 class HistoryPage extends StatefulWidget {
   @override
@@ -20,25 +21,25 @@ class _HistoryPageState extends State<HistoryPage> {
     super.initState();
   }
 
-  HistoriesList historiesList;
+  List historiesList;
 //  List historiesList;
 
   Future<dynamic> getHistoryByUserId() async {
     final response = await http.post(
       historyUrl,
       body: {
-        "userId": '1',
+        "userId": '2',
       },
     );
     if (response.statusCode == 200) {
-      final jsonData = (json.decode(response.body))['data']['historyList'];
-      print('get');
-      print(jsonData);
+      print(response.body);
+//      final jsonData = (json.decode(response.body));
       setState(() {
-        historiesList = HistoriesList.fromJson(jsonData);
+//        historiesList = HistoriesList.fromJson(jsonData);
+        historiesList = (json.decode(response.body));
       });
 
-      print(historiesList);
+      print(historiesList[0]["catename"]);
     } else {
       print('400');
       throw Exception('Failed to load post');
@@ -46,16 +47,6 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget _buildHistory(int index) {
-    DateTime now = DateTime.now();
-    DateTime startDate =
-        DateTime.parse(historiesList.histories[index].startTime).toLocal();
-    String formattedStartDate = DateFormat('d MMMM yyyy').format(startDate);
-    String formattedStartTime = DateFormat('HH:00:00').format(startDate);
-
-    DateTime endDate =
-        DateTime.parse(historiesList.histories[index].endTime).toLocal();
-    String formattedEndTime = DateFormat('HH:00:00').format(endDate);
-    Duration diffTime = startDate.difference(DateTime.now());
     return Container(
       margin: EdgeInsets.only(
         top: 8.0,
@@ -63,41 +54,48 @@ class _HistoryPageState extends State<HistoryPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
-          color: Colors.grey[100],
+          color: Colors.grey[300],
         ),
       ),
-      child: ListTile(
-        isThreeLine: true,
-        leading: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 16.0,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ActivationPage(),
+            ),
+          );
+        },
+        child: ListTile(
+          isThreeLine: true,
+          leading: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: 16.0,
+            ),
+            child: Text('${historiesList[index]["reservid"].toString()}'),
           ),
-          child: Text('${historiesList.histories[index].id.toString()}'),
-        ),
-        title:
-            Text('facId: ${historiesList.histories[index].facId.toString()}'),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('$formattedStartDate'),
-            Text('$formattedStartTime - $formattedEndTime'),
-          ],
-        ),
-        trailing: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 16.0,
+          title: Text('facId: ${historiesList[index]["faclist"]}'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text('${historiesList[index]["date"]}'),
+              Text('${historiesList[index]["period"]}'),
+            ],
           ),
-          child: Text(
-            historiesList.histories[index].status,
-            style: TextStyle(
-                color: historiesList.histories[index].status == 'Booked'
-                    ? Colors.green
-                    : Colors.red),
+          trailing: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: 16.0,
+            ),
+//          child: Text(
+//            historiesList[index]["status"],
+//            style: TextStyle(
+//                color: historiesList[index]["status"] == 'Booked'
+//                    ? Colors.green
+//                    : Colors.red),
+//          ),
+            child: Text('฿${historiesList[index]["total_price"]}'),
           ),
         ),
-//        trailing: Text(
-//            '${diffTime.inHours}:${diffTime.inMinutes}:${diffTime.inMilliseconds}'),
-//        trailing: Text('${now}'),
       ),
     );
   }
@@ -134,12 +132,6 @@ class _HistoryPageState extends State<HistoryPage> {
         decoration: BoxDecoration(
 //          color: Color(widget.colorCode),
           color: Colors.white,
-          image: DecorationImage(
-            image: AssetImage(
-              'images/noise.png',
-            ),
-            fit: BoxFit.fill,
-          ),
         ),
         child: SafeArea(
           child: Container(
@@ -147,8 +139,7 @@ class _HistoryPageState extends State<HistoryPage> {
             height: MediaQuery.of(context).size.height,
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount:
-                  historiesList == null ? 0 : historiesList.histories.length,
+              itemCount: historiesList == null ? 0 : historiesList.length,
               itemBuilder: (BuildContext context, int index) {
                 return _buildHistory(index);
               },

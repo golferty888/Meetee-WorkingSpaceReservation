@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/customerDemand.dart';
 
 import 'package:meetee_mobile/pages/historyPage.dart';
@@ -36,24 +37,27 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        decoration: BoxDecoration(
-//          image: DecorationImage(
-//            image: AssetImage(
-//              'images/noise.png',
-//            ),
-//            fit: BoxFit.fill,
-//          ),
-            ),
+        decoration: BoxDecoration(),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                height: 320.0,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/meetee_logo.png'),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActivationPage(),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 320.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('images/meetee_logo.png'),
 //                    fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
