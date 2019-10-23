@@ -54,7 +54,7 @@ const equipment = require("./controllers/query/equipment");
 const facStatus = require("./controllers/query/facilityStatus");
 const user = require("./controllers/query/user");
 const reservation = require("./controllers/query/reservation");
-const iot = require("./controllers/query/iot");
+const iot = require("./controllers/iot/iotActivate");
 
 const login = require("./controllers/middleware/login");
 const signup = require("./controllers/middleware/signup");

@@ -11,28 +11,20 @@ exports.middleware = (request, response, next) => {
     body: JSON.stringify(request.body)
   });
   const userId = request.body.userId;
-  // const reservId = request.body.reservId;
-  const queryText = `select reservId, array_agg(json_build_object('facCode', code, 'floor', floor)) as facList 
-      from meeteenew.view_user_history
-      where userId = $1 and ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time))
-      group by reservId`;
-  const queryValues = [userId];
-  pool.query(queryText, queryValues, (error, results) => {
+  const statement = `select * from meeteenew.view_mqtt_reservtime_lookup
+      where userId = $1 and ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time))`;
+  const value = [userId];
+  pool.query(statement, value, (error, results) => {
     try {
       if (error) {
+        console.log(error);
         throw new ErrorHandler(500, "Database Error");
       } else if (userId == null) {
         throw new ErrorHandler(400, "Bad Request");
       } else if (results.rowCount == 0) {
         throw new ErrorHandler(200, "You don't have any booking in this time.");
       } else {
-        const facCodeList = [];
-        results.rows.forEach(element => {
-          element.faclist.forEach(facItem => {
-            facCodeList.push(facItem.facCode);
-          });
-        });
-        request.facCodeList = facCodeList;
+        request.rows = results.rows;
         next();
       }
     } catch (error) {
