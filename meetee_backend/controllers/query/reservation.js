@@ -10,12 +10,13 @@ exports.reserve = (request, response, next) => {
   const facList = data.facId;
   const start_time = data.startDate + " " + data.startTime;
   const end_time = data.startDate + " " + data.endTime;
+  const totalPrice = data.totalPrice;
   console.log("-------------------------------------------------------------");
   console.log({ request: "POST /reserve", body: JSON.stringify(data) });
 
-  const insertResv = `INSERT INTO meeteenew.reservation(user_id, start_time, end_time, status) 
-    VALUES($1, $2, $3, $4) RETURNING id`;
-  const insertResvValues = [userId, start_time, end_time, "Booked"];
+  const insertResv = `INSERT INTO meeteenew.reservation(user_id, start_time, end_time, total_price, status) 
+    VALUES($1, $2, $3, $4, $5) RETURNING id`;
+  const insertResvValues = [userId, start_time, end_time, totalPrice, "Booked"];
 
   pool.connect((err, client, done) => {
     const shouldAbort = err => {
