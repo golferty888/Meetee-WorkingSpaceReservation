@@ -10,21 +10,21 @@ exports.middleware = (request, response, next) => {
     request: "POST /activate",
     body: JSON.stringify(request.body)
   });
-  const userName = request.body.username;
+  const userId = request.body.userId;
   // const reservId = request.body.reservId;
   const queryText = `select reservId, array_agg(json_build_object('facCode', code, 'floor', floor)) as facList 
       from meeteenew.view_user_history
-      where username = $1 and ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time))
+      where userId = $1 and ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time))
       group by reservId`;
-  const queryValues = [userName];
+  const queryValues = [userId];
   pool.query(queryText, queryValues, (error, results) => {
     try {
-      if (userName == null) {
-        throw new ErrorHandler(400, "Bad Request");
-      } else if (error) {
+      if (error) {
         throw new ErrorHandler(500, "Database Error");
+      } else if (userId == null) {
+        throw new ErrorHandler(400, "Bad Request");
       } else if (results.rowCount == 0) {
-        throw new ErrorHandler(400, "You don't have any booking in this time.");
+        throw new ErrorHandler(200, "You don't have any booking in this time.");
       } else {
         const facCodeList = [];
         results.rows.forEach(element => {
@@ -36,6 +36,7 @@ exports.middleware = (request, response, next) => {
         next();
       }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   });
