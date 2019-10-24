@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:meetee_mobile/components/scaleRoute.dart';
+import 'package:meetee_mobile/components/fadeRoute.dart';
 
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/bookingPage.dart';
-import 'package:meetee_mobile/pages/customerDemand.dart';
 import 'package:meetee_mobile/pages/facilityDetail.dart';
 
 class SelectFacilityType extends StatefulWidget {
@@ -174,19 +173,6 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                             letterSpacing: 1.0,
                           ),
                         ),
-                        InkWell(
-                          child: Icon(
-                            Icons.info_outline,
-                            size: 24.0,
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                ScaleRoute(
-                                  page: FacilityDetail(),
-                                ));
-                          },
-                        ),
                       ],
                     ),
                     Container(
@@ -265,34 +251,20 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
               margin: EdgeInsets.fromLTRB(0.0, 0, 0.0, 16.0),
             ),
             onTap: (index) {
-              Navigator.of(context).push(_createRoute(index));
+              Navigator.push(
+                context,
+                FadeRoute(
+                  page: BookingPage(
+                    facilityType: facilityTypeList[index],
+                    index: index,
+                    subType: index == 0 ? 'Seat' : 'Room',
+                  ),
+                ),
+              );
             },
           ),
         ),
       ),
-    );
-  }
-
-  Route _createRoute(index) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => BookingPage(
-        facilityType: facilityTypeList[index],
-        index: index,
-        subType: index == 0 ? 'Seat' : 'Room',
-      ),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(0.0, 1.0);
-        var end = Offset(0.0, 0.0);
-        var curve = Curves.easeIn;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
     );
   }
 }

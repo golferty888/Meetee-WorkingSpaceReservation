@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:meetee_mobile/components/fadeRoute.dart';
 
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/seatMapPage.dart';
@@ -43,13 +44,10 @@ class FacilityDetailState extends State<FacilityDetail> {
         children: <Widget>[
           Hero(
             tag: 'category + ${widget.index.toString()}',
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Image.network(
-                widget.imgPath,
-                height: double.infinity,
-                fit: BoxFit.cover,
-              ),
+            child: Image.network(
+              widget.imgPath,
+              height: double.infinity,
+              fit: BoxFit.cover,
             ),
           ),
           SafeArea(
@@ -191,8 +189,8 @@ class FacilityDetailState extends State<FacilityDetail> {
                                       onPressed: () {
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(
-                                            builder: (context) => SeatMapPage(
+                                          FadeRoute(
+                                            page: SeatMapPage(
                                               index: widget.index,
                                               imgPath: widget.imgPath,
                                               secondaryColor:

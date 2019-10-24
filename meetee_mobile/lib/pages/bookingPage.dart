@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:intl/intl.dart';
+import 'package:meetee_mobile/components/fadeRoute.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'package:meetee_mobile/components/calendarPicker.dart';
@@ -154,21 +155,24 @@ class _BookingPageState extends State<BookingPage> {
       viewportFraction: 0.7,
       scale: 0.75,
       onTap: (index) {
-        Navigator.push(context, MaterialPageRoute(builder: (_) {
-          selectedIndex = index;
-          return FacilityDetail(
-            type: widget.index,
-            index: index,
-            imgPath: categoriesMap[index]["link_url"],
-            cateId: categoriesMap[index]["cateid"],
-            categoryName: categoriesMap[index]["catename"],
-            categoryDetail: categoriesMap[index],
-            secondaryColor: widget.facilityType.secondaryColorCode,
-            startDate: startDate,
-            startTime: startTime,
-            endTime: endTime,
-          );
-        }));
+        selectedIndex = index;
+        Navigator.push(
+          context,
+          FadeRoute(
+            page: FacilityDetail(
+              type: widget.index,
+              index: index,
+              imgPath: categoriesMap[index]["link_url"],
+              cateId: categoriesMap[index]["cateid"],
+              categoryName: categoriesMap[index]["catename"],
+              categoryDetail: categoriesMap[index],
+              secondaryColor: widget.facilityType.secondaryColorCode,
+              startDate: startDate,
+              startTime: startTime,
+              endTime: endTime,
+            ),
+          ),
+        );
       },
     );
   }

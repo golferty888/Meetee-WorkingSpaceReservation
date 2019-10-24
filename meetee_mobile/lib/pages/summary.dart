@@ -40,7 +40,7 @@ class Summary extends StatefulWidget {
 }
 
 class _SummaryState extends State<Summary> {
-  final String userId = '2';
+  final String userId = '3';
   final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
 
   String startDateFormattedForApi;
@@ -66,14 +66,16 @@ class _SummaryState extends State<Summary> {
 //        '"startDate": "$startDateFormattedForApi", '
 //        '"startTime": "$startTimeFormatted", '
 //        '"endTime": "$endTimeFormatted", '
-//        '"facId": ${widget.facId}'
+//        '"facId": ${widget.facId}, '
+//        '"totalPrice": ${widget.totalPrice}'
 //        '}';
     String body = '{'
         '"userId": $userId, '
         '"startDate": "$startDateFormattedForApi", '
-        '"startTime": "18:00", '
-        '"endTime": "19:00", '
-        '"facId": ${widget.facId}'
+        '"startTime": "11:33:00", '
+        '"endTime": "11:34:00", '
+        '"facId": ${widget.facId}, '
+        '"totalPrice": ${widget.totalPrice}'
         '}';
     print('body: ' + body);
     final response = await http.post(
