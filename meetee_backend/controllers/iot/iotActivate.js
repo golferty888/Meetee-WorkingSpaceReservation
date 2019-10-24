@@ -5,7 +5,7 @@ const pool = new Pool({
 const { ErrorHandler, handlerError } = require("../../helpers/error");
 const iotCron = require("./iotOff");
 const mqtt = require("mqtt");
-const mqttClient = mqtt.connect("mqtt://20.191.141.209");
+const mqttClient = mqtt.connect("mqtt://broker.hivemq.com");
 exports.activateIotEquipment = (request, response) => {
   //iot-equip-list in each-room => Subscribe Topic {fac-code}
   //loop to publish message to those iot-equip in fac-code
@@ -13,7 +13,7 @@ exports.activateIotEquipment = (request, response) => {
   var facCodeList = [];
   rows.forEach(row => {
     facCodeList.push(row.code);
-    mqttClient.publish(row.code, "ON");
+    mqttClient.publish(row.code, "1");
   });
   iotCron.setTimeToTurnOff(rows);
   const message = "Activation Success!";

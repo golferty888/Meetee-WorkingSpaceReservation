@@ -3,7 +3,7 @@ const pool = new Pool({
   connectionString: process.env.POSTGRES_CONNECTION_URL
 });
 const mqtt = require("mqtt");
-const mqttClient = mqtt.connect("mqtt://20.191.141.209");
+const mqttClient = mqtt.connect("mqtt://broker.hivemq.com");
 const { ErrorHandler, handlerError } = require("../../helpers/error");
 const cron = require("node-cron");
 
@@ -20,7 +20,7 @@ function setTimeToTurnOff(rows) {
             time: time_cron,
             facCode: facCode
           });
-          mqttClient.publish(facCode, "OFF");
+          mqttClient.publish(facCode, "0");
         },
         {
           scheduled: true,
