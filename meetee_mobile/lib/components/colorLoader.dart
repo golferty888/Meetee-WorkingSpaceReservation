@@ -69,13 +69,13 @@ class _ColorLoader4State extends State<ColorLoader4>
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: new Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           AnimatedBuilder(
             animation: controller,
             builder: (_, child) {
-              return new Transform.translate(
+              return Transform.translate(
                 offset: Offset(
                   0.0,
                   -30 *
@@ -83,7 +83,7 @@ class _ColorLoader4State extends State<ColorLoader4>
                           ? animation_1.value
                           : 1.0 - animation_1.value),
                 ),
-                child: new Padding(
+                child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Dot(
                     radius: 10.0,
@@ -98,7 +98,7 @@ class _ColorLoader4State extends State<ColorLoader4>
           AnimatedBuilder(
             animation: controller,
             builder: (_, child) {
-              return new Transform.translate(
+              return Transform.translate(
                 offset: Offset(
                   0.0,
                   -30 *
@@ -106,7 +106,7 @@ class _ColorLoader4State extends State<ColorLoader4>
                           ? animation_2.value
                           : 1.0 - animation_2.value),
                 ),
-                child: new Padding(
+                child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Dot(
                     radius: 10.0,
@@ -121,7 +121,7 @@ class _ColorLoader4State extends State<ColorLoader4>
           AnimatedBuilder(
             animation: controller,
             builder: (_, child) {
-              return new Transform.translate(
+              return Transform.translate(
                 offset: Offset(
                   0.0,
                   -30 *
@@ -129,7 +129,7 @@ class _ColorLoader4State extends State<ColorLoader4>
                           ? animation_3.value
                           : 1.0 - animation_3.value),
                 ),
-                child: new Padding(
+                child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Dot(
                     radius: 10.0,
@@ -163,14 +163,14 @@ class Dot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Center(
+    return Center(
       child: type == DotType.icon
           ? Icon(
               icon.icon,
               color: color,
               size: 1.3 * radius,
             )
-          : new Transform.rotate(
+          : Transform.rotate(
               angle: type == DotType.diamond ? pi / 4 : 0.0,
               child: Container(
                 width: radius,
