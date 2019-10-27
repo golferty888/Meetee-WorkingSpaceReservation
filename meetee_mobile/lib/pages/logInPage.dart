@@ -1,13 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
-import 'package:meetee_mobile/pages/signUpPage.dart';
 import 'package:vector_math/vector_math_64.dart' as vector_math;
 
 import 'package:meetee_mobile/components/colorLoader.dart';
-import 'package:meetee_mobile/components/fadeRoute.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
 
 class LogInPage extends StatefulWidget {
@@ -23,6 +22,7 @@ class _LogInPageState extends State<LogInPage>
   final passWordSignUpController = TextEditingController();
   final rePassWordSignUpController = TextEditingController();
   final String logInUrl = 'http://18.139.12.132:9000/login';
+  final String signUpUrl = 'http://18.139.12.132:9000/signup';
   Map<String, String> headers = {"Content-type": "application/json"};
 
   Future<dynamic> logIn() async {
@@ -79,6 +79,61 @@ class _LogInPageState extends State<LogInPage>
     }
   }
 
+  Future<dynamic> signUp() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String body = '{'
+        '"username": "${userNameSignUpController.text}", '
+        '"password": "${passWordSignUpController.text}"'
+        '}';
+    print('body: ' + body);
+    final response = await http.post(
+      signUpUrl,
+      body: body,
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      Future.delayed(
+        Duration(milliseconds: 1500),
+        () {
+          setState(
+            () {
+//              _isLogInFailed = false;
+              _isLoading = false;
+            },
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return SelectFacilityType();
+              },
+            ),
+          );
+        },
+      );
+    } else {
+      print(response.body);
+      Future.delayed(
+        Duration(milliseconds: 1000),
+        () {
+          setState(
+            () {
+//              _isLogInFailed = true;
+              _isLoading = false;
+              _errorUserNameMessage = 'Username is already taken';
+//              if (_isLogInFailed) {
+//                animationController.forward(from: 0.0);
+//              }
+            },
+          );
+        },
+      );
+    }
+  }
+
   AnimationController animationController;
   Animation<double> animation;
 
@@ -93,7 +148,6 @@ class _LogInPageState extends State<LogInPage>
       vsync: this,
       duration: Duration(milliseconds: 200),
     );
-//      ..addListener(() => setState(() {}));
 
     animation = Tween<double>(
       begin: 50.0,
@@ -139,6 +193,52 @@ class _LogInPageState extends State<LogInPage>
       BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
+  }
+
+  static final validCharacters = RegExp(r'^[a-zA-Z0-9]+$');
+  String _errorUserNameMessage;
+  String _errorPassWordMessage;
+  bool _isMasked = true;
+
+  checkUserNameField() {
+    if (userNameSignUpController.text.length > 0) {
+      if (userNameSignUpController.text.length < 4) {
+        if (!validCharacters.hasMatch(userNameSignUpController.text)) {
+          setState(() {
+            _errorUserNameMessage = 'Special character is not allowed.';
+          });
+        } else {
+          setState(() {
+            _errorUserNameMessage =
+                'Username must contains 4 or more characters.';
+          });
+        }
+      } else if (!validCharacters.hasMatch(userNameSignUpController.text)) {
+        setState(() {
+          _errorUserNameMessage = 'Special character is not allowed.';
+        });
+      } else {
+        setState(() {
+          _errorUserNameMessage = null;
+        });
+      }
+    } else {
+      setState(() {
+        _errorUserNameMessage = 'Username must contains 4 or more characters.';
+      });
+    }
+  }
+
+  checkPassWordField() {
+    if (passWordSignUpController.text.length < 4) {
+      setState(() {
+        _errorPassWordMessage = 'Password must contains 4 or more characters.';
+      });
+    } else {
+      setState(() {
+        _errorPassWordMessage = null;
+      });
+    }
   }
 
   Container _buildLoginView() {
@@ -318,8 +418,10 @@ class _LogInPageState extends State<LogInPage>
           SizedBox(
             height: 8,
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+          Container(
+            height: 116,
+//            color: Colors.green,
+            padding: EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),
             child: TextField(
               textCapitalization: TextCapitalization.none,
               controller: userNameSignUpController,
@@ -331,82 +433,66 @@ class _LogInPageState extends State<LogInPage>
                 _textFocusChange(
                     context, _userNameSignUpFocus, _passWordSignUpFocus);
               },
+              onChanged: (input) {
+                checkUserNameField();
+              },
               style: TextStyle(
                 letterSpacing: 2.0,
               ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'username',
+                errorText: _errorUserNameMessage,
                 prefixIcon: Icon(
                   Icons.person,
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+          Container(
             child: TextField(
               style: TextStyle(
                 letterSpacing: 2.0,
               ),
-              obscureText: true,
               controller: passWordSignUpController,
               focusNode: _passWordSignUpFocus,
               textInputAction: TextInputAction.next,
+              obscureText: _isMasked ? true : false,
               autocorrect: false,
+              onChanged: (input) {
+                checkPassWordField();
+              },
               onSubmitted: (term) {
                 _textFocusChange(
                     context, _passWordSignUpFocus, _rePassWordSignUpFocus);
               },
-//              onSubmitted: (term) {
-//                logIn();
-//                Future.delayed(
-//                  Duration(milliseconds: 2000),
-//                  () {
-//                    setState(() {
-//                      _isLoading = false;
-//                    });
-//                  },
-//                );
-//              },
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'password',
+                errorText: _errorPassWordMessage,
                 prefixIcon: Icon(Icons.lock),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-            child: TextField(
-              style: TextStyle(
-                letterSpacing: 2.0,
-              ),
-              obscureText: true,
-              controller: rePassWordSignUpController,
-              focusNode: _rePassWordSignUpFocus,
-              textInputAction: TextInputAction.done,
-              autocorrect: false,
-              onSubmitted: (term) {
-//                logIn();
-//                Future.delayed(
-//                  Duration(milliseconds: 2000),
-//                  () {
-//                    setState(() {
-//                      _isLoading = false;
-//                    });
-//                  },
-//                );
-              },
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'confirm password',
-                prefixIcon: Icon(Icons.lock),
+                suffixIcon: _isMasked
+                    ? IconButton(
+                        icon: Icon(Icons.visibility),
+                        onPressed: () {
+                          setState(() {
+                            _isMasked = false;
+                          });
+                        },
+                      )
+                    : IconButton(
+                        icon: Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _isMasked = true;
+                          });
+                        },
+                      ),
               ),
             ),
           ),
           SizedBox(
-            height: 64.0,
+            height: 52.0,
           ),
           Container(
             height: 48,
@@ -417,7 +503,6 @@ class _LogInPageState extends State<LogInPage>
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
-
               child: _isLoading
                   ? Padding(
                       padding: EdgeInsets.only(top: 6),
@@ -438,7 +523,7 @@ class _LogInPageState extends State<LogInPage>
                       ),
                     ),
               onPressed: () {
-                logIn();
+                signUp();
               },
             ),
           ),
