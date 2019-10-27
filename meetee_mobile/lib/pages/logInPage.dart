@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -116,6 +117,7 @@ class _LogInPageState extends State<LogInPage>
       );
     } else {
       print(response.body);
+      String responseMessage = json.decode(response.body)["message"];
       Future.delayed(
         Duration(milliseconds: 1000),
         () {
@@ -123,12 +125,21 @@ class _LogInPageState extends State<LogInPage>
             () {
 //              _isLogInFailed = true;
               _isLoading = false;
-              _errorUserNameMessage = 'Username is already taken';
-//              if (_isLogInFailed) {
-//                animationController.forward(from: 0.0);
-//              }
             },
           );
+//          if (responseMessage ==
+//              "Use 4 characters or more for your username.") {
+//            _errorUserNameMessage =
+//                'Username must contains 4 or more characters.';
+//          }
+          if (responseMessage == "That username is taken. Try another.") {
+            _errorUserNameMessage = 'Username is already taken.';
+          }
+//          if (responseMessage ==
+//              "Use 4 characters or more for your password.") {
+//            _errorPassWordMessage =
+//                'Password must contains 4 or more characters.';
+//          }
         },
       );
     }
@@ -523,6 +534,8 @@ class _LogInPageState extends State<LogInPage>
                       ),
                     ),
               onPressed: () {
+                checkUserNameField();
+                checkPassWordField();
                 signUp();
               },
             ),
