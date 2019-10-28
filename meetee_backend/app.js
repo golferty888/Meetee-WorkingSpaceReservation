@@ -54,6 +54,7 @@ const equipment = require("./controllers/query/equipment");
 const facStatus = require("./controllers/query/facilityStatus");
 const user = require("./controllers/query/user");
 const reservation = require("./controllers/query/reservation");
+const iotQuery = require("./controllers/query/iot");
 const iot = require("./controllers/iot/iotActivate");
 
 const login = require("./controllers/middleware/login");
@@ -87,8 +88,10 @@ app.post("/reserve", reserve.middleWare, reservation.reserve);
 // Reservation Information
 app.post("/user/history", user.getReservationHistoryList);
 app.get("/reservations", reservation.getAllReservations);
+// User Information for Admin
+app.get("/users", user.getAllUsers);
 // Test PG
-app.post("/test", facStatus.getAvaialableFacWithAmount);
+app.post("/activate/initial", iotQuery.getStartTimeForActivation);
 // app.post("/testreserve", reservation.testReserve);
 
 app.get("/", requireJWTAuth, (request, response) => {
