@@ -60,7 +60,30 @@ exports.getReservationHistoryList = (request, response, next) => {
         console.log(error);
         throw new ErrorHandler(500, "Database Error");
       } else {
-        response.status(200).send(results.rows);
+        if (results.rowCount == 0) {
+        } else {
+          response.status(200).send(results.rows);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  });
+};
+
+exports.getAllUsers = (request, response, next) => {
+  const data = "asasas";
+  console.log("-------------------------------------------------------------");
+  console.log({ request: "GET /users", body: JSON.stringify(data) });
+  const statement = `select * from meeteenew.users`;
+  const value = [];
+  pool.query(statement, (err, res) => {
+    try {
+      if (err) {
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.send(res.rows);
       }
     } catch (error) {
       console.log(error);
