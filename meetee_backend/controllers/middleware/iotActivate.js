@@ -12,8 +12,9 @@ exports.middleware = (request, response, next) => {
   });
   const userId = request.body.userId;
   const statement = `select * from meeteenew.view_mqtt_reservtime_lookup
-      where userId = $1 and ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time))`;
-  const value = [userId];
+      where userId = $1 and status = $2`;
+  // where userId = $1 and ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time))`;
+  const value = [userId, "in_this_time"];
   pool.query(statement, value, (error, results) => {
     try {
       if (error) {
@@ -28,7 +29,10 @@ exports.middleware = (request, response, next) => {
         next();
       }
     } catch (error) {
-      console.log(error);
+      console.log({ error: error });
+      if (error.name == "RangeError") {
+        next(500, "Internal Server Error");
+      }
       next(error);
     }
   });

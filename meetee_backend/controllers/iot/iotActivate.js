@@ -11,14 +11,21 @@ exports.activateIotEquipment = (request, response) => {
   //loop to publish message to those iot-equip in fac-code
   const rows = request.rows;
   var facCodeList = [];
+  var endTimeList = [];
   rows.forEach(row => {
     facCodeList.push(row.code);
+    endTimeList.push(row.end_time);
     mqttClient.publish(row.code, "1");
   });
   iotCron.setTimeToTurnOff(rows);
-  const message = "Activation Success!";
-  response.status(200).send({
-    message: message,
-    facList: facCodeList
-  });
+  try {
+    response.status(200).send({
+      message: "Activation Success!",
+      facList: facCodeList,
+      endTimeList: endTimeList
+    });
+  } catch (error) {
+    console.log(error);
+    next(500, "Response Error");
+  }
 };
