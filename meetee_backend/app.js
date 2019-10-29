@@ -81,15 +81,17 @@ app.post(
   facStatus.checkStatusAvaialableEachFacilityCategory
 );
 app.post("/facility/cate/status", facStatus.checkStatusEachFacilityCategory);
-// app.post("/facility/type/status", facStatus.checkStatusEachFacilityType);
-// app.post("/facility/all/status", facStatus.checkStatusAllFacilities);
+app.post("/facility/pending/lock", facStatus.lockAndUnlockPendingFacilityInSpecificPeriod);
+app.post("/facility/pending/unlock", facStatus.lockAndUnlockPendingFacilityInSpecificPeriod);
 // Do Reserve Room/Seat
 app.post("/reserve", reserve.middleWare, reservation.reserve);
 // Reservation Information
 app.post("/user/history", user.getReservationHistoryList);
+app.post("/user/history/upcoming", user.getUpcomingAndIntimeReservation);
 app.get("/reservations", reservation.getAllReservations);
 // User Information for Admin
 app.get("/users", user.getAllUsers);
+app.get("/userx", user.getAllUsers);
 // Test PG
 app.post("/activate/initial", iotQuery.getStartTimeForActivation);
 // app.post("/testreserve", reservation.testReserve);
@@ -153,7 +155,7 @@ wss.on("connection", ws => {
   pgClient2.on("notification", async data => {
     console.log("PG Notification in Websocket!!!!");
     const payload = data.payload;
-    ws.send("Websocket: reservation_table is updated.");
+    ws.send("Websocket: reservation_table/pending_facility_table is updated.");
   });
 });
 
