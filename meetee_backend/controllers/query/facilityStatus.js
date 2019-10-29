@@ -125,14 +125,31 @@ exports.checkStatusEachFacilityCategory = (request, response, next) => {
   const data = request.body;
   console.log("-------------------------------------------------------------");
   console.log({
-    request: "POST /facility/cate/status",
+    request: request.method + " " + request.url,
     body: JSON.stringify(data)
   });
   const cateId = data.cateId;
   const startDate = data.startDate;
   const startTime = data.startDate + " " + data.startTime;
   const endTime = data.startDate + " " + data.endTime;
-  const statement = `select f.id as facId, f.code, f.floor, f.cate_id, case when v.start_time is null then 'available' when v.start_time is not null then 'unavailable' end as status  from
+  // var statement = `select f.id as facId, f.code, f.floor, f.cate_id, case when v.start_time is null then 'available' when v.start_time is not null then 'unavailable' end as status  from
+  // (select id, code, floor, cate_id from meeteenew.facility
+  // where cate_id = $1) as f
+  // left join
+  // (select distinct facId, start_time
+  //    from meeteenew.view_fac_status
+  //    where cateId = $1 and
+  //    (inDate = $2 and
+  //    (status = $3 and ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (start_time, end_time))) or
+  //    (status = $4 and not ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (start_time, end_time))))
+  //    order by facid) as v
+  //   on f.id = v.facId
+  // order by f.id;`;
+  var statement = ` select f.id facId, f.code, f.floor, f.cate_id, 
+  case when  pf.start_time is not null and ((TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') overlaps (pf.start_time, pf.end_time)) then 'pending'
+  when v.start_time is null then 'available' 
+  when v.start_time is not null then 'unavailable' end status  
+  from
   (select id, code, floor, cate_id from meeteenew.facility
   where cate_id = $1) as f
   left join
@@ -140,10 +157,11 @@ exports.checkStatusEachFacilityCategory = (request, response, next) => {
      from meeteenew.view_fac_status
      where cateId = $1 and
      (inDate = $2 and
-     (status = $3 and ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (start_time, end_time))) or
-     (status = $4 and not ((timestamp '${startTime}', TIMESTAMP '${endTime}') overlaps (start_time, end_time))))
+     (status = $3 and ((TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') overlaps (start_time, end_time))) or
+     (status = $4 and not ((TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') overlaps (start_time, end_time))))
      order by facid) as v
     on f.id = v.facId
+  left join meeteenew.pending_facility as pf on f.id = pf.facility_id
   order by f.id;`;
   const values = [cateId, startDate, "Booked", "Cancelled"];
 
@@ -160,10 +178,46 @@ exports.checkStatusEachFacilityCategory = (request, response, next) => {
         console.log(error);
         throw new ErrorHandler(500, "Database Error");
       } else {
+        if (request.url == "/facility/cate/lock") {
+        }
         response.status(200).send(results.rows);
       }
     } catch (error) {
       next(error);
     }
   });
+};
+
+exports.lockAndUnlockPendingFacilityInSpecificPeriod = (
+  request,
+  response,
+  next
+) => {
+  const data = request.body;
+  const facList = data.facList;
+  const startTime = data.startDate + " " + data.startTime;
+  const endTime = data.startDate + " " + data.endTime;
+  console.log({ request: request.method + " " + request.url, body: data });
+  var statement;
+  if (request.url == "/facility/pending/lock") {
+    statement = `INSERT INTO meeteenew.pending_facility(facility_id, start_time, end_time) VALUES($1, $2, $3)`;
+  } else if (request.url == "/facility/pending/unlock") {
+    statement = `DELETE FROM meeteenew.pending_facility where facility_id = $1 and start_time = $2 and end_time = $3`;
+  }
+
+  facList.forEach(facId => {
+    const values = [facId, startTime, endTime];
+    pool.query(statement, values, (err, res) => {
+      try {
+        if (err) {
+          console.log(err);
+          throw new ErrorHandler(500, "Database Error");
+        }
+      } catch (error) {
+        console.log(error);
+        next(error);
+      }
+    });
+  });
+  response.send("Success!");
 };

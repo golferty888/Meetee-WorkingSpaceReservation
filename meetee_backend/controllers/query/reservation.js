@@ -8,16 +8,16 @@ exports.reserve = (request, response, next) => {
   const data = request.body;
   const userId = data.userId;
   const facList = data.facId;
-  const start_time = data.startDate + " " + data.startTime;
-  const end_time = data.startDate + " " + data.endTime;
+  const startTime = data.startDate + " " + data.startTime;
+  const endTime = data.startDate + " " + data.endTime;
   const totalPrice = data.totalPrice;
   console.log("-------------------------------------------------------------");
   console.log({ request: "POST /reserve", body: JSON.stringify(data) });
 
   const insertResv = `INSERT INTO meeteenew.reservation(user_id, start_time, end_time, total_price, status) 
     VALUES($1, $2, $3, $4, $5) RETURNING id`;
-  const insertResvValues = [userId, start_time, end_time, totalPrice, "Booked"];
-
+  const insertResvValues = [userId, startTime, endTime, totalPrice, "Booked"];
+  const deletePending = `DELETE FROM meeteenew.pending_facility where facility_id = $1 and start_time = $2 and end_time = $3`;
   pool.connect((err, client, done) => {
     const shouldAbort = err => {
       if (err) {
@@ -41,6 +41,13 @@ exports.reserve = (request, response, next) => {
             VALUES(${res.rows[0].id}, ${facId});`;
           client.query(insertResvLine, (err, res) => {
             if (shouldAbort(err)) return;
+          });
+          const values = [facId, startTime, endTime];
+          client.query(deletePending, values, (err, res) => {
+            if (shouldAbort(err)) {
+              console.log(err);
+              return;
+            }
           });
         });
         client.query("COMMIT", err => {
