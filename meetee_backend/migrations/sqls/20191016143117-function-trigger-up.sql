@@ -1,7 +1,9 @@
 /* Replace with your SQL commands */
+    
+
 CREATE OR REPLACE FUNCTION meeteenew.date_format1(timestamp) 
-    RETURNS text AS $$
-    SELECT to_char($1, 'MonthDD, YYYY');
+    RETURNS date AS $$
+    SELECT to_char($1, 'MonthDD, YYYY') :: date;
     $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION meeteenew.date_format2(timestamp) 
@@ -18,13 +20,13 @@ CREATE OR REPLACE FUNCTION meeteenew.hour_cal(timestamp, timestamp)
     RETURNS numeric
     AS 'SELECT ((extract (hour from $2) - extract (hour from $1)) :: numeric)' LANGUAGE SQL;
 
-CREATE OR REPLACE FUNCTION meeteenew.price_over_hours(numeric, timestamp, timestamp) RETURNS numeric
-    AS 'SELECT $1 * ((extract (hour from $3) - extract (hour from $2)) :: numeric)' LANGUAGE SQL;
+CREATE OR REPLACE FUNCTION meeteenew.price_over_hours(numeric, timestamp, timestamp, numeric) RETURNS numeric
+    AS 'SELECT $1 * meeteenew.hour_cal($2, $3) * $4' LANGUAGE SQL;
 
-CREATE OR REPLACE FUNCTION meeteenew.get_reserv_history(numeric, timestamp, timestamp) 
-    RETURNS TABLE (timePeriod text, hour numeric, priceTotal numeric)
-    AS $$ SELECT meeteenew.time_period($2, $3), meeteenew.hour_cal($2, $3), meeteenew.price_over_hours($1, $2, $3)
-    $$ LANGUAGE SQL;
+CREATE OR REPLACE FUNCTION meeteenew.time_cron_format(timestamp) 
+    RETURNS text  AS $$
+    select to_char($1, 'SS MI HH24 DD MM *') ::text as end_cron
+   $$ LANGUAGE SQL;
 
 CREATE TABLE meeteenew.reserv_audit(
     operation   char(6)     NOT NULL,
@@ -69,3 +71,25 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER notify_reservation_event
     AFTER INSERT OR UPDATE OR DELETE ON meeteenew.reservation
     FOR EACH ROW EXECUTE PROCEDURE meeteenew.notify_event();
+
+CREATE OR REPLACE FUNCTION meeteenew.notify_event_pending_status() RETURNS TRIGGER AS $$
+    DECLARE
+        record RECORD;
+        payload JSON;
+    BEGIN
+        IF (TG_OP = 'INSERT') THEN record = NEW;
+        ELSIF (TG_OP = 'UPDATE') THEN record = NEW;
+        ELSIF (TG_OP = 'DELETE') THEN record = OLD;
+        END IF;
+
+        payload = json_build_object('table', TG_TABLE_NAME,
+                                    'action', TG_OP,
+                                    'data', row_to_json(record));
+        PERFORM pg_notify('events', payload::text);
+        RETURN NULL;
+    END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_pending_status_event
+    AFTER INSERT OR UPDATE OR DELETE ON meeteenew.pending_facility
+    FOR EACH ROW EXECUTE PROCEDURE meeteenew.notify_event_pending_status();

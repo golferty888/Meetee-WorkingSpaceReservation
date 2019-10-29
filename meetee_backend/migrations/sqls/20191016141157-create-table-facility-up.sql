@@ -2,14 +2,15 @@
 
 CREATE TABLE meeteenew.facility_type(
     id      SERIAL  PRIMARY KEY,
-    name    VARCHAR(256) NOT NULL
+    name    VARCHAR(256) NOT NULL,
+    color_code VARCHAR(256)
 );
 
 CREATE TABLE meeteenew.facility_category(
     id      SERIAL  PRIMARY KEY,
     name    VARCHAR(256) NOT NULL,
     capacity    VARCHAR(256) NOT NULL,
-    price   NUMERIC(5, 2) NOT NULL,
+    price   NUMERIC(5, 2) NOT NULL CHECK(price > 0),
     link_url VARCHAR(256) NOT NULL,
     detail  VARCHAR(1024),
     type_id  INT    NOT NULL,
@@ -19,14 +20,14 @@ CREATE TABLE meeteenew.facility_category(
 CREATE TABLE meeteenew.facility(
     id      SERIAL  PRIMARY KEY,
     code    VARCHAR(256)  NOT NULL,
-    floor   INT NOT NULL,
+    floor   VARCHAR(128) NOT NULL,
     cate_id INT NOT NULL,
     FOREIGN KEY(cate_id) REFERENCES meeteenew.facility_category(id)
 );
 --TYPE
-INSERT INTO meeteenew.facility_type(name) VALUES('Meeting Room');
-INSERT INTO meeteenew.facility_type(name) VALUES('Private Seat');
-INSERT INTO meeteenew.facility_type(name) VALUES('Seminar Room');
+INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Meeting Room', '0xFFFAD74E');
+INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Private Seat', '0xFFFF8989');
+INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Seminar Room',  '0xFF92D2FC');
 --CATEGORY
 INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
 VALUES('Meeting Room S', '4', 120, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-s.jpg', 1);

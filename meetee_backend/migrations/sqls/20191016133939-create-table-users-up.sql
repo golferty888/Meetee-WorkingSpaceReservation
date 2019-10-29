@@ -13,16 +13,6 @@ CREATE TABLE meeteenew.users(
 );
 
 INSERT INTO meeteenew.users (username, password, first_name, last_name, role, phone_number, birthday)
-VALUES ('peemtanapat', '12345','Tanapat','Choochot','admin','0939452459', '2019-11-17');
-
-        --   id: 2,
-        --   username: 'panakit139',
-        --   first_name: 'Panakit',
-        --   last_name: 'Paokamol',
-        --   role: 'admin',
-        --   email: 'panakit.gulfz@gmail.com',
-        --   phone_number: '0916295499',
-        --   birthday: '2019-11-21'
-        -- }
-
-
+VALUES ('admin', '$2b$04$JlxUcjHySUUkTgZA6Pl9Le2l9kI90AghmCkzTts4oa.qP5DiaI/8S','Tanapat','Choochot','admin','0939452459', '2019-11-17');
+INSERT INTO meeteenew.users (username, password, first_name, last_name, role, birthday)
+VALUES ('yoyo', '$2b$04$j12b81nj7QJj4GUFGxd.1u9NGEA8AMxHKI2XnJ0MobXjO/dCVNlaC','Pronsawan','Donpraiwan','user','2019-09-18');
