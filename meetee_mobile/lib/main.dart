@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
 
 import 'package:meetee_mobile/pages/historyPage.dart';
+import 'package:meetee_mobile/pages/logInPage.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
 import 'package:meetee_mobile/pages/splashPage.dart';
 
@@ -12,12 +13,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      initialRoute: '/',
+      routes: {
+        '/': (BuildContext context) => SplashPage(),
+        '/login': (BuildContext context) => LogInPage(),
+      },
       theme: ThemeData(
         primaryColor: Colors.black,
-        scaffoldBackgroundColor: Colors.grey,
+        scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Product Sans',
       ),
-      home: SplashPage(),
+//      home: SplashPage(),
     );
   }
 }

@@ -45,11 +45,12 @@ class _SplashPageState extends State<SplashPage>
   }
 
   onDoneLoading() async {
-    Navigator.push(
+    Navigator.pushAndRemoveUntil(
       context,
       FadeRouteDelayed(
         page: LogInPage(),
       ),
+      ModalRoute.withName('/login'),
     );
   }
 

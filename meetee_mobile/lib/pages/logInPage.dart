@@ -6,9 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:vector_math/vector_math_64.dart' as vector_math;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:meetee_mobile/components/colorLoader.dart';
-import 'package:meetee_mobile/pages/selectFacility.dart';
+import 'package:meetee_mobile/pages/homePage.dart';
 
 class LogInPage extends StatefulWidget {
   @override
@@ -21,10 +22,100 @@ class _LogInPageState extends State<LogInPage>
   final passWordController = TextEditingController();
   final userNameSignUpController = TextEditingController();
   final passWordSignUpController = TextEditingController();
-  final rePassWordSignUpController = TextEditingController();
+
   final String logInUrl = 'http://18.139.12.132:9000/login';
   final String signUpUrl = 'http://18.139.12.132:9000/signup';
   Map<String, String> headers = {"Content-type": "application/json"};
+
+  AnimationController animationController;
+  Animation<double> animation;
+
+  PageController pageViewController;
+
+  @override
+  void initState() {
+    _loadUser();
+
+    _isLogInFailed = false;
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
+
+    animation = Tween<double>(
+      begin: 50.0,
+      end: 120.0,
+    ).animate(animationController);
+
+    pageViewController = PageController();
+
+    super.initState();
+  }
+
+  String _userName;
+
+  _navigateToHomePage() {
+    print(_userName);
+    return Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return HomePage(
+            userName: _userName ?? userNameController.text,
+          );
+        },
+      ),
+    );
+  }
+
+  _loadUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print('pref: ${prefs.getString('userName')} '
+        '${prefs.getString('passWord')}');
+    setState(() {
+      _userName = prefs.getString('userName');
+    });
+    if (prefs.getString('userName') != null &&
+        prefs.getString('passWord') != null) {
+      pageViewController.jumpToPage(2);
+      autoLogIn(prefs);
+    }
+  }
+
+  Future<dynamic> autoLogIn(SharedPreferences prefs) async {
+    String body = '{'
+        '"username": "${prefs.getString('userName')}", '
+        '"password": "${prefs.getString('passWord')}"'
+        '}';
+    print('body: ' + body);
+    final response = await http.post(
+      logInUrl,
+      body: body,
+      headers: headers,
+    );
+    Future.delayed(
+      Duration(milliseconds: 3000),
+      () {
+        if (response.statusCode == 200) {
+          print('auto login success ${response.body}');
+          setState(
+            () {
+              _promptLoadingText = 'Logging in ...';
+            },
+          );
+          Future.delayed(
+            Duration(milliseconds: 3000),
+            () {
+              _navigateToHomePage();
+            },
+          );
+        } else {
+          print('failed');
+        }
+      },
+    );
+  }
 
   Future<dynamic> logIn() async {
     setState(() {
@@ -42,6 +133,10 @@ class _LogInPageState extends State<LogInPage>
     );
     if (response.statusCode == 200) {
       print(response.body);
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('userName', userNameController.text);
+      prefs.setString('passWord', passWordController.text);
+
       Future.delayed(
         Duration(milliseconds: 1500),
         () {
@@ -51,14 +146,7 @@ class _LogInPageState extends State<LogInPage>
               _isLoading = false;
             },
           );
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return SelectFacilityType();
-              },
-            ),
-          );
+          _navigateToHomePage();
         },
       );
     } else {
@@ -101,18 +189,10 @@ class _LogInPageState extends State<LogInPage>
         () {
           setState(
             () {
-//              _isLogInFailed = false;
               _isLoading = false;
             },
           );
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return SelectFacilityType();
-              },
-            ),
-          );
+          _navigateToHomePage();
         },
       );
     } else {
@@ -123,51 +203,15 @@ class _LogInPageState extends State<LogInPage>
         () {
           setState(
             () {
-//              _isLogInFailed = true;
               _isLoading = false;
             },
           );
-//          if (responseMessage ==
-//              "Use 4 characters or more for your username.") {
-//            _errorUserNameMessage =
-//                'Username must contains 4 or more characters.';
-//          }
           if (responseMessage == "That username is taken. Try another.") {
             _errorUserNameMessage = 'Username is already taken.';
           }
-//          if (responseMessage ==
-//              "Use 4 characters or more for your password.") {
-//            _errorPassWordMessage =
-//                'Password must contains 4 or more characters.';
-//          }
         },
       );
     }
-  }
-
-  AnimationController animationController;
-  Animation<double> animation;
-
-  PageController pageViewController;
-  double currentPageValue = 0.0;
-
-  @override
-  void initState() {
-    _isLogInFailed = false;
-
-    animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-    );
-
-    animation = Tween<double>(
-      begin: 50.0,
-      end: 120.0,
-    ).animate(animationController);
-
-    pageViewController = PageController();
-
-    super.initState();
   }
 
   vector_math.Vector3 _shake() {
@@ -182,7 +226,6 @@ class _LogInPageState extends State<LogInPage>
     passWordController.dispose();
     userNameSignUpController.dispose();
     passWordSignUpController.dispose();
-    rePassWordSignUpController.dispose();
 
     animationController.dispose();
 
@@ -349,14 +392,7 @@ class _LogInPageState extends State<LogInPage>
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return SelectFacilityType();
-                  },
-                ),
-              );
+              _navigateToHomePage();
             },
             child: Text(
               'Forgot password?',
@@ -390,7 +426,8 @@ class _LogInPageState extends State<LogInPage>
                         dotTwoColor: Colors.pink[400],
                         dotThreeColor: Colors.blue[400],
                         duration: Duration(milliseconds: 1000),
-                      ))
+                      ),
+                    )
                   : Text(
                       'Login',
                       style: TextStyle(
@@ -545,6 +582,35 @@ class _LogInPageState extends State<LogInPage>
     );
   }
 
+  String _promptLoadingText = 'Loading data ...';
+
+  Container _buildLoadView() {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          ColorLoader4(
+            dotOneColor: Colors.yellow[700],
+            dotTwoColor: Colors.pink[400],
+            dotThreeColor: Colors.blue[400],
+            duration: Duration(milliseconds: 1000),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 24.0),
+            child: Text(
+              '$_promptLoadingText',
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.black54,
+                letterSpacing: 1.0,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -620,6 +686,7 @@ class _LogInPageState extends State<LogInPage>
                           children: <Widget>[
                             _buildLoginView(),
                             _buildSignUpView(),
+                            _buildLoadView(),
                           ],
                         ),
                       ),
@@ -683,6 +750,10 @@ class _LogInPageState extends State<LogInPage>
                               );
                               setState(() {
                                 _isLogInView = true;
+                                userNameSignUpController.clear();
+                                passWordSignUpController.clear();
+                                _errorUserNameMessage = null;
+                                _errorPassWordMessage = null;
                               });
                             },
                             child: Text(
