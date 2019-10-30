@@ -251,9 +251,10 @@ class _SeatMapPageState extends State<SeatMapPage> {
 //                  height: 400,
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey[200].withOpacity(0.5),
-                      ),
+                      color: Colors.black.withOpacity(0.5),
+//                      border: Border.all(
+//                        color: Colors.grey[200].withOpacity(0.5),
+//                      ),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     margin: EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 16.0),
@@ -263,7 +264,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
                       children: <Widget>[
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
+//                            color: Colors.black.withOpacity(0.5),
                             borderRadius: BorderRadius.vertical(
                                 top: Radius.circular(8.0)),
                           ),
@@ -311,7 +312,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
+//                            color: Colors.black.withOpacity(0.5),
                             borderRadius: BorderRadius.vertical(
                                 bottom: Radius.circular(8.0)),
                           ),

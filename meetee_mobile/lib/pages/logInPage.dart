@@ -62,7 +62,7 @@ class _LogInPageState extends State<LogInPage>
       MaterialPageRoute(
         builder: (context) {
           return HomePage(
-            userName: _userName ?? userNameController.text,
+            userName: _userName,
           );
         },
       ),
@@ -136,16 +136,12 @@ class _LogInPageState extends State<LogInPage>
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('userName', userNameController.text);
       prefs.setString('passWord', passWordController.text);
-
+      setState(() {
+        _userName = userNameController.text;
+      });
       Future.delayed(
         Duration(milliseconds: 1500),
         () {
-          setState(
-            () {
-              _isLogInFailed = false;
-              _isLoading = false;
-            },
-          );
           _navigateToHomePage();
         },
       );
@@ -184,6 +180,9 @@ class _LogInPageState extends State<LogInPage>
     );
     if (response.statusCode == 200) {
       print(response.body);
+      setState(() {
+        _userName = userNameSignUpController.text;
+      });
       Future.delayed(
         Duration(milliseconds: 1500),
         () {
@@ -504,15 +503,20 @@ class _LogInPageState extends State<LogInPage>
               ),
               controller: passWordSignUpController,
               focusNode: _passWordSignUpFocus,
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
               obscureText: _isMasked ? true : false,
               autocorrect: false,
               onChanged: (input) {
                 checkPassWordField();
               },
+//              onSubmitted: (term) {
+//                _textFocusChange(
+//                    context, _passWordSignUpFocus, _rePassWordSignUpFocus);
+//              },
               onSubmitted: (term) {
-                _textFocusChange(
-                    context, _passWordSignUpFocus, _rePassWordSignUpFocus);
+                checkUserNameField();
+                checkPassWordField();
+                signUp();
               },
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -545,7 +549,6 @@ class _LogInPageState extends State<LogInPage>
           Container(
             height: 48,
             child: RaisedButton(
-//                          color: Color(0xFFFAD74E),
               color: Colors.black,
               elevation: 0.0,
               shape: RoundedRectangleBorder(
@@ -613,165 +616,168 @@ class _LogInPageState extends State<LogInPage>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
-        body: Container(
-          child: SafeArea(
-            right: false,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 24.0,
-                      ),
-                      Material(
-                        color: Colors.transparent,
-                        child: Hero(
-                          tag: 'meeteeLogo',
-                          child: Column(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.white,
+          body: Container(
+            child: SafeArea(
+              right: false,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 24.0,
+                        ),
+                        Material(
+                          color: Colors.transparent,
+                          child: Hero(
+                            tag: 'meeteeLogo',
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  height: 160.0,
+                                  width: 160.0,
+                                  child: SvgPicture.asset(
+                                    'images/meetee_logo.svg',
+                                  ),
+                                ),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: Text(
+                                    'Meetee',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 32.0,
+                                      fontWeight: FontWeight.normal,
+                                      letterSpacing: 2.0,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: Text(
+                                    'Just a coworking space.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.normal,
+                                      letterSpacing: 1.5,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 56,
+                        ),
+                        Expanded(
+                          child: PageView(
+                            controller: pageViewController,
+                            physics: NeverScrollableScrollPhysics(),
                             children: <Widget>[
-                              Container(
-                                height: 160.0,
-                                width: 160.0,
-                                child: SvgPicture.asset(
-                                  'images/meetee_logo.svg',
-                                ),
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: Text(
-                                  'Meetee',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 32.0,
-                                    fontWeight: FontWeight.normal,
-                                    letterSpacing: 2.0,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: Text(
-                                  'Just a coworking space.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.normal,
-                                    letterSpacing: 1.5,
-                                  ),
-                                ),
-                              ),
+                              _buildLoginView(),
+                              _buildSignUpView(),
+                              _buildLoadView(),
                             ],
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 56,
-                      ),
-                      Expanded(
-                        child: PageView(
-                          controller: pageViewController,
-                          physics: NeverScrollableScrollPhysics(),
+                      ],
+                    ),
+                  ),
+                  _isLogInView
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            _buildLoginView(),
-                            _buildSignUpView(),
-                            _buildLoadView(),
+                            Text(
+                              'Do not have an accout? ',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.normal,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                pageViewController.animateToPage(
+                                  1,
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.ease,
+                                );
+                                setState(() {
+                                  _isLogInView = false;
+                                });
+                              },
+                              child: Text(
+                                'Sign up',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Already have an accout? ',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.normal,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                pageViewController.animateToPage(
+                                  0,
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.ease,
+                                );
+                                setState(() {
+                                  _isLogInView = true;
+                                  userNameSignUpController.clear();
+                                  passWordSignUpController.clear();
+                                  _errorUserNameMessage = null;
+                                  _errorPassWordMessage = null;
+                                });
+                              },
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    ],
+                  SizedBox(
+                    height: 24.0,
                   ),
-                ),
-                _isLogInView
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Do not have an accout? ',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.normal,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              pageViewController.animateToPage(
-                                1,
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.ease,
-                              );
-                              setState(() {
-                                _isLogInView = false;
-                              });
-                            },
-                            child: Text(
-                              'Sign up',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Already have an accout? ',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.normal,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              pageViewController.animateToPage(
-                                0,
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.ease,
-                              );
-                              setState(() {
-                                _isLogInView = true;
-                                userNameSignUpController.clear();
-                                passWordSignUpController.clear();
-                                _errorUserNameMessage = null;
-                                _errorPassWordMessage = null;
-                              });
-                            },
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                SizedBox(
-                  height: 24.0,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
