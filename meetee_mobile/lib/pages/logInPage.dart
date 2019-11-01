@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:meetee_mobile/components/css.dart';
 import 'package:vector_math/vector_math_64.dart' as vector_math;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +32,8 @@ class _LogInPageState extends State<LogInPage>
   Animation<double> animation;
 
   PageController pageViewController;
+
+  bool isLargeScreen = false;
 
   @override
   void initState() {
@@ -164,6 +167,8 @@ class _LogInPageState extends State<LogInPage>
     }
   }
 
+  bool _isSignUpView = false;
+
   Future<dynamic> signUp() async {
     setState(() {
       _isLoading = true;
@@ -240,7 +245,6 @@ class _LogInPageState extends State<LogInPage>
   final FocusNode _passWordFocus = FocusNode();
   final FocusNode _userNameSignUpFocus = FocusNode();
   final FocusNode _passWordSignUpFocus = FocusNode();
-  final FocusNode _rePassWordSignUpFocus = FocusNode();
 
   _textFocusChange(
       BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
@@ -294,12 +298,27 @@ class _LogInPageState extends State<LogInPage>
     }
   }
 
-  Container _buildLoginView() {
+  _buildLoginView() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 64.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width / 10,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            height: isLargeScreen
+                ? MediaQuery.of(context).viewInsets.bottom > 0
+                    ? MediaQuery.of(context).size.height / 1.62 -
+                        MediaQuery.of(context).viewInsets.bottom
+                    : MediaQuery.of(context).size.height / 3
+                : MediaQuery.of(context).viewInsets.bottom > 0
+                    ? MediaQuery.of(context).size.height / 1.92 -
+                        MediaQuery.of(context).viewInsets.bottom
+                    : MediaQuery.of(context).size.height / 3,
+            child: Container(),
+          ),
           _isLogInFailed
               ? AnimatedBuilder(
                   animation: animationController,
@@ -313,7 +332,8 @@ class _LogInPageState extends State<LogInPage>
                         style: TextStyle(
 //                              color: Colors.black,
                           color: Colors.red,
-                          fontSize: 20.0,
+                          fontSize:
+                              isLargeScreen ? fontSizeH2[0] : fontSizeH2[1],
                           fontWeight: FontWeight.normal,
                           letterSpacing: 1.5,
                         ),
@@ -324,18 +344,17 @@ class _LogInPageState extends State<LogInPage>
               : Text(
                   'Login',
                   style: TextStyle(
-//                              color: Colors.black,
                     color: Colors.black,
-                    fontSize: 20.0,
+                    fontSize: isLargeScreen ? fontSizeH2[0] : fontSizeH2[1],
                     fontWeight: FontWeight.normal,
                     letterSpacing: 1.5,
                   ),
                 ),
           SizedBox(
-            height: 8,
+            height: MediaQuery.of(context).size.height / 80,
           ),
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: TextField(
               textCapitalization: TextCapitalization.none,
               controller: userNameController,
@@ -347,11 +366,11 @@ class _LogInPageState extends State<LogInPage>
                 _textFocusChange(context, _userNameFocus, _passWordFocus);
               },
               style: TextStyle(
-                letterSpacing: 2.0,
+                letterSpacing: 0.5,
               ),
               decoration: InputDecoration(
-//                            border: OutlineInputBorder(),
-                hintText: 'username',
+                labelText: 'username',
+                alignLabelWithHint: true,
                 prefixIcon: Icon(
                   Icons.person,
                 ),
@@ -359,7 +378,7 @@ class _LogInPageState extends State<LogInPage>
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: TextField(
               style: TextStyle(
                 letterSpacing: 2.0,
@@ -380,17 +399,20 @@ class _LogInPageState extends State<LogInPage>
                 );
               },
               decoration: InputDecoration(
-//                            border: OutlineInputBorder(),
-                hintText: 'password',
+                labelText: 'password',
+                alignLabelWithHint: true,
                 prefixIcon: Icon(Icons.lock),
               ),
             ),
           ),
           SizedBox(
-            height: 16.0,
+            height: MediaQuery.of(context).size.height / 40,
           ),
           GestureDetector(
             onTap: () {
+              setState(() {
+                _userName = 'Guest';
+              });
               _navigateToHomePage();
             },
             child: Text(
@@ -405,7 +427,7 @@ class _LogInPageState extends State<LogInPage>
             ),
           ),
           SizedBox(
-            height: 64.0,
+            height: MediaQuery.of(context).size.height / 40,
           ),
           Container(
             height: 48,
@@ -432,7 +454,9 @@ class _LogInPageState extends State<LogInPage>
                       style: TextStyle(
 //                              color: Colors.black,
                         color: Colors.white,
-                        fontSize: 20.0,
+                        fontSize: isLargeScreen
+                            ? fontSizeButton[0]
+                            : fontSizeButton[1],
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.5,
                       ),
@@ -449,15 +473,30 @@ class _LogInPageState extends State<LogInPage>
 
   Container _buildSignUpView() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 64.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width / 10,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            height: isLargeScreen
+                ? MediaQuery.of(context).viewInsets.bottom > 0
+                    ? MediaQuery.of(context).size.height / 1.60 -
+                        MediaQuery.of(context).viewInsets.bottom
+                    : MediaQuery.of(context).size.height / 3
+                : MediaQuery.of(context).viewInsets.bottom > 0
+                    ? MediaQuery.of(context).size.height / 1.95 -
+                        MediaQuery.of(context).viewInsets.bottom
+                    : MediaQuery.of(context).size.height / 3,
+            child: Container(),
+          ),
           Text(
             'Create an account',
             style: TextStyle(
               color: Colors.black,
-              fontSize: 20.0,
+              fontSize: isLargeScreen ? fontSizeH2[0] : fontSizeH2[1],
               fontWeight: FontWeight.normal,
               letterSpacing: 1.5,
             ),
@@ -466,9 +505,9 @@ class _LogInPageState extends State<LogInPage>
             height: 8,
           ),
           Container(
-            height: 116,
+            height: 88,
 //            color: Colors.green,
-            padding: EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),
+            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
             child: TextField(
               textCapitalization: TextCapitalization.none,
               controller: userNameSignUpController,
@@ -487,8 +526,10 @@ class _LogInPageState extends State<LogInPage>
                 letterSpacing: 2.0,
               ),
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(0.0),
                 border: OutlineInputBorder(),
-                hintText: 'username',
+                labelText: 'username',
+                alignLabelWithHint: true,
                 errorText: _errorUserNameMessage,
                 prefixIcon: Icon(
                   Icons.person,
@@ -519,8 +560,10 @@ class _LogInPageState extends State<LogInPage>
                 signUp();
               },
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(0.0),
                 border: OutlineInputBorder(),
-                hintText: 'password',
+                labelText: 'password',
+                alignLabelWithHint: true,
                 errorText: _errorPassWordMessage,
                 prefixIcon: Icon(Icons.lock),
                 suffixIcon: _isMasked
@@ -544,7 +587,7 @@ class _LogInPageState extends State<LogInPage>
             ),
           ),
           SizedBox(
-            height: 52.0,
+            height: 32.0,
           ),
           Container(
             height: 48,
@@ -568,7 +611,9 @@ class _LogInPageState extends State<LogInPage>
                       style: TextStyle(
 //                              color: Colors.black,
                         color: Colors.white,
-                        fontSize: 20.0,
+                        fontSize: isLargeScreen
+                            ? fontSizeButton[0]
+                            : fontSizeButton[1],
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.5,
                       ),
@@ -616,6 +661,17 @@ class _LogInPageState extends State<LogInPage>
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.height > 600) {
+      print('large');
+      setState(() {
+        isLargeScreen = true;
+      });
+    } else {
+      print('small');
+      setState(() {
+        isLargeScreen = false;
+      });
+    }
     return WillPopScope(
       onWillPop: () async => false,
       child: GestureDetector(
@@ -624,159 +680,217 @@ class _LogInPageState extends State<LogInPage>
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomPadding: false,
           backgroundColor: Colors.white,
-          body: Container(
-            child: SafeArea(
-              right: false,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 24.0,
-                        ),
-                        Material(
-                          color: Colors.transparent,
-                          child: Hero(
-                            tag: 'meeteeLogo',
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                child: SafeArea(
+                  right: false,
+                  child: Stack(
+                    children: <Widget>[
+                      PageView(
+                        controller: pageViewController,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                          _buildLoginView(),
+                          _buildSignUpView(),
+                          _buildLoadView(),
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Expanded(
                             child: Column(
                               children: <Widget>[
-                                Container(
-                                  height: 160.0,
-                                  width: 160.0,
-                                  child: SvgPicture.asset(
-                                    'images/meetee_logo.svg',
-                                  ),
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height / 24,
                                 ),
                                 Material(
                                   color: Colors.transparent,
-                                  child: Text(
-                                    'Meetee',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 32.0,
-                                      fontWeight: FontWeight.normal,
-                                      letterSpacing: 2.0,
+                                  child: Hero(
+                                    tag: 'meeteeLogo',
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          height: MediaQuery.of(context)
+                                                          .viewInsets
+                                                          .bottom >
+                                                      0 &&
+                                                  !isLargeScreen
+                                              ? 0
+                                              : MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  8,
+//                                  width: 160.0,
+                                          child: SvgPicture.asset(
+                                            'images/meetee_logo.svg',
+                                          ),
+                                        ),
+                                        MediaQuery.of(context)
+                                                        .viewInsets
+                                                        .bottom >
+                                                    0 &&
+                                                !isLargeScreen
+                                            ? Container()
+                                            : Material(
+                                                color: Colors.transparent,
+                                                child: Text(
+                                                  'Meetee',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: isLargeScreen
+                                                        ? fontSizeH1[0]
+                                                        : fontSizeH1[1],
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    letterSpacing: 2.0,
+                                                  ),
+                                                ),
+                                              ),
+                                        SizedBox(
+                                          height: 6,
+                                        ),
+                                        MediaQuery.of(context)
+                                                        .viewInsets
+                                                        .bottom >
+                                                    0 &&
+                                                !isLargeScreen
+                                            ? Container()
+                                            : Material(
+                                                color: Colors.transparent,
+                                                child: Text(
+                                                  'Just a coworking space.',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    letterSpacing: 1.5,
+                                                  ),
+                                                ),
+                                              ),
+                                      ],
                                     ),
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 8,
+                                  height:
+                                      MediaQuery.of(context).size.height / 20,
                                 ),
-                                Material(
-                                  color: Colors.transparent,
-                                  child: Text(
-                                    'Just a coworking space.',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.normal,
-                                      letterSpacing: 1.5,
-                                    ),
-                                  ),
-                                ),
+//                            Expanded(
+//                              child: PageView(
+//                                controller: pageViewController,
+//                                physics: NeverScrollableScrollPhysics(),
+//                                children: <Widget>[
+//                                  _buildLoginView(),
+//                                  _buildSignUpView(),
+//                                  _buildLoadView(),
+//                                ],
+//                              ),
+//                            ),
                               ],
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 56,
-                        ),
-                        Expanded(
-                          child: PageView(
-                            controller: pageViewController,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: <Widget>[
-                              _buildLoginView(),
-                              _buildSignUpView(),
-                              _buildLoadView(),
-                            ],
+                          _isLogInView
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      'Do not have an accout? ',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: isLargeScreen
+                                            ? fontSizeH3[0]
+                                            : fontSizeH3[1],
+                                        fontWeight: FontWeight.normal,
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        pageViewController.animateToPage(
+                                          1,
+                                          duration: Duration(milliseconds: 500),
+                                          curve: Curves.ease,
+                                        );
+                                        setState(() {
+                                          _isSignUpView = true;
+                                          _isLogInView = false;
+                                        });
+                                      },
+                                      child: Text(
+                                        'Sign up',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: isLargeScreen
+                                              ? fontSizeH3[0]
+                                              : fontSizeH3[1],
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      'Already have an accout? ',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: isLargeScreen
+                                            ? fontSizeH3[0]
+                                            : fontSizeH3[1],
+                                        fontWeight: FontWeight.normal,
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        pageViewController.animateToPage(
+                                          0,
+                                          duration: Duration(milliseconds: 500),
+                                          curve: Curves.ease,
+                                        );
+                                        setState(() {
+                                          _isLogInView = true;
+                                          _isSignUpView = false;
+                                          userNameSignUpController.clear();
+                                          passWordSignUpController.clear();
+                                          _errorUserNameMessage = null;
+                                          _errorPassWordMessage = null;
+                                        });
+                                      },
+                                      child: Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: isLargeScreen
+                                              ? fontSizeH3[0]
+                                              : fontSizeH3[1],
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 24,
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
-                  _isLogInView
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Do not have an accout? ',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.normal,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                pageViewController.animateToPage(
-                                  1,
-                                  duration: Duration(milliseconds: 500),
-                                  curve: Curves.ease,
-                                );
-                                setState(() {
-                                  _isLogInView = false;
-                                });
-                              },
-                              child: Text(
-                                'Sign up',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Already have an accout? ',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.normal,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                pageViewController.animateToPage(
-                                  0,
-                                  duration: Duration(milliseconds: 500),
-                                  curve: Curves.ease,
-                                );
-                                setState(() {
-                                  _isLogInView = true;
-                                  userNameSignUpController.clear();
-                                  passWordSignUpController.clear();
-                                  _errorUserNameMessage = null;
-                                  _errorPassWordMessage = null;
-                                });
-                              },
-                              child: Text(
-                                'Login',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                  SizedBox(
-                    height: 24.0,
-                  ),
-                ],
+                ),
               ),
             ),
           ),

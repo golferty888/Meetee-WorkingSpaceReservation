@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/fadeRouteDelayed.dart';
 import 'package:meetee_mobile/pages/logInPage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +13,8 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage>
     with SingleTickerProviderStateMixin {
+  bool isLargeScreen = false;
+
   AnimationController controller;
   Animation animation;
   @override
@@ -56,6 +59,18 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.height);
+    if (MediaQuery.of(context).size.height > 600) {
+      print('large');
+      setState(() {
+        isLargeScreen = true;
+      });
+    } else {
+      print('small');
+      setState(() {
+        isLargeScreen = false;
+      });
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -73,7 +88,7 @@ class _SplashPageState extends State<SplashPage>
                 child: Column(
                   children: <Widget>[
                     Container(
-                      height: 160.0,
+                      height: MediaQuery.of(context).size.height / 5,
                       child: SvgPicture.asset(
                         'images/meetee_logo.svg',
                       ),
@@ -86,7 +101,8 @@ class _SplashPageState extends State<SplashPage>
                           'Meetee',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 32.0,
+                            fontSize:
+                                isLargeScreen ? fontSizeH1[0] : fontSizeH1[1],
                             fontWeight: FontWeight.normal,
                             letterSpacing: 2.0,
                           ),
