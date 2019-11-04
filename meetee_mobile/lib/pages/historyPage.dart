@@ -112,12 +112,12 @@ class _HistoryPageState extends State<HistoryPage> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MyHomePage(),
-              ),
-            );
+//            Navigator.push(
+//              context,
+//              MaterialPageRoute(
+//                builder: (context) => MyHomePage(),
+//              ),
+//            );
           },
         ),
         title: Text(

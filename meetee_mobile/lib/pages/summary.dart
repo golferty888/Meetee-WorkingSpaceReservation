@@ -40,7 +40,7 @@ class Summary extends StatefulWidget {
 }
 
 class _SummaryState extends State<Summary> {
-  final String userId = '3';
+  final String userId = '2';
   final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
 
   String startDateFormattedForApi;
@@ -53,6 +53,7 @@ class _SummaryState extends State<Summary> {
   @override
   void initState() {
     super.initState();
+
     startDateFormattedForApi =
         DateFormat("yyyy-MM-dd").format(widget.startDate);
     startDateFormatted = DateFormat("dd MMMM yyy").format(widget.startDate);
@@ -72,8 +73,8 @@ class _SummaryState extends State<Summary> {
     String body = '{'
         '"userId": $userId, '
         '"startDate": "$startDateFormattedForApi", '
-        '"startTime": "11:33:00", '
-        '"endTime": "11:34:00", '
+        '"startTime": "19:00:00", '
+        '"endTime": "20:00:00", '
         '"facId": ${widget.facId}, '
         '"totalPrice": ${widget.totalPrice}'
         '}';
@@ -431,10 +432,10 @@ class _SummaryState extends State<Summary> {
 
   void _onCardEntryComplete() {
     print('_onCardEntryComplete');
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MyHomePage()),
-    );
+//    Navigator.push(
+//      context,
+//      MaterialPageRoute(builder: (context) => MyHomePage()),
+//    );
     showDialog(
         context: context,
         builder: (_) => FlareGiffyDialog(

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:meetee_mobile/pages/activationPage.dart';
 
+import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/historyPage.dart';
 import 'package:meetee_mobile/pages/logInPage.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
 import 'package:meetee_mobile/pages/splashPage.dart';
+
+const bool debugEnableDeviceSimulator = true;
 
 void main() => runApp(MyApp());
 

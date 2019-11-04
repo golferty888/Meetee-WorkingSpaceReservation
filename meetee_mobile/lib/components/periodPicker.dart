@@ -51,11 +51,12 @@ class _PeriodPickerState extends State<PeriodPicker> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 16.0),
-      height: 72.0,
+      margin: EdgeInsets.fromLTRB(4.0, 8.0, 24.0, 8.0),
+//      margin: EdgeInsets.all(8.0),
+//      height: 72.0,
       child: GestureDetector(
         child: Container(
-          padding: EdgeInsets.all(14.0),
+          padding: EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8.0),

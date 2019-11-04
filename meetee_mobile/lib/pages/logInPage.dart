@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -26,6 +27,7 @@ class _LogInPageState extends State<LogInPage>
 
   final String logInUrl = 'http://18.139.12.132:9000/login';
   final String signUpUrl = 'http://18.139.12.132:9000/signup';
+  final String countDownUrl = 'http://18.139.12.132:9000/activate/initial';
   Map<String, String> headers = {"Content-type": "application/json"};
 
   AnimationController animationController;
@@ -59,18 +61,20 @@ class _LogInPageState extends State<LogInPage>
   String _userName;
 
   _navigateToHomePage() {
-    print(_userName);
     return Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) {
           return HomePage(
             userName: _userName,
+            upComingBookingJson: _upComingBookingJson,
           );
         },
       ),
     );
   }
+
+  var _upComingBookingJson;
 
   _loadUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -98,7 +102,7 @@ class _LogInPageState extends State<LogInPage>
       headers: headers,
     );
     Future.delayed(
-      Duration(milliseconds: 3000),
+      Duration(milliseconds: 1000),
       () {
         if (response.statusCode == 200) {
           print('auto login success ${response.body}');
@@ -107,8 +111,9 @@ class _LogInPageState extends State<LogInPage>
               _promptLoadingText = 'Logging in ...';
             },
           );
+          countDownToUnlock();
           Future.delayed(
-            Duration(milliseconds: 3000),
+            Duration(milliseconds: 1000),
             () {
               _navigateToHomePage();
             },
@@ -142,6 +147,7 @@ class _LogInPageState extends State<LogInPage>
       setState(() {
         _userName = userNameController.text;
       });
+      countDownToUnlock();
       Future.delayed(
         Duration(milliseconds: 1500),
         () {
@@ -188,6 +194,7 @@ class _LogInPageState extends State<LogInPage>
       setState(() {
         _userName = userNameSignUpController.text;
       });
+      countDownToUnlock();
       Future.delayed(
         Duration(milliseconds: 1500),
         () {
@@ -224,6 +231,28 @@ class _LogInPageState extends State<LogInPage>
     return vector_math.Vector3(offset * 4, 0.0, 0.0);
   }
 
+//  DateTime _startTime;
+
+  Future countDownToUnlock() async {
+    String body = '{'
+        '"userId": 1'
+        '}';
+    print('body: ' + body);
+    final response = await http.post(
+      countDownUrl,
+      body: body,
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        _upComingBookingJson = json.decode(response.body);
+      });
+//      print(_startTime);
+    } else {
+      print('ereer');
+    }
+  }
+
   @override
   void dispose() {
     userNameController.dispose();
@@ -234,6 +263,7 @@ class _LogInPageState extends State<LogInPage>
     animationController.dispose();
 
     pageViewController.dispose();
+
     super.dispose();
   }
 
@@ -413,6 +443,7 @@ class _LogInPageState extends State<LogInPage>
               setState(() {
                 _userName = 'Guest';
               });
+              countDownToUnlock();
               _navigateToHomePage();
             },
             child: Text(
@@ -637,6 +668,9 @@ class _LogInPageState extends State<LogInPage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 8,
+          ),
           ColorLoader4(
             dotOneColor: Colors.yellow[700],
             dotTwoColor: Colors.pink[400],

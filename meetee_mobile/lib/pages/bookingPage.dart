@@ -185,7 +185,7 @@ class _BookingPageState extends State<BookingPage> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16.0),
             child: Container(
-              height: 500.0,
+//              height: 500.0,
 //              child: FadeInImage.memoryNetwork(
 //                fadeInDuration: Duration(milliseconds: 100),
 //                placeholder: kTransparentImage,
@@ -195,6 +195,7 @@ class _BookingPageState extends State<BookingPage> {
 //              ),
               child: Image.network(
                 _categoriesList[index]["link_url"],
+                width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
@@ -365,27 +366,27 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                   child: Row(
                     children: <Widget>[
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: Container(
-                            padding:
-                                EdgeInsets.fromLTRB(40.0, 16.0, 16.0, 16.0),
-                            height: 160.0,
-                            child: Hero(
-                              tag: 'facilityType' + widget.index.toString(),
-                              child: SvgPicture.asset(
-                                widget.facilityType.imagePath,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+//                      Expanded(
+//                        child: GestureDetector(
+//                          onTap: () => Navigator.pop(context),
+//                          child: Container(
+//                            padding:
+//                                EdgeInsets.fromLTRB(40.0, 16.0, 16.0, 16.0),
+//                            height: 160.0,
+//                            child: Hero(
+//                              tag: 'facilityType' + widget.index.toString(),
+//                              child: SvgPicture.asset(
+//                                widget.facilityType.imagePath,
+//                              ),
+//                            ),
+//                          ),
+//                        ),
+//                      ),
                       Expanded(
                         child: Container(
-                          height: 200.0,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+//                          height: 80.0,
+                          child: Row(
+//                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               Expanded(
                                 flex: 1,

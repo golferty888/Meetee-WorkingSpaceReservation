@@ -1,7 +1,5 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_picker (0.0.1):
-    - Flutter
   - flutter_statusbarcolor (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
@@ -13,7 +11,6 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - flutter_picker (from `.symlinks/plugins/flutter_picker/ios`)
   - flutter_statusbarcolor (from `.symlinks/plugins/flutter_statusbarcolor/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - square_in_app_payments (from `.symlinks/plugins/square_in_app_payments/ios`)
@@ -25,8 +22,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  flutter_picker:
-    :path: ".symlinks/plugins/flutter_picker/ios"
   flutter_statusbarcolor:
     :path: ".symlinks/plugins/flutter_statusbarcolor/ios"
   shared_preferences:
@@ -36,7 +31,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_picker: 8ff0d7440b4e8327fcc9e6b21a39ef9369e697c7
   flutter_statusbarcolor: 8afb1071ed8c58be929f1e32b36c629771fd2259
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   square_in_app_payments: 5147612bdab7ae2861e4281853ea0b1fc50823bb

@@ -1,8 +1,12 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+
+import 'package:meetee_mobile/config.dart';
+import 'package:meetee_mobile/main.dart';
 
 class ActivationPage extends StatefulWidget {
   @override
@@ -16,12 +20,9 @@ class _ActivationPageState extends State<ActivationPage> {
     final response = await http.post(
       activateUrl,
       body: {
-        "username": "gulf",
+        "userId": '3',
       },
-      headers: {
-        HttpHeaders.authorizationHeader:
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndWxmIiwiaWF0IjoxNTcxODI5MjE3MTAyfQ.CfVR45S-EiEHaT2wexRDc7DkJ2ZhdzAjtoR64TZeEvk",
-      },
+      headers: {HttpHeaders.authorizationHeader: fakeToken},
     );
     if (response.statusCode == 200) {
       print(response.body);
@@ -39,19 +40,35 @@ class _ActivationPageState extends State<ActivationPage> {
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
-          Container(
-            color: Color(0xFFFAD74E),
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  activateNow();
-                },
-                child: ClipOval(
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    color: Colors.red,
-                  ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16.0),
+            child: Image.network(
+              'https://storage.googleapis.com/meetee-file-storage/img/fac/bar-chair.jpg',
+              height: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 5.0,
+                sigmaY: 5.0,
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+              ),
+            ),
+          ),
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                activateNow();
+              },
+              child: ClipOval(
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  color: Colors.red,
                 ),
               ),
             ),
@@ -69,7 +86,14 @@ class _ActivationPageState extends State<ActivationPage> {
                   Icons.arrow_back,
                   color: Colors.black,
                 ),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (context) => MyHomePage(),
+//                    ),
+//                  );
+                },
               ),
             ),
           ),
