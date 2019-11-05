@@ -1,12 +1,17 @@
 import 'dart:convert';
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:meetee_mobile/components/countDownPanel.dart';
+import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
+import 'package:meetee_mobile/pages/bookingPage.dart';
 import 'package:meetee_mobile/pages/historyPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:skeleton_text/skeleton_text.dart';
 
 import 'package:meetee_mobile/pages/selectFacility.dart';
 
@@ -26,206 +31,162 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final String upComingUrl = 'http://18.139.12.132:9000/user/history/upcoming';
   final String countDownUrl = 'http://18.139.12.132:9000/activate/initial';
+  final String historyUrl = 'http://18.139.12.132:9000/user/history';
   Map<String, String> headers = {"Content-type": "application/json"};
   String body = '{'
       '"userId": 1'
       '}';
 
-  List _upComingList;
   Timer _timer;
   int _start;
-  String _countDownText;
 
   @override
   void initState() {
     print('init: ${widget.upComingBookingJson}');
-//    getHistoryByUserId();
 //    countDownToUnlock();
     _start = DateTime.parse(widget.upComingBookingJson[0]["start_time"])
         .difference(
           DateTime.now(),
         )
         .inSeconds;
-//    _start = 86450;
-    _start = 172850;
+    _start = 7200;
+//    _start = 172850;
     print('seconds: $_start');
-    startTimer();
+    getHistoryByUserId();
+
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
+  List historiesList;
 
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) => setState(
-        () {
-          if (_start < 1) {
-            print('cancel');
-            timer.cancel();
-            _start = 0;
-          } else {
-            _start = _start - 1;
-          }
-        },
-      ),
-    );
-  }
-
-  GestureDetector _menuCard(IconData menuIcon, String menuText, destination) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => destination),
-        );
+  Future<dynamic> getHistoryByUserId() async {
+    final response = await http.post(
+      historyUrl,
+      body: {
+        "userId": '1',
       },
-      child: Container(
-        padding: EdgeInsets.all(10.0),
-        margin: EdgeInsets.only(right: 8.0),
-        width: 160,
-        decoration: BoxDecoration(
-          color: Colors.blueGrey[100].withOpacity(0.5),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Icon(
-              menuIcon,
-              color: Colors.black,
-            ),
-            Text(
-              menuText,
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
+    if (response.statusCode == 200) {
+      print(response.body);
+      setState(() {
+//        historiesList = HistoriesList.fromJson(jsonData);
+        historiesList = (json.decode(response.body));
+      });
+
+      print(historiesList[0]["catename"]);
+    } else {
+      print('400');
+      throw Exception('Failed to load post');
+    }
   }
 
   _buildUpComingBookingCard(int index) {
-    return GestureDetector(
-      child: Container(
-        width: index == 0 ? 272 : 136,
-//        width: 272.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-          image: DecorationImage(
-            image: NetworkImage(
-              'https://storage.googleapis.com/meetee-file-storage/img/fac/bar-chair.jpg',
-            ),
-            fit: BoxFit.cover,
-          ),
-          color: Color(0xFFFF8989),
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Card(
+        color: Colors.black,
+        elevation: 2.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-//            Icon(
-//              menuIcon,
-//              color: Colors.blue[600],
-//            ),
-            Container(
-              height: 160.0,
-              padding: EdgeInsets.fromLTRB(
-                20.0,
-                20.0,
-                0.0,
-                0.0,
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          width: MediaQuery.of(context).size.width * 5 / 9,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '${DateFormat("d MMM").format(
+                      DateTime.parse(
+                          widget.upComingBookingJson[0]["start_time"]),
+                    )}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0,
+                    ),
+                  ),
+                  Text(
+                    'Start: ${DateFormat("HH:00").format(
+                      DateTime.parse(
+                          widget.upComingBookingJson[0]["start_time"]),
+                    )}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ],
               ),
-//              color: Colors.black.withOpacity(0.5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.black54,
-                    Colors.black38,
-                    Colors.black26,
-                    Colors.transparent,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [
-                    0.2,
-                    0.4,
-                    0.6,
-                    0.8,
-                  ],
+              Container(
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  shape: BoxShape.circle,
                 ),
-              ),
-              child: Text(
-                '${_upComingList[index]["period"]}',
-                textAlign: TextAlign.left,
-                style: TextStyle(
+                child: Icon(
+                  Icons.lock,
                   color: Colors.white,
-                  fontSize: 24.0,
-//                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                0.0,
-                0.0,
-                16.0,
-                0.0,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        'Bar Table',
+                        style: TextStyle(
+                          color: Colors.yellow[600],
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      Text(
+                        ' x 2',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        'Meeting Room S',
+                        style: TextStyle(
+                          color: Colors.pink[300],
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      Text(
+                        ' x 1',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-//              color: Colors.black.withOpacity(0.5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Text(
-                '${_upComingList[index]["catename"]}',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 12.0,
-//                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Card _buildFavoriteCard(int index) {
-    return Card(
-      elevation: 0.0,
-      color: Colors.blueGrey[100].withOpacity(0.5),
-      child: Container(
-        padding: EdgeInsets.all(10.0),
-        width: 136,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Icon(
-              Icons.favorite,
-            ),
-            Text(
-              _upComingList[index]["period"],
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-          ],
-        ),
-      ),
+  _buildHistoryList(int index) {
+    return ListTile(
+      title: Text('dfgdfgd'),
     );
   }
 
@@ -233,6 +194,21 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: () {
+//          Navigator.push(
+//            context,
+//            MaterialPageRoute(
+//              builder: (context) {
+//                return SelectFacilityType();
+//              },
+//            ),
+//          );
+//        },
+//        child: Icon(
+//          Icons.add,
+//        ),
+//      ),
       body: SafeArea(
         right: false,
         left: false,
@@ -244,204 +220,202 @@ class _HomePageState extends State<HomePage> {
             SliverAppBar(
               elevation: 0.0,
               centerTitle: false,
+              floating: true,
               automaticallyImplyLeading: false,
               backgroundColor: Colors.white,
-              expandedHeight: MediaQuery.of(context).size.height * 2 / 3,
-              flexibleSpace: FlexibleSpaceBar(
-                  title: Text(
-                    'Upcoming booking',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14.0,
-//                letterSpacing: 0.5,
-                      fontWeight: FontWeight.bold,
-                    ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.exit_to_app,
+                    color: Colors.black,
                   ),
-                  centerTitle: true,
-//                  titlePadding: EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 8.0),
-                  background: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 4.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'Welcome, ${widget.userName}',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.exit_to_app,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  final prefs =
-                                      await SharedPreferences.getInstance();
-                                  prefs.remove('userName');
-                                  prefs.remove('passWord');
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                      '/login',
-                                      (Route<dynamic> route) => false);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-//                        Text(
-//                          'Schedule 17:00 - 18:00, 18 Nov',
-//                          textAlign: TextAlign.start,
-//                          style: TextStyle(
-//                            color: Colors.black,
-//                            fontSize: 16.0,
-////                            fontWeight: FontWeight.bold,
-//                          ),
-//                        ),
-//                        Text(
-//                          'Tab to see more details',
-//                          textAlign: TextAlign.start,
-//                          style: TextStyle(
-//                            color: Colors.black,
-//                            fontSize: 16.0,
-////                            fontWeight: FontWeight.bold,
-//                          ),
-//                        ),
-
-                        Column(
-                          children: <Widget>[
-                            Icon(
-                              Icons.lock,
-                              size: 32,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                'Your schedule will start in',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ),
-                            if (_start > 0 && _start < 86400)
-                              Text(
-                                '${(_start / 60 / 60 % 24).floor().toString().padLeft(2, '0')}'
-                                ':'
-                                '${(_start / 60 % 60).floor().toString().padLeft(2, '0')}'
-                                ':'
-                                '${(_start % 60).toString().padLeft(2, '0')}',
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                ),
-                              ),
-                            if (_start >= 86400 && _start < 172800)
-                              Text(
-                                '${(_start / 60 / 60 / 24 % 30).floor().toString()} day',
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                ),
-                              ),
-                            if (_start >= 172800)
-                              Text(
-                                '${(_start / 60 / 60 / 24 % 30).floor().toString()} days',
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                ),
-                              ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 40,
-                        )
-                      ],
-                    ),
-                  )),
-            ),
-            SliverToBoxAdapter(
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        height: 1,
-                        color: Colors.white,
-                      ),
-                      Container(
-                        height: 23,
-                        color: Colors.black87,
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: 24,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(24.0),
-                      ),
-                    ),
-                    child: Icon(Icons.expand_less),
-                  ),
-                ],
+                  onPressed: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.remove('userName');
+                    prefs.remove('passWord');
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/login', (Route<dynamic> route) => false);
+                  },
+                ),
+              ],
+              title: Text(
+                '${DateFormat("EEEE d MMMM").format(DateTime.now())}',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SliverToBoxAdapter(
-              child: Container(
-                height: 100.0,
-                margin: EdgeInsets.fromLTRB(0.0, 24.0, 0.0, 0.0),
-                child: ListView(
-                  padding: EdgeInsets.only(left: 12.0),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    _menuCard(
-                      Icons.calendar_today,
-                      'Booking',
-                      SelectFacilityType(),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  16.0,
+                  0.0,
+                  0.0,
+                  16.0,
+                ),
+                child: Text(
+                  'Welcome, ${widget.userName}',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  16.0,
+                  0.0,
+                  16.0,
+                  0.0,
+                ),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 3 / 4,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(16.0),
                     ),
-                    _menuCard(
-                      Icons.vpn_key,
-                      'Activate',
-                      ActivationPage(),
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'images/single_chair.jpg',
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    _menuCard(
-                      Icons.history,
-                      'History',
-                      HistoryPage(),
-                    ),
-                    _menuCard(
-                      Icons.stars,
-                      'Promotion',
-                      HomePage(),
-                    ),
-                  ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          20.0,
+                          0.0,
+                          0.0,
+                          18.0,
+                        ),
+                        child: Text(
+                          'Most\nBooking',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 48.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.7),
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(16.0),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.all(4.0),
+                                  height: 40.0,
+                                  width: 40.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow[600],
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(
+                                    facilityTypeList[0].imagePath,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 24,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'Single Chair',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${facilityTypeList[0].typeName}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Container(
+                              height: 40.0,
+                              width: 80.0,
+                              child: RaisedButton(
+                                elevation: 0.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(32.0),
+                                ),
+                                color: Colors.white,
+                                child: Text(
+                                  'Book',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return BookingPage(
+                                          facilityType: facilityTypeList[0],
+                                          index: 0,
+                                          subType: 0 == 0 ? 'Seat' : 'Room',
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             SliverList(
               delegate: SliverChildListDelegate.fixed(
                 [
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 16),
-                    width: double.infinity,
-                    height: 8.0,
-                    color: Colors.grey[100],
-                  ),
+//                  Container(
+//                    margin: EdgeInsets.fromLTRB(16.0, 48.0, 16.0, 8.0),
+//                    width: double.infinity,
+//                    height: 1.0,
+//                    color: Colors.black38,
+//                  ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 8.0),
+                    padding: EdgeInsets.fromLTRB(16.0, 40.0, 0.0, 8.0),
                     child: Text(
                       'Upcoming bookings',
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 20.0,
+                        fontSize: 24.0,
 //                letterSpacing: 0.5,
                         fontWeight: FontWeight.bold,
                       ),
@@ -467,51 +441,15 @@ class _HomePageState extends State<HomePage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                margin: EdgeInsets.only(top: 8.0),
-                height: 200.0,
-                child: FutureBuilder(
-                  future: http.post(
-                    upComingUrl,
-                    body: body,
-                    headers: headers,
-                  ),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                        return Text('none...');
-                      case ConnectionState.active:
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      case ConnectionState.waiting:
-//                      if (_isFetched == false) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-//                      }
-
-                      case ConnectionState.done:
-                        if (snapshot.hasError)
-                          return Text('Error: ${snapshot.error}');
-                        _upComingList = json.decode(snapshot.data.body);
-
-                        return Container(
-                          margin: EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _upComingList.length,
-                            itemBuilder: (BuildContext context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(
-                                  right: 12.0,
-                                ),
-                                child: _buildUpComingBookingCard(index),
-                              );
-                            },
-                          ),
-                        );
-                    }
-                    return null;
+                height: MediaQuery.of(context).size.height / 2,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: widget.upComingBookingJson == null
+                      ? 0
+                      : widget.upComingBookingJson.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildUpComingBookingCard(index);
                   },
                 ),
               ),
@@ -519,13 +457,19 @@ class _HomePageState extends State<HomePage> {
             SliverList(
               delegate: SliverChildListDelegate.fixed(
                 [
+//                  Container(
+//                    margin: EdgeInsets.fromLTRB(16.0, 48.0, 16.0, 8.0),
+//                    width: double.infinity,
+//                    height: 1.0,
+//                    color: Colors.black38,
+//                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
                     child: Text(
-                      'Favorite',
+                      'History',
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 20.0,
+                        fontSize: 24.0,
 //                letterSpacing: 0.5,
                         fontWeight: FontWeight.bold,
                       ),
@@ -549,54 +493,16 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                margin: EdgeInsets.only(top: 8.0),
-                height: 200.0,
-                child: FutureBuilder(
-                  future: http.post(
-                    upComingUrl,
-                    body: body,
-                    headers: headers,
-                  ),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                        return Text('none...');
-                      case ConnectionState.active:
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      case ConnectionState.waiting:
-//                      if (_isFetched == false) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-//                      }
-
-                      case ConnectionState.done:
-                        if (snapshot.hasError)
-                          return Text('Error: ${snapshot.error}');
-                        _upComingList = json.decode(snapshot.data.body);
-                        return Container(
-                          margin: EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _upComingList.length,
-                            itemBuilder: (BuildContext context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(
-                                  right: 8.0,
-                                ),
-                                child: _buildFavoriteCard(index),
-                              );
-                            },
-                          ),
-                        );
-                    }
-                    return null;
-                  },
-                ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  // To convert this infinite list to a list with three items,
+                  // uncomment the following line:
+                  // if (index > 3) return null;
+                  return _buildHistoryList(index);
+                },
+                // Or, uncomment the following line:
+                childCount: historiesList.length,
               ),
             ),
           ],

@@ -695,7 +695,7 @@ class _LogInPageState extends State<LogInPage>
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).size.height > 600) {
+    if (MediaQuery.of(context).size.height > 700) {
       print('large');
       setState(() {
         isLargeScreen = true;
