@@ -37,7 +37,6 @@ class _HomePageState extends State<HomePage> {
       '"userId": 1'
       '}';
 
-  Timer _timer;
   int _start;
 
   @override
@@ -69,8 +68,8 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       print(response.body);
       setState(() {
-//        historiesList = HistoriesList.fromJson(jsonData);
         historiesList = (json.decode(response.body));
+        _isHistoryLoadDone = true;
       });
 
       print(historiesList[0]["catename"]);
@@ -82,7 +81,12 @@ class _HomePageState extends State<HomePage> {
 
   _buildUpComingBookingCard(int index) {
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.fromLTRB(
+        16.0,
+        8.0,
+        0.0,
+        0.0,
+      ),
       child: Card(
         color: Colors.black,
         elevation: 2.0,
@@ -185,10 +189,569 @@ class _HomePageState extends State<HomePage> {
   }
 
   _buildHistoryList(int index) {
-    return ListTile(
-      title: Text('dfgdfgd'),
+//    return ListTile(
+//      title: Text('dfgdfgd $index'),
+//    );
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        16.0,
+        0.0,
+        16.0,
+        0.0,
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                'Today',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                width: 4.0,
+              ),
+              Text(
+                'Reservations',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
+//              SizedBox(
+//                width: 4.0,
+//              ),
+              IconButton(
+                icon: Icon(
+                  Icons.expand_more,
+                ),
+                onPressed: () {},
+              )
+            ],
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(
+                        0.0,
+                        4.0,
+                        0.0,
+                        0.0,
+                      ),
+                      child: Text(
+                        '12:00',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                ' - ',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Text(
+                                '13:00',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              16.0, 0.0, 8.0, 0.0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              8.0, 4.0, 8.0, 4.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.pink[200],
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'MR-S',
+                                            style: TextStyle(
+                                              fontSize: 14.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          'x 1',
+                                          style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '฿130',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                ' - ',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Text(
+                                '13:00',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              16.0, 2.0, 8.0, 0.0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              8.0, 4.0, 8.0, 4.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.yellow[600],
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'BT',
+                                            style: TextStyle(
+                                              fontSize: 14.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          'x 2',
+                                          style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '฿120',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                ' - ',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Text(
+                                '15:00',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              16.0, 2.0, 8.0, 0.0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              8.0, 4.0, 8.0, 4.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.yellow[600],
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'TSF',
+                                            style: TextStyle(
+                                              fontSize: 14.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          'x 2',
+                                          style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '฿120',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                ' - ',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Text(
+                                '19:00',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              16.0, 2.0, 8.0, 0.0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              8.0, 4.0, 8.0, 4.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue[300],
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'SR',
+                                            style: TextStyle(
+                                              fontSize: 14.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          'x 1',
+                                          style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '฿1200',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'Total    ฿1500',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            color: Colors.black38,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(
+                        0.0,
+                        4.0,
+                        0.0,
+                        0.0,
+                      ),
+                      child: Text(
+                        '14:00',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                ' - ',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Text(
+                                '16:00',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              16.0, 0.0, 8.0, 0.0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              8.0, 4.0, 8.0, 4.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.pink[200],
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'MR-L',
+                                            style: TextStyle(
+                                              fontSize: 14.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          'x 1',
+                                          style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '฿300',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'Total    ฿300',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            color: Colors.black38,
+          ),
+          Row(
+            children: <Widget>[
+              Text(
+                '8 Nov',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                width: 4.0,
+              ),
+              Text(
+                'Reservations',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
+//              SizedBox(
+//                width: 4.0,
+//              ),
+              IconButton(
+                icon: Icon(
+                  Icons.expand_more,
+                ),
+                onPressed: () {},
+              )
+            ],
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(
+                        0.0,
+                        4.0,
+                        0.0,
+                        0.0,
+                      ),
+                      child: Text(
+                        '09:00',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                ' - ',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Text(
+                                '12:00',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              16.0, 0.0, 8.0, 0.0),
+                                          padding: EdgeInsets.fromLTRB(
+                                              8.0, 4.0, 8.0, 4.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.yellow[600],
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'SC',
+                                            style: TextStyle(
+                                              fontSize: 14.0,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          'x 3',
+                                          style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      '฿90',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'Total    ฿90',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            color: Colors.black38,
+          ),
+        ],
+      ),
     );
   }
+
+  bool _isHistoryLoadDone = false;
+
+//  _delayHistory() {
+//    Future.delayed(Duration(seconds: 2), () {
+//      setState(() {
+//        _isHistoryLoadDone = true;
+//      });
+//    });
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -435,7 +998,7 @@ class _HomePageState extends State<HomePage> {
                         Radius.circular(2.0),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -464,7 +1027,7 @@ class _HomePageState extends State<HomePage> {
 //                    color: Colors.black38,
 //                  ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
+                    padding: EdgeInsets.fromLTRB(16.0, 32.0, 0.0, 8.0),
                     child: Text(
                       'History',
                       style: TextStyle(
@@ -493,18 +1056,56 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  // To convert this infinite list to a list with three items,
-                  // uncomment the following line:
-                  // if (index > 3) return null;
-                  return _buildHistoryList(index);
-                },
-                // Or, uncomment the following line:
-                childCount: historiesList.length,
-              ),
-            ),
+            _isHistoryLoadDone
+                ?
+//            SliverList(
+//                    delegate: SliverChildBuilderDelegate(
+//                      (BuildContext context, int index) {
+//                        return _buildHistoryList(index);
+//                      },
+//                      childCount: historiesList.length,
+//                    ),
+//                  )
+                SliverToBoxAdapter(
+                    child: _buildHistoryList(0),
+                  )
+                : SliverToBoxAdapter(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 15.0, bottom: 5.0),
+                          child: SkeletonAnimation(
+                            child: Container(
+                              height: 15,
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  color: Colors.grey[300]),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 5.0),
+                            child: SkeletonAnimation(
+                              child: Container(
+                                width: 60,
+                                height: 13,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Colors.grey[300]),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
           ],
         ),
       ),
