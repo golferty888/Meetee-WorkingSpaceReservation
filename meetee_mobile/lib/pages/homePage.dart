@@ -201,34 +201,41 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                'Today',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+          Padding(
+            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  'Today',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 4.0,
-              ),
-              Text(
-                'Reservations',
-                style: TextStyle(
-                  fontSize: 16.0,
+                SizedBox(
+                  width: 4.0,
                 ),
-              ),
+                Text(
+                  'Reservations',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
 //              SizedBox(
 //                width: 4.0,
 //              ),
-              IconButton(
-                icon: Icon(
-                  Icons.expand_more,
-                ),
-                onPressed: () {},
-              )
-            ],
+                Container(
+                  width: 12.0,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.expand_more,
+                      color: Colors.black38,
+                    ),
+                    onPressed: () {},
+                  ),
+                )
+              ],
+            ),
           ),
           Container(
             width: MediaQuery.of(context).size.width,
@@ -609,34 +616,41 @@ class _HomePageState extends State<HomePage> {
           Divider(
             color: Colors.black38,
           ),
-          Row(
-            children: <Widget>[
-              Text(
-                '8 Nov',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+          Padding(
+            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  '8 Nov',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 4.0,
-              ),
-              Text(
-                'Reservations',
-                style: TextStyle(
-                  fontSize: 16.0,
+                SizedBox(
+                  width: 4.0,
                 ),
-              ),
+                Text(
+                  'Reservations',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
 //              SizedBox(
 //                width: 4.0,
 //              ),
-              IconButton(
-                icon: Icon(
-                  Icons.expand_more,
-                ),
-                onPressed: () {},
-              )
-            ],
+                Container(
+                  width: 12.0,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.expand_more,
+                      color: Colors.black38,
+                    ),
+                    onPressed: () {},
+                  ),
+                )
+              ],
+            ),
           ),
           Container(
             width: MediaQuery.of(context).size.width,
