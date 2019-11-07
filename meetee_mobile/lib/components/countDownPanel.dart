@@ -24,11 +24,11 @@ class _CountDownPanelState extends State<CountDownPanel>
       _start = widget.start;
     });
     startTimer();
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 5),
-    );
-    controller.reverse(from: controller.value == 0.0 ? 1.0 : controller.value);
+//    controller = AnimationController(
+//      vsync: this,
+//      duration: Duration(seconds: 5),
+//    );
+//    controller.reverse(from: controller.value == 0.0 ? 1.0 : controller.value);
     super.initState();
   }
 
@@ -62,6 +62,7 @@ class _CountDownPanelState extends State<CountDownPanel>
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Icon(
           Icons.lock,
