@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/countDownPanel.dart';
+import 'package:meetee_mobile/components/fadeRoute.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/bookingPage.dart';
@@ -37,20 +38,9 @@ class _HomePageState extends State<HomePage> {
       '"userId": 1'
       '}';
 
-  int _start;
-
   @override
   void initState() {
-    print('init: ${widget.upComingBookingJson}');
-//    countDownToUnlock();
-    _start = DateTime.parse(widget.upComingBookingJson[0]["start_time"])
-        .difference(
-          DateTime.now(),
-        )
-        .inSeconds;
-    _start = 7200;
-//    _start = 172850;
-    print('seconds: $_start');
+//    print('init: ${widget.upComingBookingJson}');
     getHistoryByUserId();
 
     super.initState();
@@ -84,104 +74,170 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.fromLTRB(
         16.0,
         8.0,
-        0.0,
+        16.0,
         0.0,
       ),
-      child: Card(
-        color: Colors.black,
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          width: MediaQuery.of(context).size.width * 5 / 9,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '${DateFormat("d MMM").format(
-                      DateTime.parse(
-                          widget.upComingBookingJson[0]["start_time"]),
-                    )}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                    ),
-                  ),
-                  Text(
-                    'Start: ${DateFormat("HH:00").format(
-                      DateTime.parse(
-                          widget.upComingBookingJson[0]["start_time"]),
-                    )}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ],
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            FadeRoute(
+              page: ActivationPage(
+                userName: widget.userName,
+                upComingBookingJson: widget.upComingBookingJson,
               ),
-              Container(
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.lock,
-                  color: Colors.white,
-                ),
+            ),
+          );
+//          Navigator.push(
+//            context,
+//            MaterialPageRoute(
+//              builder: (context) {
+//                return ActivationPage(
+//                  userName: widget.userName,
+//                  upComingBookingJson: widget.upComingBookingJson,
+//                );
+//              },
+//            ),
+//          );
+        },
+        child: Hero(
+          tag: 'activationPanel',
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            width: MediaQuery.of(context).size.width * 2 / 3,
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.all(
+                Radius.circular(16.0),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[350],
+                  blurRadius: 16.0, // has the effect of softening the shadow
+                  spreadRadius: -8, // has the effect of extending the shadow
+                  offset: Offset(
+                    -3.0, // horizontal, move right 10
+                    8.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'Bar Table',
+                        '${DateFormat("HH:00").format(
+                          DateTime.parse(
+                              widget.upComingBookingJson[0]["start_time"]),
+                        )}',
                         style: TextStyle(
-                          color: Colors.yellow[600],
-                          fontSize: 14.0,
+                          color: Colors.white,
+                          fontSize: 24.0,
                         ),
                       ),
                       Text(
-                        ' x 2',
+                        '${DateFormat("d MMMM").format(
+                          DateTime.parse(
+                              widget.upComingBookingJson[0]["start_time"]),
+                        )}',
                         style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          color: Colors.white70,
+                          fontSize: 18.0,
                         ),
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  Container(
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.white,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.lock,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      Text(
-                        'Meeting Room S',
-                        style: TextStyle(
-                          color: Colors.pink[300],
-                          fontSize: 14.0,
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+                              decoration: BoxDecoration(
+                                color: Colors.yellow[600],
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: Text(
+                                'Bar Table',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              ' x 2',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Text(
-                        ' x 1',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+                              decoration: BoxDecoration(
+                                color: Colors.pink[200],
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: Text(
+                                'Meeting Room S',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              ' x 1',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -239,6 +295,25 @@ class _HomePageState extends State<HomePage> {
           ),
           Container(
             width: MediaQuery.of(context).size.width,
+            margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(16.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[350],
+                  blurRadius: 16.0, // has the effect of softening the shadow
+                  spreadRadius: -8, // has the effect of extending the shadow
+                  offset: Offset(
+                    -3.0, // horizontal, move right 10
+                    8.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -505,19 +580,41 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                Text(
-                  'Total    ฿1500',
-                  textAlign: TextAlign.end,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    'Total    ฿1500',
+                    textAlign: TextAlign.end,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
           ),
-          Divider(
-            color: Colors.black38,
-          ),
+//          Divider(
+//            color: Colors.black38,
+//          ),
           Container(
             width: MediaQuery.of(context).size.width,
+            margin: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(16.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[350],
+                  blurRadius: 16.0, // has the effect of softening the shadow
+                  spreadRadius: -8, // has the effect of extending the shadow
+                  offset: Offset(
+                    -3.0, // horizontal, move right 10
+                    8.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -605,17 +702,18 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                Text(
-                  'Total    ฿300',
-                  textAlign: TextAlign.end,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                  child: Text(
+                    'Total    ฿300',
+                    textAlign: TextAlign.end,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
           ),
-          Divider(
-            color: Colors.black38,
-          ),
+
           Padding(
             padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
             child: Row(
@@ -654,6 +752,25 @@ class _HomePageState extends State<HomePage> {
           ),
           Container(
             width: MediaQuery.of(context).size.width,
+            margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(16.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[350],
+                  blurRadius: 16.0, // has the effect of softening the shadow
+                  spreadRadius: -8, // has the effect of extending the shadow
+                  offset: Offset(
+                    -3.0, // horizontal, move right 10
+                    8.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -741,16 +858,55 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                Text(
-                  'Total    ฿90',
-                  textAlign: TextAlign.end,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                  child: Text(
+                    'Total    ฿90',
+                    textAlign: TextAlign.end,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
           ),
-          Divider(
-            color: Colors.black38,
+//          Divider(
+//            color: Colors.black38,
+//          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  '11 Nov',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  width: 4.0,
+                ),
+                Text(
+                  'Reservations',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+//              SizedBox(
+//                width: 4.0,
+//              ),
+                Container(
+                  width: 12.0,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.expand_less,
+                      color: Colors.black38,
+                    ),
+                    onPressed: () {},
+                  ),
+                )
+              ],
+            ),
           ),
         ],
       ),
@@ -770,7 +926,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
 //      floatingActionButton: FloatingActionButton(
 //        onPressed: () {
 //          Navigator.push(
@@ -799,7 +955,7 @@ class _HomePageState extends State<HomePage> {
               centerTitle: false,
               floating: true,
               automaticallyImplyLeading: false,
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.grey[50],
               actions: <Widget>[
                 IconButton(
                   icon: Icon(
@@ -838,7 +994,7 @@ class _HomePageState extends State<HomePage> {
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24.0,
+                    fontSize: 26.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -998,18 +1154,30 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Container(
-                    height: 3.0,
-                    margin: EdgeInsets.fromLTRB(
-                      16.0,
-                      4.0,
-                      MediaQuery.of(context).size.width - 64.0,
-                      4.0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(2.0),
+//                  Container(
+//                    height: 3.0,
+//                    margin: EdgeInsets.fromLTRB(
+//                      16.0,
+//                      4.0,
+//                      MediaQuery.of(context).size.width - 64.0,
+//                      4.0,
+//                    ),
+//                    decoration: BoxDecoration(
+//                      color: Colors.grey[800],
+//                      borderRadius: BorderRadius.all(
+//                        Radius.circular(2.0),
+//                      ),
+//                    ),
+//                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+                    child: Text(
+                      'You can unlock your rooms here.',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 18.0,
+//                letterSpacing: 0.5,
+//                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -1018,7 +1186,7 @@ class _HomePageState extends State<HomePage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                height: MediaQuery.of(context).size.height / 2,
+                height: MediaQuery.of(context).size.height * 2 / 3,
                 child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
@@ -1041,32 +1209,45 @@ class _HomePageState extends State<HomePage> {
 //                    color: Colors.black38,
 //                  ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(16.0, 32.0, 0.0, 8.0),
-                    child: Text(
-                      'History',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24.0,
-//                letterSpacing: 0.5,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    padding: EdgeInsets.fromLTRB(16.0, 40.0, 16.0, 0.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          'History',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'See all',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 12.0,
+//                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    height: 3.0,
-                    margin: EdgeInsets.fromLTRB(
-                      16.0,
-                      4.0,
-                      MediaQuery.of(context).size.width - 64.0,
-                      4.0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(2.0),
-                      ),
-                    ),
-                  )
+//                  Container(
+//                    height: 3.0,
+//                    margin: EdgeInsets.fromLTRB(
+//                      16.0,
+//                      4.0,
+//                      MediaQuery.of(context).size.width - 64.0,
+//                      4.0,
+//                    ),
+//                    decoration: BoxDecoration(
+//                      color: Colors.grey[800],
+//                      borderRadius: BorderRadius.all(
+//                        Radius.circular(2.0),
+//                      ),
+//                    ),
+//                  )
                 ],
               ),
             ),
@@ -1119,7 +1300,33 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                  )
+                  ),
+            SliverToBoxAdapter(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(16.0, 40.0, 16.0, 16.0),
+                child: RaisedButton(
+                  elevation: 0.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  color: Colors.black,
+                  onPressed: () {},
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      'Book now'.toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
