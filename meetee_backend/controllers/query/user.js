@@ -64,8 +64,8 @@ exports.getReservationHistoryList = (request, response, next) => {
       } else {
         if (results.rowCount == 0) {
           response.status(200).send({
-            userId: userId,
             errorCode: "01",
+            userId: userId,
             message: "User have never made a booking before."
           });
         } else {
