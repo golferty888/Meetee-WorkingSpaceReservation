@@ -41,7 +41,7 @@ exports.login = (request, response, next) => {
   };
   const SECRET = process.env.SECRET;
   const cipherText = jwt.encode(payload, SECRET);
-  response.status(200).send({ message: "Login success!", token: cipherText });
+  response.status(200).send({ message: "Login success!", userId: request.userId, token: cipherText });
 };
 
 exports.getReservationHistoryList = (request, response, next) => {

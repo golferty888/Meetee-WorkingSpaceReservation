@@ -9,7 +9,7 @@ exports.middleware = async (request, response, next) => {
   const username = request.body.username;
   const userPassword = request.body.password;
 
-  const statement = `select password from meeteenew.users
+  const statement = `select id, password from meeteenew.users
         where username = $1`;
   const values = [username];
   var userPasswordDB = null;
@@ -27,6 +27,7 @@ exports.middleware = async (request, response, next) => {
           "User with the specified username does not exists."
         );
       } else {
+        request.userId = res.rows[0].id;
         userPasswordDB = res.rows[0].password;
         bcrypt.compare(userPassword, userPasswordDB, (err, loginPass) => {
           try {
