@@ -72,15 +72,27 @@ flutter:
   fonts:
     - family: Product Sans
       fonts:
-       - asset: fonts/Product Sans Regular.ttf
-       - asset: fonts/Product Sans Italic.ttf
+       - asset: fonts/product sans/Product Sans Regular.ttf
+       - asset: fonts/product sans/Product Sans Italic.ttf
          style: italic
-       - asset: fonts/Product Sans Bold.ttf
+       - asset: fonts/product sans/Product Sans Bold.ttf
          weight: 700
-       - asset: fonts/Product Sans Bold Italic.ttf
+       - asset: fonts/product sans/Product Sans Bold Italic.ttf
          weight: 700
          style: italic
-
+    - family: Amatic SC
+      fonts:
+       - asset: fonts/Amatic_SC/AmaticSC-Regular.ttf
+       - asset: fonts/Amatic_SC/AmaticSC-Bold.ttf
+         weight: 700
+    - family: Economica
+      fonts:
+        - asset: fonts/Economica/Economica-Regular.ttf
+        - asset: fonts/Economica/Economica-Bold.ttf
+          weight: 700
+    - family: brain flower
+      fonts:
+        - asset: fonts/brain_flower/Brain Flower Euro.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
