@@ -17,6 +17,7 @@ exports.middleware = async (request, response, next) => {
   pool.query(statement, values, (err, res) => {
     try {
       if (username == "guest") {
+        request.userId = res.rows[0].id;
         next();
       } else if (username == null || userPassword == null) {
         throw new ErrorHandler(400, "Bad Request");
