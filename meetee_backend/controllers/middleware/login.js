@@ -16,8 +16,9 @@ exports.middleware = async (request, response, next) => {
 
   pool.query(statement, values, (err, res) => {
     try {
-      console.log(res.rows);
-      if (username == null || userPassword == null) {
+      if (username == "guest") {
+        next();
+      } else if (username == null || userPassword == null) {
         throw new ErrorHandler(400, "Bad Request");
       } else if (err) {
         throw new ErrorHandler(500, "Database Error");
