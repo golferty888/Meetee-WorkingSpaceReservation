@@ -26,7 +26,7 @@ CREATE TABLE meeteenew.reservation(
 create TABLE meeteenew.reservation_line(
     reserve_id  INT     NOT NULL,
     facility_id     INT     NOT NULL,
-    FOREIGN KEY(reserve_id) REFERENCES meeteenew.reservation(id),
+    FOREIGN KEY(reserve_id) REFERENCES meeteenew.reservation(id) ON DELETE CASCADE,
     FOREIGN KEY(facility_id) REFERENCES meeteenew.facility(id)
 );
 
