@@ -30,6 +30,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _isLargeScreen = false;
   final String upComingUrl = 'http://18.139.12.132:9000/user/history/upcoming';
   final String countDownUrl = 'http://18.139.12.132:9000/activate/initial';
   final String historyUrl = 'http://18.139.12.132:9000/user/history';
@@ -925,6 +926,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.height > 700) {
+      print('large');
+      setState(() {
+        _isLargeScreen = true;
+      });
+    } else {
+      print('small');
+      setState(() {
+        _isLargeScreen = false;
+      });
+    }
     return Scaffold(
       backgroundColor: Colors.grey[50],
 //      floatingActionButton: FloatingActionButton(
@@ -1118,6 +1130,7 @@ class _HomePageState extends State<HomePage> {
                                           facilityType: facilityTypeList[0],
                                           index: 0,
                                           subType: 0 == 0 ? 'Seat' : 'Room',
+                                          isLargeScreen: _isLargeScreen,
                                         );
                                       },
                                     ),
