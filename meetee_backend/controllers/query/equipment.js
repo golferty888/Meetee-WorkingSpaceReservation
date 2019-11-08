@@ -17,7 +17,7 @@ exports.getFacilityCategoryDetail = (request, response, next) => {
         console.log(error);
         throw new ErrorHandler(500, "Database Error");
       } else {
-        response.status(200).send(results.rows);
+        response.status(200).send(results.rows[0]);
       }
     } catch (error) {
       console.log(error);
