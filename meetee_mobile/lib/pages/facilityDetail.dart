@@ -1,12 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
 
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/seatMapPage.dart';
 
 class FacilityDetail extends StatefulWidget {
+  final bool isLargeScreen;
   final int type;
   final int index;
   final String imgPath;
@@ -20,6 +22,7 @@ class FacilityDetail extends StatefulWidget {
 
   FacilityDetail({
     Key key,
+    this.isLargeScreen,
     this.type,
     this.index,
     this.imgPath,
@@ -61,20 +64,21 @@ class FacilityDetailState extends State<FacilityDetail> {
                 ),
                 Expanded(child: Container()),
                 Center(
-                  child: Container(
-                    width: 320.0,
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 5000),
+                    width: MediaQuery.of(context).size.width * 5 / 6,
                     child: Hero(
-                      flightShuttleBuilder: (
-                        BuildContext flightContext,
-                        Animation<double> animation,
-                        HeroFlightDirection flightDirection,
-                        BuildContext fromHeroContext,
-                        BuildContext toHeroContext,
-                      ) {
-                        return SingleChildScrollView(
-                          child: fromHeroContext.widget,
-                        );
-                      },
+//                      flightShuttleBuilder: (
+//                        BuildContext flightContext,
+//                        Animation<double> animation,
+//                        HeroFlightDirection flightDirection,
+//                        BuildContext fromHeroContext,
+//                        BuildContext toHeroContext,
+//                      ) {
+//                        return SingleChildScrollView(
+//                          child: fromHeroContext.widget,
+//                        );
+//                      },
                       tag: 'detail + ${widget.index.toString()}',
                       child: Material(
                         color: Colors.transparent,
@@ -90,85 +94,70 @@ class FacilityDetailState extends State<FacilityDetail> {
                             child: Container(
                               color: Colors.black.withOpacity(0.5),
                               padding:
-                                  EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                                  EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 12.0),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: <Widget>[
-                                            Text(
-                                              widget.categoryName,
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                fontSize: 24.0,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            widget.categoryDetail["capacity"] >
-                                                    1
-                                                ? Text(
-                                                    '${widget.categoryDetail["capacity"].toString()} persons',
-                                                    textAlign: TextAlign.start,
-                                                    style: TextStyle(
-                                                      fontSize: 18.0,
-                                                      letterSpacing: 1.5,
-                                                      color: Color(
-                                                        widget.secondaryColor,
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Text(
-                                                    '${widget.categoryDetail["capacity"].toString()} person',
-                                                    textAlign: TextAlign.start,
-                                                    style: TextStyle(
-                                                      fontSize: 18.0,
-                                                      letterSpacing: 1.5,
-                                                      color: Color(
-                                                        widget.secondaryColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                          ],
+                                      Text(
+                                        widget.categoryName,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: widget.isLargeScreen
+                                              ? fontSizeH1[0]
+                                              : fontSizeH1[1],
+                                          color: Colors.white,
                                         ),
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.fromLTRB(
-                                            0.0, 0.0, 16.0, 0.0),
-                                        width: 1,
-                                        height: 40.0,
-                                        color: Colors.grey.withOpacity(0.5),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 4.0,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        '฿${widget.categoryDetail["price"].toString()} per hour',
+                                        style: TextStyle(
+                                          fontSize: widget.isLargeScreen
+                                              ? fontSizeH3[0]
+                                              : fontSizeH3[1],
+                                          color: Color(
+                                            widget.secondaryColor,
+                                          ),
+                                        ),
                                       ),
-                                      Container(
-                                        width: 72.0,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              '฿${widget.categoryDetail["price"].toString()}',
+                                      widget.categoryDetail["capacity"] > 1
+                                          ? Text(
+                                              '${widget.categoryDetail["capacity"].toString()} persons',
+                                              textAlign: TextAlign.start,
                                               style: TextStyle(
-                                                fontSize: 24.0,
+                                                fontSize: widget.isLargeScreen
+                                                    ? fontSizeH3[0]
+                                                    : fontSizeH3[1],
+                                                letterSpacing: 1.5,
+                                                color: Color(
+                                                  widget.secondaryColor,
+                                                ),
+                                              ),
+                                            )
+                                          : Text(
+                                              '${widget.categoryDetail["capacity"].toString()} person',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                fontSize: widget.isLargeScreen
+                                                    ? fontSizeH3[0]
+                                                    : fontSizeH3[1],
+                                                letterSpacing: 1.5,
                                                 color: Color(
                                                   widget.secondaryColor,
                                                 ),
                                               ),
                                             ),
-                                            Text(
-                                              'per hour',
-                                              style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
                                     ],
                                   ),
                                   Container(
@@ -256,7 +245,7 @@ class FacilityDetailState extends State<FacilityDetail> {
                       ),
                       child: Container(
                         color: Colors.black.withOpacity(0.5),
-                        padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                        padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
