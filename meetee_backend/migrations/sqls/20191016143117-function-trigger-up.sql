@@ -3,7 +3,7 @@
 
 CREATE OR REPLACE FUNCTION meeteenew.date_format1(timestamp) 
     RETURNS date AS $$
-    SELECT to_char($1, 'MonthDD, YYYY') :: date;
+    SELECT to_char($1, 'Month DD, YYYY') :: date;
     $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION meeteenew.date_format2(timestamp) 
@@ -43,7 +43,8 @@ CREATE OR REPLACE FUNCTION meeteenew.notify_event() RETURNS TRIGGER AS $$
         record RECORD;
         payload JSON;
     BEGIN
-        IF (NEW.start_time >= NEW.end_time) THEN
+
+        IF (TG_OP != 'DELETE' AND NEW.start_time >= NEW.end_time) THEN
             RAISE EXCEPTION 'Time value error: end_time must be more than start_time'
             USING HINT = 'Please check your time values';
         END IF;
