@@ -11,22 +11,23 @@
 -- order by start_time asc;
 
 create or replace view meeteenew.init_activation_page as
-	select resv.start_time ::text, end_time ::text, meeteenew.date_format1(start_time) ::text as inDate,
-			array_agg(json_build_object('id', fac.id, 'code', fac.code, 'floor', fac.floor)) as facList, resv.user_id as userId,
-			case when ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time)) then 'in-time'
-			else 'up-coming' end as status
-	from meeteenew.reservation resv
-	join meeteenew.reservation_line li on resv.id = li.reserve_id
-	join meeteenew.facility fac on li.facility_id = fac.id
-	join meeteenew.facility_category cate on fac.cate_id = cate.id
-	where end_time >= now()
-	group by start_time, user_id, status, end_time
-	order by start_time asc;
+select resv.start_time ::text,
+		meeteenew.date_format1(start_time) ::text as inDate,
+		array_agg(json_build_object('id', fac.id, 'code', fac.code, 'floor', fac.floor, 'end_time', end_time ::text
+		, 'status', case when ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time)) then 'in_time'
+		else 'up_coming' end)) as facList, user_id as userId
+from meeteenew.reservation resv
+join meeteenew.reservation_line li on resv.id = li.reserve_id
+join meeteenew.facility fac on li.facility_id = fac.id
+join meeteenew.facility_category cate on fac.cate_id = cate.id
+where end_time >= now()
+group by start_time, user_id
+order by start_time asc; 
 
 create or replace view meeteenew.view_mqtt_reservtime_lookup as
 	select rs.id, us.id userId, fac.id facId, code, start_time, end_time ::text, meeteenew.time_cron_format(end_time),
-		case when ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time)) then 'in_this_time'
-		else 'up-coming' end as status
+		case when ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time)) then 'in_time'
+		else 'up_coming' end as status
 	from meeteenew.reservation rs
 	join meeteenew.reservation_line rl on rs.id = rl.reserve_id
 	join meeteenew.facility fac on rl.facility_id = fac.id
@@ -107,4 +108,4 @@ create or replace view meeteenew.upcoming_and_intime_reservation as
 	join meeteenew.facility_category cate on fac.cate_id = cate.id
 	where rs.end_time >= now()
 	group by reservId, userId, cateName, date, period, hour, totalPrice
-	order by reservId asc;
+	order by rs.start_time asc;
