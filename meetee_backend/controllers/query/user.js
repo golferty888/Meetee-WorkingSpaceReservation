@@ -41,13 +41,11 @@ exports.login = (request, response, next) => {
   };
   const SECRET = process.env.SECRET;
   const cipherText = jwt.encode(payload, SECRET);
-  response
-    .status(200)
-    .send({
-      message: "Login success!",
-      userId: request.userId,
-      token: cipherText
-    });
+  response.status(200).send({
+    message: "Login success!",
+    userId: request.userId,
+    token: cipherText
+  });
 };
 
 exports.getReservationHistoryList = (request, response, next) => {
@@ -57,7 +55,6 @@ exports.getReservationHistoryList = (request, response, next) => {
   const queryText = `select * from meeteenew.view_user_history
     where userId = $1`;
   pool.query(queryText, queryValue, (error, results) => {
-    
     try {
       if (userId == null) {
         throw new ErrorHandler(400, "Bad Request");
@@ -72,7 +69,7 @@ exports.getReservationHistoryList = (request, response, next) => {
             message: "User have never made a booking before."
           });
         } else {
-          response.status(200).send(results.rows);
+          response.status(200).send({ errorCode: "00", results: results.rows });
         }
       }
     } catch (error) {
