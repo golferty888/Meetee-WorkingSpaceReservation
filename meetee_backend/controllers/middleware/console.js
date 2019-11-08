@@ -33,5 +33,7 @@ exports.req = (request, response, next) => {
         next(error);
       }
     });
+  } else {
+    next();
   }
 };
