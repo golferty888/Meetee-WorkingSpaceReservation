@@ -8,8 +8,6 @@ const { ErrorHandler, handlerError } = require("../../helpers/error");
 exports.middleware = async (request, response, next) => {
   const username = request.body.username;
   const userPassword = request.body.password;
-  console.log("-------------------------------------------------------------");
-  console.log({ request: "POST /login", body: JSON.stringify(request.body) });
 
   const statement = `select password from meeteenew.users
         where username = $1`;

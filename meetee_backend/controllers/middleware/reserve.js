@@ -10,8 +10,7 @@ exports.middleWare = (request, response, next) => {
   const facList = data.facId;
   const start_time = data.startDate + " " + data.startTime;
   const end_time = data.startDate + " " + data.endTime;
-  console.log("-------------------------------------------------------------");
-  console.log({ request: "POST /reserve", body: JSON.stringify(data) });
+
   const statement = `select id from meeteenew.reservation
     where user_id = $1 and start_time = $2 and end_time = $3`;
   const values = [userId, start_time, end_time];
@@ -29,6 +28,8 @@ exports.middleWare = (request, response, next) => {
       } else if (error) {
         throw new ErrorHandler(500, "Database Error");
       } else if (facList != null && facList.length > 10) {
+        throw new ErrorHandler(400, "Bad Request");
+      } else if (new Date(start_time) < new Date()) {
         throw new ErrorHandler(400, "Bad Request");
       } else if (facList != null) {
         const statement = `select id from meeteenew.view_reservation as v
@@ -68,3 +69,5 @@ exports.middleWare = (request, response, next) => {
     }
   });
 };
+
+function checkPastTime() {}

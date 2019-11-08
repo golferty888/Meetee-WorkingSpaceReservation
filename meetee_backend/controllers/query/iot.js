@@ -10,10 +10,15 @@ exports.getStartTimeForActivation = (request, response, next) => {
   where userId = $1`;
   const value = [userId];
   pool.query(statement, value, (err, res) => {
-    if (err) {
-      throw new (500, "Database Error")();
-    } else {
-      response.send(res.rows);
+    try {
+      if (err) {
+        console.log(err);
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.send(res.rows);
+      }
+    } catch (error) {
+      next(error);
     }
   });
 };

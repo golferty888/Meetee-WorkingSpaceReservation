@@ -6,9 +6,6 @@ const { ErrorHandler, handlerError } = require("../../helpers/error");
 
 exports.getAvaialableFacWithAmount = async (request, response, next) => {
   const data = request.body;
-  console.log(
-    "--> Request /facility/cate/xxxxxxxxxxxx: " + JSON.stringify(data)
-  );
   const classId = data.classId;
   const cateId = data.cateId;
   const startDate = data.startDate;
@@ -80,11 +77,6 @@ exports.checkStatusAvaialableEachFacilityCategory = async (
   next
 ) => {
   const data = request.body;
-  console.log("-------------------------------------------------------------");
-  console.log({
-    request: "POST /facility/cate/status/av",
-    body: JSON.stringify(data)
-  });
   const cateId = data.cateId;
   const startDate = data.startDate;
   const startTime = data.startDate + " " + data.startTime;
@@ -123,11 +115,6 @@ exports.checkStatusAvaialableEachFacilityCategory = async (
 
 exports.checkStatusEachFacilityCategory = (request, response, next) => {
   const data = request.body;
-  console.log("-------------------------------------------------------------");
-  console.log({
-    request: request.method + " " + request.url,
-    body: JSON.stringify(data)
-  });
   const cateId = data.cateId;
   const startDate = data.startDate;
   const startTime = data.startDate + " " + data.startTime;
@@ -197,7 +184,6 @@ exports.lockAndUnlockPendingFacilityInSpecificPeriod = (
   const facList = data.facList;
   const startTime = data.startDate + " " + data.startTime;
   const endTime = data.startDate + " " + data.endTime;
-  console.log({ request: request.method + " " + request.url, body: data });
   var statement;
   if (request.url == "/facility/pending/lock") {
     statement = `INSERT INTO meeteenew.pending_facility(facility_id, start_time, end_time) VALUES($1, $2, $3)`;

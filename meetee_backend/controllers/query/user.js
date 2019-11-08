@@ -46,8 +46,6 @@ exports.login = (request, response, next) => {
 
 exports.getReservationHistoryList = (request, response, next) => {
   const data = request.body;
-  console.log("-------------------------------------------------------------");
-  console.log({ request: "POST /user/history", body: JSON.stringify(data) });
   const userId = data.userId;
   const queryValue = [userId];
   const queryText = `select * from meeteenew.view_user_history
@@ -74,7 +72,6 @@ exports.getReservationHistoryList = (request, response, next) => {
 
 exports.getUpcomingAndIntimeReservation = (request, response, next) => {
   const data = request.body;
-  console.log({ request: request.method + " " + request.url, body: data });
   const userId = data.userId;
   const statement = `select * from meeteenew.upcoming_and_intime_reservation
     where userId = $1`;
@@ -94,13 +91,6 @@ exports.getUpcomingAndIntimeReservation = (request, response, next) => {
 };
 
 exports.getAllUsers = (request, response, next) => {
-  const data = "asasas";
-  console.log("-------------------------------------------------------------");
-  console.log({
-    request: "GET /users",
-    url: request.url,
-    body: JSON.stringify(data)
-  });
   if (request.url == "/userx") {
     response.send("yes!");
   } else {

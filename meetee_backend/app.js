@@ -56,15 +56,18 @@ const user = require("./controllers/query/user");
 const reservation = require("./controllers/query/reservation");
 const iotQuery = require("./controllers/query/iot");
 const iot = require("./controllers/iot/iotActivate");
+const del = require("./controllers/query/deleteForTest");
 
 const login = require("./controllers/middleware/login");
 const signup = require("./controllers/middleware/signup");
 const reserve = require("./controllers/middleware/reserve");
 const iotActivate = require("./controllers/middleware/iotActivate");
-app.post("/signup", signup.middleware, user.signup);
-app.post("/login", login.middleware, user.login);
+const consl = require("./controllers/middleware/console");
+app.post("/signup", consl.req, signup.middleware, user.signup);
+app.post("/login", consl.req, login.middleware, user.login);
 app.post(
   "/activate",
+  consl.req,
   requireJWTAuth,
   iotActivate.middleware,
   iot.activateIotEquipment
@@ -72,35 +75,53 @@ app.post(
 
 // Rest API
 // Getting Room/Seat Information
-app.get("/fac", facility.getAllFacility);
-app.get("/fac/type/:id", facility.getFacilityCategoriesFromType);
-app.get("/fac/cate/:id", equipment.getFacilityCategoryDetail);
+app.get("/fac", consl.req, facility.getAllFacility);
+app.get("/fac/type/:id", consl.req, facility.getFacilityCategoriesFromType);
+app.get("/fac/cate/:id", consl.req, equipment.getFacilityCategoryDetail);
 // Checking Room/Seat Status
 app.post(
   "/facility/cate/status/av",
+  consl.req,
   facStatus.checkStatusAvaialableEachFacilityCategory
 );
-app.post("/facility/cate/status", facStatus.checkStatusEachFacilityCategory);
-app.post("/facility/pending/lock", facStatus.lockAndUnlockPendingFacilityInSpecificPeriod);
-app.post("/facility/pending/unlock", facStatus.lockAndUnlockPendingFacilityInSpecificPeriod);
+app.post(
+  "/facility/cate/status",
+  consl.req,
+  facStatus.checkStatusEachFacilityCategory
+);
+app.post(
+  "/facility/pending/lock",
+  consl.req,
+  facStatus.lockAndUnlockPendingFacilityInSpecificPeriod
+);
+app.post(
+  "/facility/pending/unlock",
+  consl.req,
+  facStatus.lockAndUnlockPendingFacilityInSpecificPeriod
+);
 // Do Reserve Room/Seat
-app.post("/reserve", reserve.middleWare, reservation.reserve);
+app.post("/reserve", consl.req, reserve.middleWare, reservation.reserve);
 // Reservation Information
-app.post("/user/history", user.getReservationHistoryList);
-app.post("/user/history/upcoming", user.getUpcomingAndIntimeReservation);
-app.get("/reservations", reservation.getAllReservations);
+app.post("/user/history", consl.req, user.getReservationHistoryList);
+app.post(
+  "/user/history/upcoming",
+  consl.req,
+  user.getUpcomingAndIntimeReservation
+);
+app.get("/reservations", consl.req, reservation.getAllReservations);
 // User Information for Admin
-app.get("/users", user.getAllUsers);
-app.get("/userx", user.getAllUsers);
+app.get("/users", consl.req, user.getAllUsers);
+app.get("/userx", consl.req, user.getAllUsers);
 // Test PG
-app.post("/activate/initial", iotQuery.getStartTimeForActivation);
+app.post("/activate/initial", consl.req, iotQuery.getStartTimeForActivation);
 // app.post("/testreserve", reservation.testReserve);
+app.delete("/delete", consl.req, del.userAndReservation);
 
-app.get("/", requireJWTAuth, (request, response) => {
+app.get("/", consl.req, requireJWTAuth, (request, response) => {
   response.send("MeeteeAPI welcome!");
 });
 
-app.use("*", function(request, response) {
+app.use("*", (request, response) => {
   response.status(404).send("404, Not found");
 });
 
@@ -109,7 +130,6 @@ app.use((err, req, res, next) => {
 });
 
 // Postgres Client Connections
-console.log(pgConnectionString);
 const pgClient1 = new pg.Client(pgConnectionString);
 const pgClient2 = new pg.Client(pgConnectionString);
 pgClient1.connect();

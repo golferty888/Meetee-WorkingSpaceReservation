@@ -5,11 +5,6 @@ const pool = new Pool({
 const { ErrorHandler, handlerError } = require("../../helpers/error");
 
 exports.middleware = (request, response, next) => {
-  console.log("-------------------------------------------------------------");
-  console.log({
-    request: "POST /activate",
-    body: JSON.stringify(request.body)
-  });
   const userId = request.body.userId;
   const statement = `select * from meeteenew.view_mqtt_reservtime_lookup
       where userId = $1 and status = $2`;

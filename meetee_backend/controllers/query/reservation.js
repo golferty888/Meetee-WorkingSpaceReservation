@@ -11,8 +11,6 @@ exports.reserve = (request, response, next) => {
   const startTime = data.startDate + " " + data.startTime;
   const endTime = data.startDate + " " + data.endTime;
   const totalPrice = data.totalPrice;
-  console.log("-------------------------------------------------------------");
-  console.log({ request: "POST /reserve", body: JSON.stringify(data) });
 
   const insertResv = `INSERT INTO meeteenew.reservation(user_id, start_time, end_time, total_price, status) 
     VALUES($1, $2, $3, $4, $5) RETURNING id`;
@@ -62,19 +60,18 @@ exports.reserve = (request, response, next) => {
 };
 
 exports.getAllReservations = (request, response, next) => {
-  console.log("-------------------------------------------------------------");
-  console.log({ request: "GET /reservations" });
-  const queryText = `select reservId, 
-    array_agg(json_build_object('facCode', code, 'floor', floor)) as facList,
-    cateName, price :: int, date, period, hour :: int, total_price :: int, status
-    from meeteenew.view_user_history
-    group by reservId, cateName, price, date, period, hour , total_price, status
-    order by reservId desc`;
+  const queryText = `select * from meeteenew.view_user_history`;
   pool.query(queryText, (error, results) => {
-    if (error) {
-      throw new ErrorHandler(500, "Database Error");
-    } else {
-      response.status(200).send(results.rows);
+    try {
+      if (error) {
+        console.log(error);
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.status(200).send(results.rows);
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
   });
 };
