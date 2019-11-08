@@ -19,11 +19,13 @@ import 'package:meetee_mobile/pages/selectFacility.dart';
 class HomePage extends StatefulWidget {
   final String userName;
   final upComingBookingJson;
+  final int userId;
 
   HomePage({
     Key key,
     this.userName,
     this.upComingBookingJson,
+    this.userId,
   }) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
@@ -35,37 +37,45 @@ class _HomePageState extends State<HomePage> {
   final String countDownUrl = 'http://18.139.12.132:9000/activate/initial';
   final String historyUrl = 'http://18.139.12.132:9000/user/history';
   Map<String, String> headers = {"Content-type": "application/json"};
-  String body = '{'
-      '"userId": 1'
-      '}';
 
   @override
   void initState() {
-//    print('init: ${widget.upComingBookingJson}');
+    print('userId: ${widget.userId}');
     getHistoryByUserId();
-
+    print('upComingBookingJson: ${widget.upComingBookingJson}');
     super.initState();
   }
 
   List historiesList;
+  bool _isHasHistory = false;
 
   Future<dynamic> getHistoryByUserId() async {
     final response = await http.post(
       historyUrl,
       body: {
-        "userId": '1',
+        "userId": '${widget.userId}',
       },
     );
+    var jsonData = json.decode(response.body);
+    print(jsonData);
     if (response.statusCode == 200) {
-      print(response.body);
-      setState(() {
-        historiesList = (json.decode(response.body));
-        _isHistoryLoadDone = true;
-      });
-
-      print(historiesList[0]["catename"]);
+      if (jsonData["errorCode"] == '00') {
+        print('error 00');
+        setState(() {
+          _isHistoryLoadDone = true;
+          _isHasHistory = true;
+          historiesList = (json.decode(response.body))["results"];
+        });
+      } else if (jsonData["errorCode"] == '01') {
+        print('error 01');
+        setState(() {
+          _isHasHistory = false;
+          _isHistoryLoadDone = true;
+        });
+      } else {
+        print('else ${jsonData["errorCode"]}');
+      }
     } else {
-      print('400');
       throw Exception('Failed to load post');
     }
   }
@@ -84,6 +94,8 @@ class _HomePageState extends State<HomePage> {
             context,
             FadeRoute(
               page: ActivationPage(
+                userId: widget.userId,
+                index: index,
                 userName: widget.userName,
                 upComingBookingJson: widget.upComingBookingJson,
               ),
@@ -102,7 +114,7 @@ class _HomePageState extends State<HomePage> {
 //          );
         },
         child: Hero(
-          tag: 'activationPanel',
+          tag: 'activationPanelTag$index',
           child: Container(
             padding: EdgeInsets.all(16.0),
             width: MediaQuery.of(context).size.width * 2 / 3,
@@ -135,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         '${DateFormat("HH:00").format(
                           DateTime.parse(
-                              widget.upComingBookingJson[0]["start_time"]),
+                              widget.upComingBookingJson[index]["start_time"]),
                         )}',
                         style: TextStyle(
                           color: Colors.white,
@@ -145,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         '${DateFormat("d MMMM").format(
                           DateTime.parse(
-                              widget.upComingBookingJson[0]["start_time"]),
+                              widget.upComingBookingJson[index]["start_time"]),
                         )}',
                         style: TextStyle(
                           color: Colors.white70,
@@ -1149,12 +1161,6 @@ class _HomePageState extends State<HomePage> {
             SliverList(
               delegate: SliverChildListDelegate.fixed(
                 [
-//                  Container(
-//                    margin: EdgeInsets.fromLTRB(16.0, 48.0, 16.0, 8.0),
-//                    width: double.infinity,
-//                    height: 1.0,
-//                    color: Colors.black38,
-//                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(16.0, 40.0, 0.0, 8.0),
                     child: Text(
@@ -1167,21 +1173,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-//                  Container(
-//                    height: 3.0,
-//                    margin: EdgeInsets.fromLTRB(
-//                      16.0,
-//                      4.0,
-//                      MediaQuery.of(context).size.width - 64.0,
-//                      4.0,
-//                    ),
-//                    decoration: BoxDecoration(
-//                      color: Colors.grey[800],
-//                      borderRadius: BorderRadius.all(
-//                        Radius.circular(2.0),
-//                      ),
-//                    ),
-//                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
                     child: Text(
@@ -1189,8 +1180,6 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                         color: Colors.black54,
                         fontSize: 18.0,
-//                letterSpacing: 0.5,
-//                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -1198,29 +1187,30 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 2 / 3,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget.upComingBookingJson == null
-                      ? 0
-                      : widget.upComingBookingJson.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildUpComingBookingCard(index);
-                  },
-                ),
-              ),
+              child: widget.upComingBookingJson.length == 0
+                  ? Container(
+                      height: 80,
+                      child: Center(
+                        child: Text('No upcoming booking'),
+                      ),
+                    )
+                  : Container(
+                      height: MediaQuery.of(context).size.height * 2 / 3,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.upComingBookingJson == null
+                            ? 0
+                            : widget.upComingBookingJson.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _buildUpComingBookingCard(index);
+                        },
+                      ),
+                    ),
             ),
             SliverList(
               delegate: SliverChildListDelegate.fixed(
                 [
-//                  Container(
-//                    margin: EdgeInsets.fromLTRB(16.0, 48.0, 16.0, 8.0),
-//                    width: double.infinity,
-//                    height: 1.0,
-//                    color: Colors.black38,
-//                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(16.0, 40.0, 16.0, 0.0),
                     child: Row(
@@ -1274,9 +1264,18 @@ class _HomePageState extends State<HomePage> {
 //                      childCount: historiesList.length,
 //                    ),
 //                  )
-                SliverToBoxAdapter(
-                    child: _buildHistoryList(0),
-                  )
+                _isHasHistory
+                    ? SliverToBoxAdapter(
+                        child: _buildHistoryList(0),
+                      )
+                    : SliverToBoxAdapter(
+                        child: Container(
+                          height: 80,
+                          child: Center(
+                            child: Text('No history'),
+                          ),
+                        ),
+                      )
                 : SliverToBoxAdapter(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1284,8 +1283,11 @@ class _HomePageState extends State<HomePage> {
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 15.0, bottom: 5.0),
+                          padding: const EdgeInsets.only(
+                            left: 15.0,
+                            bottom: 5.0,
+                            top: 16.0,
+                          ),
                           child: SkeletonAnimation(
                             child: Container(
                               height: 15,
@@ -1323,7 +1325,19 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   color: Colors.black,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return SelectFacilityType(
+                            userId: widget.userId,
+                            isLargeScreen: _isLargeScreen,
+                          );
+                        },
+                      ),
+                    );
+                  },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     width: MediaQuery.of(context).size.width,

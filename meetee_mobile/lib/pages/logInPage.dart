@@ -59,6 +59,7 @@ class _LogInPageState extends State<LogInPage>
   }
 
   String _userName;
+  int _userId;
 
   _navigateToHomePage() {
     return Navigator.pushReplacement(
@@ -68,6 +69,7 @@ class _LogInPageState extends State<LogInPage>
           return HomePage(
             userName: _userName,
             upComingBookingJson: _upComingBookingJson,
+            userId: _userId,
           );
         },
       ),
@@ -95,7 +97,6 @@ class _LogInPageState extends State<LogInPage>
         '"username": "${prefs.getString('userName')}", '
         '"password": "${prefs.getString('passWord')}"'
         '}';
-    print('body: ' + body);
     final response = await http.post(
       logInUrl,
       body: body,
@@ -106,11 +107,14 @@ class _LogInPageState extends State<LogInPage>
       () {
         if (response.statusCode == 200) {
           print('auto login success ${response.body}');
+          Map jsonData = json.decode(response.body);
           setState(
             () {
+              _userId = jsonData["userId"];
               _promptLoadingText = 'Logging in ...';
             },
           );
+          print(_userId);
           countDownToUnlock();
           Future.delayed(
             Duration(milliseconds: 1000),
@@ -139,12 +143,14 @@ class _LogInPageState extends State<LogInPage>
       body: body,
       headers: headers,
     );
+    print(json.decode(response.body));
     if (response.statusCode == 200) {
-      print(response.body);
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('userName', userNameController.text);
       prefs.setString('passWord', passWordController.text);
+      var jsonData = json.decode(response.body);
       setState(() {
+        _userId = jsonData["userId"];
         _userName = userNameController.text;
       });
       countDownToUnlock();
@@ -155,7 +161,6 @@ class _LogInPageState extends State<LogInPage>
         },
       );
     } else {
-      print(response.body);
       Future.delayed(
         Duration(milliseconds: 1000),
         () {
@@ -183,15 +188,15 @@ class _LogInPageState extends State<LogInPage>
         '"username": "${userNameSignUpController.text}", '
         '"password": "${passWordSignUpController.text}"'
         '}';
-    print('body: ' + body);
     final response = await http.post(
       signUpUrl,
       body: body,
       headers: headers,
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      var jsonData = json.decode(response.body);
       setState(() {
+        _userId = jsonData["userId"];
         _userName = userNameSignUpController.text;
       });
       countDownToUnlock();
@@ -207,7 +212,6 @@ class _LogInPageState extends State<LogInPage>
         },
       );
     } else {
-      print(response.body);
       String responseMessage = json.decode(response.body)["message"];
       Future.delayed(
         Duration(milliseconds: 1000),
@@ -235,19 +239,18 @@ class _LogInPageState extends State<LogInPage>
 
   Future countDownToUnlock() async {
     String body = '{'
-        '"userId": 1'
+        '"userId": $_userId'
         '}';
-    print('body: ' + body);
     final response = await http.post(
       countDownUrl,
       body: body,
       headers: headers,
     );
+    print(json.decode(response.body));
     if (response.statusCode == 200) {
       setState(() {
         _upComingBookingJson = json.decode(response.body);
       });
-//      print(_startTime);
     } else {
       print('ereer');
     }
@@ -442,6 +445,7 @@ class _LogInPageState extends State<LogInPage>
             onTap: () {
               setState(() {
                 _userName = 'Guest';
+                _userId = 100;
               });
               countDownToUnlock();
               _navigateToHomePage();

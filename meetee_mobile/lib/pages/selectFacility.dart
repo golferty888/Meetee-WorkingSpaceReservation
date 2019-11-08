@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
 
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/bookingPage.dart';
 
 class SelectFacilityType extends StatefulWidget {
+  final int userId;
+  final bool isLargeScreen;
+
+  SelectFacilityType({
+    Key key,
+    this.userId,
+    this.isLargeScreen,
+  }) : super(key: key);
   @override
   _SelectFacilityTypeState createState() => _SelectFacilityTypeState();
 }
@@ -30,10 +39,10 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
           ),
         ),
         title: Text(
-          'Select facility type',
+          'Select facility type'.toUpperCase(),
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 22.0,
+            color: Colors.black54,
+            fontSize: widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
           ),
         ),
       ),
@@ -158,9 +167,11 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                 context,
                 FadeRoute(
                   page: BookingPage(
+                    userId: widget.userId,
                     facilityType: facilityTypeList[index],
                     index: index,
                     subType: index == 0 ? 'Seat' : 'Room',
+                    isLargeScreen: widget.isLargeScreen,
                   ),
                 ),
               );

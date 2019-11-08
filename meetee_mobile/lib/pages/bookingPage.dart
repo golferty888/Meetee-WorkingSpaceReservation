@@ -18,6 +18,7 @@ import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/facilityDetail.dart';
 
 class BookingPage extends StatefulWidget {
+  final int userId;
   final FacilityType facilityType;
   final int index;
   final String subType;
@@ -26,6 +27,7 @@ class BookingPage extends StatefulWidget {
   BookingPage({
     Key key,
     @required this.facilityType,
+    this.userId,
     this.index,
     this.subType,
     this.isLargeScreen,
@@ -94,38 +96,6 @@ class _BookingPageState extends State<BookingPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-//                  Container(
-//                    height: 56.0,
-//                    decoration: BoxDecoration(
-//                      color: Color(
-//                        widget.facilityType.secondaryColorCode,
-//                      ),
-//                    ),
-//                    child: Container(
-//                      decoration: BoxDecoration(
-//                        color: Colors.white,
-//                        borderRadius: BorderRadius.vertical(
-//                          top: Radius.circular(32.0),
-//                        ),
-//                      ),
-//                      padding: EdgeInsets.fromLTRB(36.0, 20.0, 0.0, 0.0),
-//                      child: _categoriesList.length > 1
-//                          ? Text(
-//                              'We have ${_categoriesList.length} types of ${widget.facilityType.typeName.toLowerCase()}.',
-//                              style: TextStyle(
-//                                fontSize: 20.0,
-//                                color: Colors.black54,
-//                              ),
-//                            )
-//                          : Text(
-//                              'We have ${_categoriesList.length} type of ${widget.facilityType.typeName.toLowerCase()}.',
-//                              style: TextStyle(
-//                                fontSize: 20.0,
-//                                color: Colors.black54,
-//                              ),
-//                            ),
-//                    ),
-//                  ),
         Expanded(
           child: _buildSwiper(_categoriesList),
         ),
@@ -159,6 +129,7 @@ class _BookingPageState extends State<BookingPage> {
           FadeRoute(
             page: FacilityDetail(
               isLargeScreen: widget.isLargeScreen,
+              userId: widget.userId,
               type: index,
               index: index,
               imgPath: categoriesMap[index]["link_url"],
@@ -178,19 +149,19 @@ class _BookingPageState extends State<BookingPage> {
 
   _buildCategoryCard(index) {
     return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[350],
-            blurRadius: 16.0, // has the effect of softening the shadow
-            spreadRadius: 10, // has the effect of extending the shadow
-            offset: Offset(
-              0.0, // horizontal, move right 10
-              8.0, // vertical, move down 10
-            ),
-          )
-        ],
-      ),
+//      decoration: BoxDecoration(
+//        boxShadow: [
+//          BoxShadow(
+//            color: Colors.grey[400],
+//            blurRadius: 10.0, // has the effect of softening the shadow
+//            spreadRadius: 2, // has the effect of extending the shadow
+//            offset: Offset(
+//              0.0, // horizontal, move right 10
+//              4.0, // vertical, move down 10
+//            ),
+//          )
+//        ],
+//      ),
       child: Stack(
         children: <Widget>[
           Hero(
@@ -239,7 +210,7 @@ class _BookingPageState extends State<BookingPage> {
                       ),
                       child: Container(
                         color: Colors.black.withOpacity(0.5),
-                        padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 12.0),
+                        padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
@@ -331,10 +302,10 @@ class _BookingPageState extends State<BookingPage> {
         backgroundColor: Colors.grey[50],
         elevation: 0.0,
         title: Text(
-          'Booking ${widget.facilityType.typeName.toLowerCase()}',
+          'Booking ${widget.facilityType.typeName.toLowerCase()}'.toUpperCase(),
           style: TextStyle(
             color: Colors.black54,
-            fontSize: 18.0,
+            fontSize: widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
           ),
         ),
         leading: Padding(

@@ -6,11 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:meetee_mobile/components/css.dart';
 
 import 'package:meetee_mobile/pages/summary.dart';
 
 class SeatMapPage extends StatefulWidget {
 //  final int type;
+  final bool isLargeScreen;
+  final int userId;
   final int index;
   final String imgPath;
   final String categoryName;
@@ -25,6 +28,8 @@ class SeatMapPage extends StatefulWidget {
   SeatMapPage(
       {Key key,
 //        this.type,
+      this.isLargeScreen,
+      this.userId,
       this.index,
       this.imgPath,
       this.categoryName,
@@ -43,7 +48,7 @@ class SeatMapPage extends StatefulWidget {
 class _SeatMapPageState extends State<SeatMapPage> {
   @override
   void initState() {
-    startDateFormatted = DateFormat("dd MMMM").format(widget.startDate);
+    startDateFormatted = DateFormat("dd MMM").format(widget.startDate);
     startTimeFormatted = DateFormat("HH:00").format(widget.startTime);
     endTimeFormatted = DateFormat("HH:00").format(widget.endTime);
     totalHour = widget.endTime.difference(widget.startTime).inHours;
@@ -118,61 +123,68 @@ class _SeatMapPageState extends State<SeatMapPage> {
               return Padding(
                 padding: EdgeInsets.all(8.0),
                 child: GridView.count(
-                    shrinkWrap: true,
-                    primary: false,
-                    crossAxisCount: 3,
-                    childAspectRatio: 1.7,
-                    children: List.generate(
-                      _seatsList.length,
-                      (index) {
-                        return _seatsList[index]["status"] == "available"
-                            ? GestureDetector(
-                                onTap: () => _onSelectedSeat(
-                                  _seatsList[index]["facid"],
-                                  _seatsList[index]["code"],
-                                ),
-                                child: Container(
-                                  margin: EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                    color: _selectedSeatList.contains(
-                                            _seatsList[index]["facid"])
-                                        ? Color(widget.secondaryColor)
-                                        : Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      _seatsList[index]["code"],
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        letterSpacing: 1.5,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Container(
+                  shrinkWrap: true,
+                  primary: false,
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.7,
+                  children: List.generate(
+                    _seatsList.length,
+                    (index) {
+                      return _seatsList[index]["status"] == "available"
+                          ? GestureDetector(
+                              onTap: () => _onSelectedSeat(
+                                _seatsList[index]["facid"],
+                                _seatsList[index]["code"],
+                              ),
+                              child: Container(
                                 margin: EdgeInsets.all(8.0),
                                 decoration: BoxDecoration(
-                                  color: Colors.transparent,
+                                  color: _selectedSeatList
+                                          .contains(_seatsList[index]["facid"])
+                                      ? Color(widget.secondaryColor)
+                                      : Colors.grey[200],
                                   borderRadius: BorderRadius.circular(8.0),
-                                  border: Border.all(
-                                    color: Colors.grey[200].withOpacity(0.3),
-                                  ),
                                 ),
                                 child: Center(
                                   child: Text(
                                     _seatsList[index]["code"],
                                     style: TextStyle(
-                                      color: Colors.white.withOpacity(0.3),
+                                      fontSize: widget.isLargeScreen
+                                          ? fontSizeH3[0]
+                                          : fontSizeH3[1],
                                       fontWeight: FontWeight.normal,
                                       letterSpacing: 1.5,
                                     ),
                                   ),
                                 ),
-                              );
-                      },
-                    )),
+                              ),
+                            )
+                          : Container(
+                              margin: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(
+                                  color: Colors.grey[200].withOpacity(0.3),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _seatsList[index]["code"],
+                                  style: TextStyle(
+                                    fontSize: widget.isLargeScreen
+                                        ? fontSizeH3[0]
+                                        : fontSizeH3[1],
+                                    color: Colors.white.withOpacity(0.3),
+                                    fontWeight: FontWeight.normal,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
+                            );
+                    },
+                  ),
+                ),
               );
           }
           return null;
@@ -229,10 +241,12 @@ class _SeatMapPageState extends State<SeatMapPage> {
                   height: 56.0,
                   child: Center(
                     child: Text(
-                      widget.categoryName,
+                      widget.categoryName.toUpperCase(),
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22.0,
+                        color: Colors.white70,
+                        fontSize: widget.isLargeScreen
+                            ? fontSizeH3[0]
+                            : fontSizeH3[1],
                       ),
                     ),
                   ),
@@ -276,7 +290,9 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                 '$startDateFormatted',
                                 style: TextStyle(
                                   color: Color(widget.secondaryColor),
-                                  fontSize: 16.0,
+                                  fontSize: widget.isLargeScreen
+                                      ? fontSizeH3[0]
+                                      : fontSizeH3[1],
                                 ),
                               ),
                               Container(
@@ -288,7 +304,9 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                 '$startTimeFormatted - $endTimeFormatted',
                                 style: TextStyle(
                                   color: Color(widget.secondaryColor),
-                                  fontSize: 16.0,
+                                  fontSize: widget.isLargeScreen
+                                      ? fontSizeH3[0]
+                                      : fontSizeH3[1],
                                 ),
                               ),
                               Container(
@@ -300,7 +318,9 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                 '฿${widget.price}/hour',
                                 style: TextStyle(
                                   color: Color(widget.secondaryColor),
-                                  fontSize: 16.0,
+                                  fontSize: widget.isLargeScreen
+                                      ? fontSizeH3[0]
+                                      : fontSizeH3[1],
                                 ),
                               ),
                             ],

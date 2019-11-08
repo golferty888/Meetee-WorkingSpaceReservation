@@ -9,6 +9,7 @@ import 'package:meetee_mobile/pages/seatMapPage.dart';
 
 class FacilityDetail extends StatefulWidget {
   final bool isLargeScreen;
+  final int userId;
   final int type;
   final int index;
   final String imgPath;
@@ -23,6 +24,7 @@ class FacilityDetail extends StatefulWidget {
   FacilityDetail({
     Key key,
     this.isLargeScreen,
+    this.userId,
     this.type,
     this.index,
     this.imgPath,
@@ -180,6 +182,9 @@ class FacilityDetailState extends State<FacilityDetail> {
                                           context,
                                           FadeRoute(
                                             page: SeatMapPage(
+                                              userId: widget.userId,
+                                              isLargeScreen:
+                                                  widget.isLargeScreen,
                                               index: widget.index,
                                               imgPath: widget.imgPath,
                                               secondaryColor:

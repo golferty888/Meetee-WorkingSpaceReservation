@@ -10,12 +10,14 @@ import 'package:meetee_mobile/components/countDownPanel.dart';
 import 'package:meetee_mobile/config.dart';
 
 class ActivationPage extends StatefulWidget {
+  final int index;
   final int userId;
   final String userName;
   final upComingBookingJson;
 
   ActivationPage({
     Key key,
+    this.index,
     this.userId,
     this.userName,
     this.upComingBookingJson,
@@ -38,7 +40,7 @@ class _ActivationPageState extends State<ActivationPage> {
           DateTime.now(),
         )
         .inSeconds;
-//    _start = 7200;
+    _start = 7200;
 //    _start = 172850;
     print('seconds: $_start');
 
@@ -49,7 +51,7 @@ class _ActivationPageState extends State<ActivationPage> {
     final response = await http.post(
       activateUrl,
       body: {
-        "userId": '3',
+        "userId": widget.userId,
       },
       headers: {HttpHeaders.authorizationHeader: fakeToken},
     );
@@ -97,7 +99,7 @@ class _ActivationPageState extends State<ActivationPage> {
             ),
             Expanded(
               child: Hero(
-                tag: 'activationPanel',
+                tag: 'activationPanelTag${widget.index}',
                 child: Container(
                   padding: EdgeInsets.all(16.0),
                   child: Material(

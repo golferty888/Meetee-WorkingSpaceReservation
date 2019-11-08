@@ -71,7 +71,7 @@ class _DatePickerState extends State<DatePicker> {
         child: Text(
           text,
           style: TextStyle(
-            color: Colors.grey,
+            color: Colors.black38,
             fontSize: widget.valueFontSize,
           ),
         ),

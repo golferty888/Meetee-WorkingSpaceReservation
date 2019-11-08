@@ -61,12 +61,10 @@ class _SplashPageState extends State<SplashPage>
   Widget build(BuildContext context) {
     print(MediaQuery.of(context).size.height);
     if (MediaQuery.of(context).size.height > 600) {
-      print('large');
       setState(() {
         isLargeScreen = true;
       });
     } else {
-      print('small');
       setState(() {
         isLargeScreen = false;
       });
