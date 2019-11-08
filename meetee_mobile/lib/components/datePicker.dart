@@ -6,6 +6,7 @@ class DatePicker extends StatefulWidget {
   final ValueChanged<DateTime> returnDate;
   final double titleFontSize;
   final double valueFontSize;
+  final bool isLargeScreen;
 
   DatePicker({
     Key key,
@@ -13,6 +14,7 @@ class DatePicker extends StatefulWidget {
     this.returnDate,
     this.titleFontSize,
     this.valueFontSize,
+    this.isLargeScreen,
   }) : super(key: key);
 
   @override
@@ -152,6 +154,7 @@ class _DatePickerState extends State<DatePicker> {
   @override
   Widget build(BuildContext context) {
     return Container(
+//      width: double.infinity,
       margin: EdgeInsets.fromLTRB(
         24.0,
         8.0,
@@ -159,7 +162,7 @@ class _DatePickerState extends State<DatePicker> {
         8.0,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Text(
             'Select date (' + formattedDate + ')',
@@ -168,37 +171,68 @@ class _DatePickerState extends State<DatePicker> {
             ),
           ),
           SizedBox(
-            height: 16.0,
+            height: 10.0,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              timeOut == false
-                  ? selectedDateWithText(today, 'Today', 64.0)
-                  : disabledButton('Today', 56.0),
-              selectedDateWithText(today + 1, 'Tomorrow', 88.0),
-              selectedDate(today + 2),
-              selectedDate(today + 3),
-              selectedDate(today + 4),
-              Container(
-                width: 34.0,
-                decoration: BoxDecoration(
-                  color: _selectedIndex != null && _selectedIndex == 6
-                      ? Color(widget.primaryColor)
-                      : null,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: GestureDetector(
-                  onTap: () => calendar(context),
-                  child: Icon(
+          widget.isLargeScreen
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    timeOut == false
+                        ? selectedDateWithText(today, 'Today', 64.0)
+                        : disabledButton('Today', 56.0),
+                    selectedDateWithText(today + 1, 'Tomorrow', 88.0),
+                    selectedDate(today + 2),
+                    selectedDate(today + 3),
+                    selectedDate(today + 4),
+                    Container(
+                      width: 34.0,
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _selectedIndex != null && _selectedIndex == 6
+                            ? Color(widget.primaryColor)
+                            : null,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: GestureDetector(
+                        onTap: () => calendar(context),
+                        child: Icon(
 //                    Icons.calendar_today,
-                    Icons.more_horiz,
-                    size: 24.0,
-                  ),
+                          Icons.more_horiz,
+                          size: 20.0,
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    timeOut == false
+                        ? selectedDateWithText(today, 'Today', 56.0)
+                        : disabledButton('Today', 56.0),
+                    selectedDateWithText(today + 1, 'Tomorrow', 80.0),
+                    selectedDate(today + 2),
+                    selectedDate(today + 3),
+                    Container(
+                      width: 34.0,
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _selectedIndex != null && _selectedIndex == 6
+                            ? Color(widget.primaryColor)
+                            : null,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: GestureDetector(
+                        onTap: () => calendar(context),
+                        child: Icon(
+//                    Icons.calendar_today,
+                          Icons.calendar_today,
+                          size: 16.0,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
         ],
       ),
     );
