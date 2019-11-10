@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:giffy_dialog/giffy_dialog.dart';
@@ -87,108 +89,164 @@ class _SeatMapPageState extends State<SeatMapPage> {
   List _seatsList;
   FutureBuilder _buildGridView() {
     return FutureBuilder(
-        future: http.post(
-          getSeatsByCateURL,
-          body: {
-            "cateId": widget.cateId.toString(),
-            "startDate": "$startDateFormattedForApi",
-            "startTime": "$startTimeFormatted",
-            "endTime": "$endTimeFormatted",
-          },
-        ),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              return Text('none...');
-            case ConnectionState.active:
+      future: http.post(
+        getSeatsByCateURL,
+        body: {
+          "cateId": widget.cateId.toString(),
+          "startDate": "$startDateFormattedForApi",
+          "startTime": "$startTimeFormatted",
+          "endTime": "$endTimeFormatted",
+        },
+      ),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Text('none...');
+          case ConnectionState.active:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          case ConnectionState.waiting:
+            if (_isFetched == false) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            case ConnectionState.waiting:
-              if (_isFetched == false) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              continue done;
+            }
+            continue done;
 
 //              return null;
-            done:
-            case ConnectionState.done:
-              if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+          done:
+          case ConnectionState.done:
+            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
 //              print('getSeats: ${json.decode(snapshot.data.body)}');
-              _seatsList = json.decode(snapshot.data.body);
-              _isFetched = true;
+            _seatsList = json.decode(snapshot.data.body);
+            _isFetched = true;
 //              print(_seatsList);
-              return Padding(
-                padding: EdgeInsets.all(8.0),
-                child: GridView.count(
-                  shrinkWrap: true,
-                  primary: false,
-                  crossAxisCount: 3,
-                  childAspectRatio: 1.7,
-                  children: List.generate(
-                    _seatsList.length,
-                    (index) {
-                      return _seatsList[index]["status"] == "available"
-                          ? GestureDetector(
-                              onTap: () => _onSelectedSeat(
-                                _seatsList[index]["facid"],
-                                _seatsList[index]["code"],
+            return Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _seatsList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    child: Container(
+                      width: 64,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          SvgPicture.asset(
+                            'images/categoryIcon/single-sofa.svg',
+                            height: 40,
+                          ),
+                          Center(
+                            child: Text(
+                              _seatsList[index]["code"].toString(),
+                              style: TextStyle(
+                                color: Colors.black,
                               ),
-                              child: Container(
-                                margin: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: _selectedSeatList
-                                          .contains(_seatsList[index]["facid"])
-                                      ? Color(widget.secondaryColor)
-                                      : Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    _seatsList[index]["code"],
-                                    style: TextStyle(
-                                      fontSize: widget.isLargeScreen
-                                          ? fontSizeH3[0]
-                                          : fontSizeH3[1],
-                                      fontWeight: FontWeight.normal,
-                                      letterSpacing: 1.5,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Container(
-                              margin: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(
-                                  color: Colors.grey[200].withOpacity(0.3),
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  _seatsList[index]["code"],
-                                  style: TextStyle(
-                                    fontSize: widget.isLargeScreen
-                                        ? fontSizeH3[0]
-                                        : fontSizeH3[1],
-                                    color: Colors.white.withOpacity(0.3),
-                                    fontWeight: FontWeight.normal,
-                                    letterSpacing: 1.5,
-                                  ),
-                                ),
-                              ),
-                            );
-                    },
-                  ),
-                ),
-              );
-          }
-          return null;
-        });
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+//            return Padding(
+//              padding: EdgeInsets.all(8.0),
+//              child: GridView.count(
+//                shrinkWrap: true,
+//                primary: false,
+//                crossAxisCount: 3,
+//                childAspectRatio: 1.7,
+//                children: List.generate(
+//                  _seatsList.length,
+//                  (index) {
+//                    return _seatsList[index]["status"] == "available"
+//                        ? GestureDetector(
+//                            onTap: () => _onSelectedSeat(
+//                              _seatsList[index]["facid"],
+//                              _seatsList[index]["code"],
+//                            ),
+//                            child: Container(
+//                              margin: EdgeInsets.all(8.0),
+//                              decoration: BoxDecoration(
+//                                color: _selectedSeatList
+//                                        .contains(_seatsList[index]["facid"])
+//                                    ? Color(widget.secondaryColor)
+//                                    : Colors.grey[200],
+//                                borderRadius: BorderRadius.circular(8.0),
+//                              ),
+//                              child: Center(
+//                                child: Text(
+//                                  _seatsList[index]["code"],
+//                                  style: TextStyle(
+//                                    fontSize: widget.isLargeScreen
+//                                        ? fontSizeH3[0]
+//                                        : fontSizeH3[1],
+//                                    fontWeight: FontWeight.normal,
+//                                    letterSpacing: 1.5,
+//                                  ),
+//                                ),
+//                              ),
+//                            ),
+//                          )
+//                        : Container(
+//                            margin: EdgeInsets.all(8.0),
+//                            decoration: BoxDecoration(
+//                              color: Colors.transparent,
+//                              borderRadius: BorderRadius.circular(8.0),
+//                              border: Border.all(
+//                                color: Colors.grey[200].withOpacity(0.3),
+//                              ),
+//                            ),
+//                            child: Center(
+//                              child: Text(
+//                                _seatsList[index]["code"],
+//                                style: TextStyle(
+//                                  fontSize: widget.isLargeScreen
+//                                      ? fontSizeH3[0]
+//                                      : fontSizeH3[1],
+//                                  color: Colors.white.withOpacity(0.3),
+//                                  fontWeight: FontWeight.normal,
+//                                  letterSpacing: 1.5,
+//                                ),
+//                              ),
+//                            ),
+//                          );
+//                  },
+//                ),
+//              ),
+//            );
+        }
+        return null;
+      },
+    );
+  }
+
+  _buildLegends(Color color, String text) {
+    return Row(
+      children: <Widget>[
+        Container(
+          height: widget.isLargeScreen ? 16.0 : 12.0,
+          width: widget.isLargeScreen ? 24.0 : 12.0,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 8.0),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: widget.isLargeScreen ? null : 12.0,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -198,13 +256,10 @@ class _SeatMapPageState extends State<SeatMapPage> {
         children: <Widget>[
           Hero(
             tag: 'category + ${widget.index.toString()}',
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Image.network(
-                widget.imgPath,
-                height: double.infinity,
-                fit: BoxFit.cover,
-              ),
+            child: Image.network(
+              widget.imgPath,
+              height: double.infinity,
+              fit: BoxFit.cover,
             ),
           ),
           Positioned(
@@ -256,13 +311,22 @@ class _SeatMapPageState extends State<SeatMapPage> {
           ),
           SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 SizedBox(
                   height: 56,
                 ),
                 Expanded(
-//                  height: 400,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                    child: Image(
+                      image: AssetImage('images/map.jpg'),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 200,
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.5),
@@ -271,7 +335,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
 //                      ),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    margin: EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 16.0),
+                    margin: EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 8.0),
 //                    padding: EdgeInsets.all(8.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -327,9 +391,9 @@ class _SeatMapPageState extends State<SeatMapPage> {
                           ),
                         ),
                         _buildGridView(),
-                        Expanded(
-                          child: Container(),
-                        ),
+//                        Expanded(
+//                          child: Container(),
+//                        ),
                         Container(
                           decoration: BoxDecoration(
 //                            color: Colors.black.withOpacity(0.5),
@@ -340,77 +404,69 @@ class _SeatMapPageState extends State<SeatMapPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                    height: 16.0,
-                                    width: 24.0,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.circular(4.0),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Text(
-                                      'Available',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              _buildLegends(
+                                Color(widget.secondaryColor),
+                                'Selected',
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                    height: 16.0,
-                                    width: 24.0,
-                                    decoration: BoxDecoration(
-                                      color: Color(widget.secondaryColor),
-                                      borderRadius: BorderRadius.circular(4.0),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Text(
-                                      'Selected',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              _buildLegends(
+                                Colors.white,
+                                'Available',
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                    height: 16.0,
-                                    width: 24.0,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(4.0),
-                                      border: Border.all(
-                                        color:
-                                            Colors.grey[200].withOpacity(0.3),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Text(
-                                      'Booked',
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              _buildLegends(
+                                Colors.black,
+                                'Booked',
                               ),
+//                              Row(
+//                                children: <Widget>[
+//                                  Container(
+//                                    height: 16.0,
+//                                    width: 24.0,
+//                                    decoration: BoxDecoration(
+//                                      color: Color(widget.secondaryColor),
+//                                      borderRadius: BorderRadius.circular(4.0),
+//                                    ),
+//                                  ),
+//                                  Padding(
+//                                    padding:
+//                                        EdgeInsets.symmetric(horizontal: 8.0),
+//                                    child: Text(
+//                                      'Selected',
+//                                      style: TextStyle(
+//                                        fontSize: 10.0,
+//                                        color: Colors.white,
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ],
+//                              ),
+//                              Row(
+//                                children: <Widget>[
+//                                  Container(
+//                                    height: 16.0,
+//                                    width: 10.0,
+//                                    decoration: BoxDecoration(
+//                                      color: Colors.transparent,
+//                                      borderRadius: BorderRadius.circular(4.0),
+//                                      border: Border.all(
+//                                        color:
+//                                            Colors.grey[200].withOpacity(0.3),
+//                                      ),
+//                                    ),
+//                                  ),
+//                                  Padding(
+//                                    padding:
+//                                        EdgeInsets.symmetric(horizontal: 8.0),
+//                                    child: Text(
+//                                      'Booked',
+//                                      textAlign: TextAlign.end,
+//                                      style: TextStyle(
+//                                        fontSize: 10.0,
+//                                        color: Colors.white,
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ],
+//                              ),
                             ],
                           ),
                         ),
@@ -419,18 +475,12 @@ class _SeatMapPageState extends State<SeatMapPage> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 32.0),
-                  child: Image(
-                    image: AssetImage('images/map.jpg'),
-                  ),
-                ),
-                Container(
                   height: 48.0,
                   margin: EdgeInsets.fromLTRB(
                     32.0,
-                    16.0,
-                    32.0,
                     8.0,
+                    32.0,
+                    16.0,
                   ),
                   child: RaisedButton(
                     elevation: 0.0,
