@@ -130,7 +130,7 @@ class _BookingPageState extends State<BookingPage> {
             page: FacilityDetail(
               isLargeScreen: widget.isLargeScreen,
               userId: widget.userId,
-              type: index,
+              type: widget.index,
               index: index,
               imgPath: categoriesMap[index]["link_url"],
               cateId: categoriesMap[index]["cateid"],

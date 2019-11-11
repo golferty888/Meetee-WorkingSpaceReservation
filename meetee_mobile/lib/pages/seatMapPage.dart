@@ -122,33 +122,78 @@ class _SeatMapPageState extends State<SeatMapPage> {
             _seatsList = json.decode(snapshot.data.body);
             _isFetched = true;
 //              print(_seatsList);
-            return Expanded(
+            return Container(
+              height: 64,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: _seatsList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    child: Container(
-                      width: 64,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          SvgPicture.asset(
-                            'images/categoryIcon/single-sofa.svg',
-                            height: 40,
+                  return _seatsList[index]["status"] == "available"
+                      ? GestureDetector(
+                          onTap: () => _onSelectedSeat(
+                            _seatsList[index]["facid"],
+                            _seatsList[index]["code"],
                           ),
-                          Center(
-                            child: Text(
-                              _seatsList[index]["code"].toString(),
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                            decoration: BoxDecoration(
+                              color: _selectedSeatList
+                                      .contains(_seatsList[index]["facid"])
+                                  ? Color(widget.secondaryColor)
+                                  : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            width: 64,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                SvgPicture.asset(
+                                  'images/categoryIcon/single-sofa.svg',
+                                  height: 32,
+                                ),
+                                Center(
+                                  child: Text(
+                                    _seatsList[index]["code"].toString(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+//                                      letterSpacing: 1.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  );
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(
+                              color: Colors.grey[200].withOpacity(0.3),
+                            ),
+                          ),
+                          width: 64,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              SvgPicture.asset(
+                                'images/categoryIcon/single-sofa.svg',
+                                height: 40,
+                              ),
+                              Center(
+                                child: Text(
+                                  _seatsList[index]["code"].toString(),
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.3),
+                                    fontWeight: FontWeight.normal,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
                 },
               ),
             );
@@ -326,96 +371,94 @@ class _SeatMapPageState extends State<SeatMapPage> {
                   ),
                 ),
                 Container(
-                  height: 200,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
 //                      border: Border.all(
 //                        color: Colors.grey[200].withOpacity(0.5),
 //                      ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    margin: EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 8.0),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  margin: EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 8.0),
 //                    padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
 //                            color: Colors.black.withOpacity(0.5),
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(8.0)),
-                          ),
-                          padding: EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                '$startDateFormatted',
-                                style: TextStyle(
-                                  color: Color(widget.secondaryColor),
-                                  fontSize: widget.isLargeScreen
-                                      ? fontSizeH3[0]
-                                      : fontSizeH3[1],
-                                ),
-                              ),
-                              Container(
-                                width: 1.0,
-                                height: 16.0,
-                                color: Colors.grey[200].withOpacity(0.5),
-                              ),
-                              Text(
-                                '$startTimeFormatted - $endTimeFormatted',
-                                style: TextStyle(
-                                  color: Color(widget.secondaryColor),
-                                  fontSize: widget.isLargeScreen
-                                      ? fontSizeH3[0]
-                                      : fontSizeH3[1],
-                                ),
-                              ),
-                              Container(
-                                width: 1.0,
-                                height: 16.0,
-                                color: Colors.grey[200].withOpacity(0.5),
-                              ),
-                              Text(
-                                '฿${widget.price}/hour',
-                                style: TextStyle(
-                                  color: Color(widget.secondaryColor),
-                                  fontSize: widget.isLargeScreen
-                                      ? fontSizeH3[0]
-                                      : fontSizeH3[1],
-                                ),
-                              ),
-                            ],
-                          ),
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(8.0)),
                         ),
-                        _buildGridView(),
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              '$startDateFormatted',
+                              style: TextStyle(
+                                color: Color(widget.secondaryColor),
+                                fontSize: widget.isLargeScreen
+                                    ? fontSizeH3[0]
+                                    : fontSizeH3[1],
+                              ),
+                            ),
+                            Container(
+                              width: 1.0,
+                              height: 16.0,
+                              color: Colors.grey[200].withOpacity(0.5),
+                            ),
+                            Text(
+                              '$startTimeFormatted - $endTimeFormatted',
+                              style: TextStyle(
+                                color: Color(widget.secondaryColor),
+                                fontSize: widget.isLargeScreen
+                                    ? fontSizeH3[0]
+                                    : fontSizeH3[1],
+                              ),
+                            ),
+                            Container(
+                              width: 1.0,
+                              height: 16.0,
+                              color: Colors.grey[200].withOpacity(0.5),
+                            ),
+                            Text(
+                              '฿${widget.price}/hour',
+                              style: TextStyle(
+                                color: Color(widget.secondaryColor),
+                                fontSize: widget.isLargeScreen
+                                    ? fontSizeH3[0]
+                                    : fontSizeH3[1],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      _buildGridView(),
 //                        Expanded(
 //                          child: Container(),
 //                        ),
-                        Container(
-                          decoration: BoxDecoration(
+                      Container(
+                        decoration: BoxDecoration(
 //                            color: Colors.black.withOpacity(0.5),
-                            borderRadius: BorderRadius.vertical(
-                                bottom: Radius.circular(8.0)),
-                          ),
-                          padding: EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              _buildLegends(
-                                Color(widget.secondaryColor),
-                                'Selected',
-                              ),
-                              _buildLegends(
-                                Colors.white,
-                                'Available',
-                              ),
-                              _buildLegends(
-                                Colors.black,
-                                'Booked',
-                              ),
+                          borderRadius: BorderRadius.vertical(
+                              bottom: Radius.circular(8.0)),
+                        ),
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            _buildLegends(
+                              Color(widget.secondaryColor),
+                              'Selected',
+                            ),
+                            _buildLegends(
+                              Colors.white,
+                              'Available',
+                            ),
+                            _buildLegends(
+                              Colors.black,
+                              'Booked',
+                            ),
 //                              Row(
 //                                children: <Widget>[
 //                                  Container(
@@ -467,11 +510,10 @@ class _SeatMapPageState extends State<SeatMapPage> {
 //                                  ),
 //                                ],
 //                              ),
-                            ],
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(
@@ -482,126 +524,147 @@ class _SeatMapPageState extends State<SeatMapPage> {
                     32.0,
                     16.0,
                   ),
-                  child: RaisedButton(
-                    elevation: 0.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    color: Color(widget.secondaryColor),
-                    disabledColor:
-                        Color(widget.secondaryColor).withOpacity(0.5),
-                    onPressed: _selectedSeatList.length == 0
-                        ? null
-                        :
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '฿${_totalPrice.toString()}',
+                              style: TextStyle(
+                                letterSpacing: 2.0,
+//                                    fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8.0,
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: RaisedButton(
+                          elevation: 0.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          color: Color(widget.secondaryColor),
+                          disabledColor:
+                              Color(widget.secondaryColor).withOpacity(0.5),
+                          onPressed: _selectedSeatList.length == 0
+                              ? null
+                              :
 //                        () {
 //                            reserveSeat();
 //                          },
-                        () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Summary(
-                                  colorCode: widget.secondaryColor,
-                                  startDate: widget.startDate,
-                                  startTime: widget.startTime,
-                                  endTime: widget.endTime,
-                                  facId: _selectedSeatList,
-                                  type: widget.categoryName,
-                                  code: _selectedSeatCode,
-                                  totalPrice: _totalPrice.toString(),
-                                  imgPath: widget.imgPath,
-                                  index: widget.index,
-                                ),
-                              ),
-                            );
-                          },
-                    child: Center(
-                      child: _selectedSeatList.length == 0
-                          ? widget.type == 0
-                              ? Text(
-                                  'Select seats to book'.toUpperCase(),
-                                  style: TextStyle(
-                                    letterSpacing: 1.5,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[800],
-                                  ),
-                                )
-                              : Text(
-                                  'Select rooms to book'.toUpperCase(),
-                                  style: TextStyle(
-                                    letterSpacing: 1.5,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[800],
-                                  ),
-                                )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'BOOK',
-                                  style: TextStyle(
-                                    letterSpacing: 2.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 4),
-                                  child: Text(
-                                    ' ${_selectedSeatList.length} ',
-                                    style: TextStyle(
-                                      fontSize: 24.0,
-                                      letterSpacing: 2.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                              () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Summary(
+                                        colorCode: widget.secondaryColor,
+                                        startDate: widget.startDate,
+                                        startTime: widget.startTime,
+                                        endTime: widget.endTime,
+                                        facId: _selectedSeatList,
+                                        type: widget.categoryName,
+                                        code: _selectedSeatCode,
+                                        totalPrice: _totalPrice.toString(),
+                                        imgPath: widget.imgPath,
+                                        index: widget.index,
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                widget.type == 0
+                                  );
+                                },
+                          child: Center(
+                            child: _selectedSeatList.length == 0
+                                ? widget.type == 0
                                     ? Text(
-                                        'SEAT',
+                                        'Book 0 seat'.toUpperCase(),
                                         style: TextStyle(
-                                          letterSpacing: 2.0,
+                                          letterSpacing: 1.5,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                          color: Colors.grey[800],
                                         ),
                                       )
                                     : Text(
-                                        'ROOM',
+                                        'Book 0 room'.toUpperCase(),
+                                        style: TextStyle(
+                                          letterSpacing: 1.5,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[800],
+                                        ),
+                                      )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(
+                                        'BOOK',
                                         style: TextStyle(
                                           letterSpacing: 2.0,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
                                         ),
                                       ),
-                                _selectedSeatList.length > 1
-                                    ? Text(
-                                        'S',
-                                        style: TextStyle(
-                                          letterSpacing: 2.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      )
-                                    : Text(
-                                        '',
-                                        style: TextStyle(
-                                          letterSpacing: 2.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 4),
+                                        child: Text(
+                                          ' ${_selectedSeatList.length} ',
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            letterSpacing: 2.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
                                         ),
                                       ),
-                                Text(
-                                  ' (฿${_totalPrice.toString()})',
-                                  style: TextStyle(
-                                    letterSpacing: 2.0,
-//                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                      widget.type == 0
+                                          ? Text(
+                                              'SEAT',
+                                              style: TextStyle(
+                                                letterSpacing: 2.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            )
+                                          : Text(
+                                              'ROOM',
+                                              style: TextStyle(
+                                                letterSpacing: 2.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                      _selectedSeatList.length > 1
+                                          ? Text(
+                                              'S',
+                                              style: TextStyle(
+                                                letterSpacing: 2.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            )
+                                          : Text(
+                                              '',
+                                              style: TextStyle(
+                                                letterSpacing: 2.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                    ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
