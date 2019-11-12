@@ -121,80 +121,87 @@ class _SeatMapPageState extends State<SeatMapPage> {
 //              print('getSeats: ${json.decode(snapshot.data.body)}');
             _seatsList = json.decode(snapshot.data.body);
             _isFetched = true;
-//              print(_seatsList);
+//            print(_seatsList);
             return Container(
               height: 64,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _seatsList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _seatsList[index]["status"] == "available"
-                      ? GestureDetector(
-                          onTap: () => _onSelectedSeat(
-                            _seatsList[index]["facid"],
-                            _seatsList[index]["code"],
-                          ),
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                            decoration: BoxDecoration(
-                              color: _selectedSeatList
-                                      .contains(_seatsList[index]["facid"])
-                                  ? Color(widget.secondaryColor)
-                                  : Colors.grey[200],
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            width: 64,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                SvgPicture.asset(
-                                  'images/categoryIcon/single-sofa.svg',
-                                  height: 32,
+              child: Stack(
+                children: <Widget>[
+                  ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _seatsList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _seatsList[index]["status"] == "available"
+                          ? GestureDetector(
+                              onTap: () => _onSelectedSeat(
+                                _seatsList[index]["facid"],
+                                _seatsList[index]["code"],
+                              ),
+                              child: Container(
+//                            margin: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                                decoration: BoxDecoration(
+                                  color: _selectedSeatList
+                                          .contains(_seatsList[index]["facid"])
+                                      ? Color(widget.secondaryColor)
+                                      : Colors.grey[200],
+//                              borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                Center(
-                                  child: Text(
-                                    _seatsList[index]["code"].toString(),
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
+                                width: 64,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    SvgPicture.asset(
+                                      'images/categoryIcon/single-sofa.svg',
+                                      height: 32,
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        _seatsList[index]["code"].toString(),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
 //                                      letterSpacing: 1.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Container(
+                              width: 64,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    'images/categoryIcon/single-sofa.svg',
+                                    color: Colors.grey[800],
+                                    height: 32,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      _seatsList[index]["code"].toString(),
+                                      style: TextStyle(
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.normal,
+//                                    letterSpacing: 1.5,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(
-                              color: Colors.grey[200].withOpacity(0.3),
-                            ),
-                          ),
-                          width: 64,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              SvgPicture.asset(
-                                'images/categoryIcon/single-sofa.svg',
-                                height: 40,
+                                ],
                               ),
-                              Center(
-                                child: Text(
-                                  _seatsList[index]["code"].toString(),
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.3),
-                                    fontWeight: FontWeight.normal,
-                                    letterSpacing: 1.5,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                },
+                            );
+                    },
+                  ),
+//                  Align(
+//                    alignment: Alignment.centerRight,
+//                    child: Container(
+//                      width: 4,
+//                      color: Colors.black.withOpacity(0.5),
+//                    ),
+//                  ),
+                ],
               ),
             );
 //            return Padding(
@@ -363,7 +370,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                    padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
                     child: Image(
                       image: AssetImage('images/map.jpg'),
                       fit: BoxFit.fill,
@@ -381,15 +388,28 @@ class _SeatMapPageState extends State<SeatMapPage> {
                   margin: EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 8.0),
 //                    padding: EdgeInsets.all(8.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                        child: Text(
+                          widget.categoryName,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: widget.isLargeScreen
+                                ? fontSizeH2[0]
+                                : fontSizeH2[1],
+                          ),
+                        ),
+                      ),
                       Container(
                         decoration: BoxDecoration(
 //                            color: Colors.black.withOpacity(0.5),
                           borderRadius:
                               BorderRadius.vertical(top: Radius.circular(8.0)),
                         ),
-                        padding: EdgeInsets.all(16.0),
+                        padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -565,10 +585,13 @@ class _SeatMapPageState extends State<SeatMapPage> {
 //                            reserveSeat();
 //                          },
                               () {
+                                  print('userId: ${widget.userId}');
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => Summary(
+                                        userId: widget.userId,
+                                        isLargeScreen: widget.isLargeScreen,
                                         colorCode: widget.secondaryColor,
                                         startDate: widget.startDate,
                                         startTime: widget.startTime,

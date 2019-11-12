@@ -88,8 +88,11 @@ class _SplashPageState extends State<SplashPage>
                     Container(
                       height: MediaQuery.of(context).size.height / 5,
                       child: SvgPicture.asset(
-                        'images/meetee_logo.svg',
+                        'images/logo.svg',
                       ),
+                    ),
+                    SizedBox(
+                      height: 8.0,
                     ),
                     FadeTransition(
                       opacity: animation,

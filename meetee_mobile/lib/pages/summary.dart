@@ -1,16 +1,22 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/main.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
+import 'package:meetee_mobile/pages/bookingCompletePage.dart';
+import 'package:meetee_mobile/pages/homePage.dart';
 
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
 import 'package:meetee_mobile/config.dart';
 
 class Summary extends StatefulWidget {
+  final int userId;
+  final bool isLargeScreen;
   final int colorCode;
   final DateTime startDate;
   final DateTime startTime;
@@ -25,22 +31,24 @@ class Summary extends StatefulWidget {
   Summary({
     Key key,
     @required this.colorCode,
-    this.startDate,
-    this.startTime,
-    this.endTime,
-    this.facId,
-    this.type,
-    this.code,
-    this.totalPrice,
-    this.imgPath,
-    this.index,
+    @required this.userId,
+    @required this.isLargeScreen,
+    @required this.startDate,
+    @required this.startTime,
+    @required this.endTime,
+    @required this.facId,
+    @required this.type,
+    @required this.code,
+    @required this.totalPrice,
+    @required this.imgPath,
+    @required this.index,
   }) : super(key: key);
   @override
   _SummaryState createState() => _SummaryState();
 }
 
 class _SummaryState extends State<Summary> {
-  final String userId = '2';
+//  final String userId = '2';
   final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
 
   String startDateFormattedForApi;
@@ -62,23 +70,23 @@ class _SummaryState extends State<Summary> {
   }
 
   Future<dynamic> reserveSeat() async {
-//    String body = '{'
-//        '"userId": $userId, '
-//        '"startDate": "$startDateFormattedForApi", '
-//        '"startTime": "$startTimeFormatted", '
-//        '"endTime": "$endTimeFormatted", '
-//        '"facId": ${widget.facId}, '
-//        '"totalPrice": ${widget.totalPrice}'
-//        '}';
     String body = '{'
-        '"userId": $userId, '
+        '"userId": ${widget.userId}, '
         '"startDate": "$startDateFormattedForApi", '
-        '"startTime": "19:00:00", '
-        '"endTime": "20:00:00", '
+        '"startTime": "$startTimeFormatted", '
+        '"endTime": "$endTimeFormatted", '
         '"facId": ${widget.facId}, '
         '"totalPrice": ${widget.totalPrice}'
         '}';
-    print('body: ' + body);
+//    String body = '{'
+//        '"userId": $userId, '
+//        '"startDate": "$startDateFormattedForApi", '
+//        '"startTime": "19:00:00", '
+//        '"endTime": "20:00:00", '
+//        '"facId": ${widget.facId}, '
+//        '"totalPrice": ${widget.totalPrice}'
+//        '}';
+    print(body);
     final response = await http.post(
       reserveSeatUrl,
 //      body: {
@@ -98,13 +106,57 @@ class _SummaryState extends State<Summary> {
     }
   }
 
+  _buildAlertDialog(
+      String title, String content, String actionLeft, String actionRight) {
+    return AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () {},
+          child: Text(
+            actionLeft,
+          ),
+        ),
+        FlatButton(
+          onPressed: () {},
+          child: Text(
+            actionRight,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _buildCupertinoAlertDialog(
+      String title, String content, String actionLeft, String actionRight) {
+    return CupertinoAlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: <Widget>[
+        CupertinoDialogAction(
+          onPressed: () {},
+          child: Text(
+            actionLeft,
+          ),
+        ),
+        CupertinoDialogAction(
+          onPressed: () {},
+          child: Text(
+            actionRight,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 2.5,
+        elevation: 0.0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -113,280 +165,205 @@ class _SummaryState extends State<Summary> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Confirm booking',
-          style: TextStyle(color: Colors.black),
+          'Confirm booking'.toUpperCase(),
+          style: TextStyle(
+            color: Colors.black54,
+            fontSize: widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
+          ),
         ),
       ),
       body: SafeArea(
-        child: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 32),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SizedBox(
-                height: 32,
-              ),
               Expanded(
                 flex: 3,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16.0),
-                  child: Image.network(
-                    widget.imgPath,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-//                  width: 240.0,
-//                  height: 224.0,
-
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(72.0, 24.0, 32.0, 0.0),
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(
-                          16.0,
-                          8.0,
-                          16.0,
-                          8.0,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                'Date',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text(
-                                '$startDateFormatted',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          8.0,
-                          16.0,
-                          8.0,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                'Time',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text(
-                                '$startTimeFormatted - $endTimeFormatted',
-                                style: TextStyle(
-                                  fontSize: 16.00,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          8.0,
-                          16.0,
-                          8.0,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                'Type',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text(
-                                '${widget.type}',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          8.0,
-                          16.0,
-                          8.0,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                'Code',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text(
-                                '${widget.code}',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          8.0,
-                          16.0,
-                          8.0,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                'Quantity',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text(
-                                '${widget.code.length}',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          8.0,
-                          16.0,
-                          8.0,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                'Price',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 5,
-                              child: Text(
-                                '${widget.totalPrice} Baht',
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 16.0,
-              ),
-              RaisedButton(
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: Text(
-                    'Copy fake card id',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      letterSpacing: 1.5,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[600],
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      widget.imgPath,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: fakeCardId));
-                },
               ),
               SizedBox(
                 height: 16.0,
               ),
-              RaisedButton(
-                elevation: 0.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Text(
+                      widget.type,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          'Date: ',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          startDateFormatted,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          'Schedule: ',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          '$startTimeFormatted - $endTimeFormatted',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
+                    Expanded(
+                      child: GridView.count(
+                        childAspectRatio: 2.5,
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                        physics: ClampingScrollPhysics(),
+                        children: List.generate(widget.code.length, (index) {
+                          return Container(
+//                            margin: EdgeInsets.fromLTRB(0.0, 4.0, 8.0, 4.0),
+                            padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                            decoration: BoxDecoration(
+                              color: Color(widget.colorCode),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Center(
+                              child: Text(
+                                widget.code[index],
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                  ],
                 ),
-                color: Color(widget.colorCode),
-                onPressed: () {
-                  _onStartCardEntryFlow();
+              ),
+              SizedBox(
+                height: 16.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Total price',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    '${widget.totalPrice} Baht',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+//              SizedBox(
+//                height: 2.0,
+//              ),
+              Divider(
+                color: Colors.grey[700],
+              ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.content_copy,
+                        color: Colors.grey[700],
+                      ),
+                      iconSize: 16,
+                      onPressed: () {
+                        Clipboard.setData(
+                          ClipboardData(
+                            text: fakeCardId,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 16.0,
+                  ),
+                  Expanded(
+                    child: RaisedButton(
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      color: Color(widget.colorCode),
+                      onPressed: () {
+                        _onStartCardEntryFlow();
 //                  _onCardEntryComplete();
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: Text(
-                    'CHECK OUT',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      letterSpacing: 2.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 24.0,
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        width: MediaQuery.of(context).size.width / 3,
+                        child: Text(
+                          'CHECK OUT',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            letterSpacing: 2.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
               SizedBox(
                 height: 32.0,
@@ -434,50 +411,84 @@ class _SummaryState extends State<Summary> {
     print('_onCardEntryComplete');
 //    Navigator.push(
 //      context,
-//      MaterialPageRoute(builder: (context) => MyHomePage()),
+//      MaterialPageRoute(
+//        builder: (context) => HomePage(),
+//      ),
 //    );
-    showDialog(
-        context: context,
-        builder: (_) => FlareGiffyDialog(
-              key: Key('success'),
-              flarePath: 'images/success_end.flr',
-              flareAnimation: 'Wait',
-              title: Text(
-                'Booking completed!'.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              description: Text(
-                'Thank you.\n  Please remind that you must activate  \n  the room to use the facilities privided.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              buttonOkColor: Color(widget.colorCode),
-              buttonOkText: Text(
-                'Activate now'.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  letterSpacing: 1.5,
-                  fontSize: 16.0,
-                ),
-              ),
-              buttonCancelText: Text(
-                'Done'.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              onOkButtonPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ActivationPage()),
-                );
-              },
-            ));
+
+//    showDialog(
+//      context: context,
+//      builder: (_) => _buildCupertinoAlertDialog(
+//        'Booked complete',
+//        '',
+//        'No',
+//        'Yes',
+//      ),
+//    );
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+//          return HomePage(
+//            userName: 'eiei',
+//            upComingBookingJson: _upComingBookingJson,
+//            userId: _userId,
+//          );
+          return BookingCompletePage(
+            userId: widget.userId,
+            isLargeScreen: widget.isLargeScreen,
+          );
+        },
+      ),
+      ModalRoute.withName('/homePage'),
+    );
+//    Navigator.popUntil(
+//      context,
+//      ModalRoute.withName('/homePage'),
+//    );
+//    showDialog(
+//      context: context,
+//      builder: (_) => FlareGiffyDialog(
+//        key: Key('success'),
+//        flarePath: 'images/success_end.flr',
+//        flareAnimation: 'Wait',
+//        title: Text(
+//          'Booking completed!'.toUpperCase(),
+//          style: TextStyle(
+//            fontSize: 22.0,
+//            fontWeight: FontWeight.bold,
+//          ),
+//        ),
+//        description: Text(
+//          'Thank you.\n  Please remind that you must activate  \n  the room to use the facilities privided.',
+//          textAlign: TextAlign.center,
+//          style: TextStyle(
+//            fontSize: 16.0,
+//          ),
+//        ),
+//        buttonOkColor: Color(widget.colorCode),
+//        buttonOkText: Text(
+//          'Activate now'.toUpperCase(),
+//          textAlign: TextAlign.center,
+//          style: TextStyle(
+//            letterSpacing: 1.5,
+//            fontSize: 16.0,
+//          ),
+//        ),
+//        buttonCancelText: Text(
+//          'Done'.toUpperCase(),
+//          textAlign: TextAlign.center,
+//          style: TextStyle(
+//            fontSize: 16.0,
+//          ),
+//        ),
+//        onOkButtonPressed: () {
+//          Navigator.push(
+//            context,
+//            MaterialPageRoute(builder: (context) => ActivationPage()),
+//          );
+//        },
+//      ),
+//    );
   }
 }

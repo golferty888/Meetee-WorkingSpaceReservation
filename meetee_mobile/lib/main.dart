@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/historyPage.dart';
+import 'package:meetee_mobile/pages/homePage.dart';
 import 'package:meetee_mobile/pages/logInPage.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
 import 'package:meetee_mobile/pages/splashPage.dart';
@@ -14,152 +15,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Meetee Coworking space',
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
         '/': (BuildContext context) => SplashPage(),
         '/login': (BuildContext context) => LogInPage(),
+        '/homePage': (BuildContext context) => HomePage(),
       },
       theme: ThemeData(
-        primaryColor: Colors.black,
-        scaffoldBackgroundColor: Colors.white,
+        primaryColor: Color(0xFF292b66),
+//        primaryColor: Color(0xFF361FB2),
+        scaffoldBackgroundColor: Colors.grey[300],
         fontFamily: 'Product Sans',
       ),
 //      home: SplashPage(),
     );
   }
 }
-
-//class MyHomePage extends StatefulWidget {
-//  @override
-//  _MyHomePageState createState() => _MyHomePageState();
-//}
-//
-//class _MyHomePageState extends State<MyHomePage> {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//      backgroundColor: Colors.white,
-//      body: Container(
-//        decoration: BoxDecoration(),
-//        child: SafeArea(
-//          child: Column(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: <Widget>[
-//              GestureDetector(
-//                onTap: () {
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => ActivationPage(),
-//                    ),
-//                  );
-//                },
-//                child: Container(
-//                  height: 320.0,
-//                  decoration: BoxDecoration(
-//                    image: DecorationImage(
-//                      image: AssetImage('images/meetee_logo.png'),
-////                    fit: BoxFit.contain,
-//                    ),
-//                  ),
-//                ),
-//              ),
-//              Text(
-//                'Meetee',
-//                style: TextStyle(
-//                  fontSize: 56.0,
-//                  letterSpacing: 2.0,
-//                ),
-//              ),
-//              Text(
-//                'We have a space for you.',
-//                style: TextStyle(
-//                  fontSize: 24.0,
-//                  letterSpacing: 1.0,
-//                ),
-//                textAlign: TextAlign.center,
-//              ),
-//              SizedBox(
-//                height: 36.0,
-//              ),
-//              OutlineButton(
-//                splashColor: Colors.black,
-//                highlightElevation: 0.0,
-//                shape: RoundedRectangleBorder(
-//                  borderRadius: BorderRadius.circular(8.0),
-//                ),
-//                borderSide: BorderSide(
-//                  width: 1.5,
-//                  color: Colors.grey[700],
-//                ),
-//                color: Colors.transparent,
-//                onPressed: () {
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => HistoryPage(),
-//                    ),
-//                  );
-//                },
-//                child: Container(
-//                  margin: EdgeInsets.symmetric(
-//                    horizontal: 24.0,
-//                  ),
-//                  padding: EdgeInsets.symmetric(vertical: 16.0),
-//                  width: 140.0,
-//                  child: Text(
-//                    'HISTORY',
-//                    textAlign: TextAlign.center,
-//                    style: TextStyle(
-//                      letterSpacing: 2.0,
-////                      fontWeight: FontWeight.bold,
-//                      color: Colors.grey[700],
-//                    ),
-//                  ),
-//                ),
-//              ),
-//              SizedBox(
-//                height: 16.0,
-//              ),
-//              RaisedButton(
-//                elevation: 0.0,
-//                splashColor: Colors.white,
-//                highlightElevation: 0.0,
-//                shape: RoundedRectangleBorder(
-//                  borderRadius: BorderRadius.circular(8.0),
-//                ),
-//                color: Colors.black,
-//                onPressed: () {
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => SelectFacilityType(),
-//                    ),
-//                  );
-//                },
-//                child: Container(
-//                  margin: EdgeInsets.symmetric(
-//                    horizontal: 24.0,
-//                  ),
-//                  padding: EdgeInsets.symmetric(vertical: 16.0),
-//                  width: 140.0,
-//                  child: Text(
-//                    'START BOOKING',
-//                    textAlign: TextAlign.center,
-//                    style: TextStyle(
-//                      letterSpacing: 2.0,
-//                      fontWeight: FontWeight.bold,
-//                      color: Colors.white,
-//                    ),
-//                  ),
-//                ),
-//              ),
-//              SizedBox(),
-//            ],
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//}

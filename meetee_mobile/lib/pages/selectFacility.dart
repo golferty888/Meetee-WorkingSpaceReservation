@@ -5,7 +5,7 @@ import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
 
 import 'package:meetee_mobile/model/facilityType.dart';
-import 'package:meetee_mobile/pages/bookingPage.dart';
+import 'package:meetee_mobile/pages/customerDemandPage.dart';
 
 class SelectFacilityType extends StatefulWidget {
   final int userId;
@@ -166,7 +166,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
               Navigator.push(
                 context,
                 FadeRoute(
-                  page: BookingPage(
+                  page: CustomerDemandPage(
                     userId: widget.userId,
                     facilityType: facilityTypeList[index],
                     index: index,

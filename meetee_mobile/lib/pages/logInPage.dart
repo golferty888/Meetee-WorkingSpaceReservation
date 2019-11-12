@@ -368,7 +368,7 @@ class _LogInPageState extends State<LogInPage>
                           fontSize:
                               isLargeScreen ? fontSizeH2[0] : fontSizeH2[1],
                           fontWeight: FontWeight.normal,
-                          letterSpacing: 1.5,
+                          letterSpacing: 1.0,
                         ),
                       ),
                     );
@@ -380,14 +380,15 @@ class _LogInPageState extends State<LogInPage>
                     color: Colors.black,
                     fontSize: isLargeScreen ? fontSizeH2[0] : fontSizeH2[1],
                     fontWeight: FontWeight.normal,
-                    letterSpacing: 1.5,
+                    letterSpacing: 1.0,
                   ),
                 ),
           SizedBox(
             height: MediaQuery.of(context).size.height / 80,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
+//            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
             child: TextField(
               textCapitalization: TextCapitalization.none,
               controller: userNameController,
@@ -404,6 +405,7 @@ class _LogInPageState extends State<LogInPage>
               decoration: InputDecoration(
                 labelText: 'username',
                 alignLabelWithHint: true,
+                contentPadding: EdgeInsets.all(0.0),
                 prefixIcon: Icon(
                   Icons.person,
                 ),
@@ -411,7 +413,8 @@ class _LogInPageState extends State<LogInPage>
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
+//            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 0.0),
             child: TextField(
               style: TextStyle(
                 letterSpacing: 2.0,
@@ -432,6 +435,7 @@ class _LogInPageState extends State<LogInPage>
                 );
               },
               decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(0.0),
                 labelText: 'password',
                 alignLabelWithHint: true,
                 prefixIcon: Icon(Icons.lock),
@@ -443,12 +447,12 @@ class _LogInPageState extends State<LogInPage>
           ),
           GestureDetector(
             onTap: () {
-              setState(() {
-                _userName = 'Guest';
-                _userId = 100;
-              });
-              countDownToUnlock();
-              _navigateToHomePage();
+//              setState(() {
+//                _userName = 'Guest';
+//                _userId = 100;
+//              });
+//              countDownToUnlock();
+//              _navigateToHomePage();
             },
             child: Text(
               'Forgot password?',
@@ -468,7 +472,7 @@ class _LogInPageState extends State<LogInPage>
             height: 48,
             child: RaisedButton(
 //                          color: Color(0xFFFAD74E),
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               elevation: 0.0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
@@ -485,7 +489,7 @@ class _LogInPageState extends State<LogInPage>
                       ),
                     )
                   : Text(
-                      'Login',
+                      'Login'.toUpperCase(),
                       style: TextStyle(
 //                              color: Colors.black,
                         color: Colors.white,
@@ -627,7 +631,7 @@ class _LogInPageState extends State<LogInPage>
           Container(
             height: 48,
             child: RaisedButton(
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               elevation: 0.0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
@@ -642,7 +646,7 @@ class _LogInPageState extends State<LogInPage>
                         duration: Duration(milliseconds: 1000),
                       ))
                   : Text(
-                      'Sign up',
+                      'Sign up'.toUpperCase(),
                       style: TextStyle(
 //                              color: Colors.black,
                         color: Colors.white,
@@ -767,8 +771,11 @@ class _LogInPageState extends State<LogInPage>
                                                   8,
 //                                  width: 160.0,
                                           child: SvgPicture.asset(
-                                            'images/meetee_logo.svg',
+                                            'images/logo.svg',
                                           ),
+                                        ),
+                                        SizedBox(
+                                          height: 8.0,
                                         ),
                                         MediaQuery.of(context)
                                                         .viewInsets

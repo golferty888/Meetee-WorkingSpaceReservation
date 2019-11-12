@@ -17,14 +17,14 @@ import 'package:meetee_mobile/components/periodPicker.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/facilityDetail.dart';
 
-class BookingPage extends StatefulWidget {
+class CustomerDemandPage extends StatefulWidget {
   final int userId;
   final FacilityType facilityType;
   final int index;
   final String subType;
   final bool isLargeScreen;
 
-  BookingPage({
+  CustomerDemandPage({
     Key key,
     @required this.facilityType,
     this.userId,
@@ -33,10 +33,10 @@ class BookingPage extends StatefulWidget {
     this.isLargeScreen,
   }) : super(key: key);
   @override
-  _BookingPageState createState() => _BookingPageState();
+  _CustomerDemandPageState createState() => _CustomerDemandPageState();
 }
 
-class _BookingPageState extends State<BookingPage> {
+class _CustomerDemandPageState extends State<CustomerDemandPage> {
   DateTime startDate = DateTime.now();
   DateTime startTime = DateTime.now().add(
     Duration(hours: 1),
@@ -65,6 +65,7 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   void initState() {
+    print(widget.userId);
     urlGetCategoryByFacilityType =
         'http://18.139.12.132:9000/fac/type/${widget.facilityType.typeId}';
     super.initState();
