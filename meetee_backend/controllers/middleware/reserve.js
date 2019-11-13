@@ -15,7 +15,6 @@ exports.middleWare = (request, response, next) => {
     where user_id = $1 and start_time = $2 and end_time = $3`;
   const values = [userId, start_time, end_time];
   pool.query(statement, values, async (error, results) => {
-    console.log({ facList: facList, length: facList.length });
     try {
       if (
         userId == null ||
@@ -23,13 +22,16 @@ exports.middleWare = (request, response, next) => {
         end_time == null ||
         facList == null
       ) {
-        console.log(error);
+        console.log("Some parameter is null");
         throw new ErrorHandler(400, "Bad Request");
       } else if (error) {
+        console.log("Database Error" + error.stack);
         throw new ErrorHandler(500, "Database Error");
       } else if (facList != null && facList.length > 10) {
+        console.log("facList is null or more than 10 items");
         throw new ErrorHandler(400, "Bad Request");
       } else if (new Date(start_time) < new Date()) {
+        console.log("start_time is less than present time");
         throw new ErrorHandler(400, "Bad Request");
       } else if (facList != null) {
         const statement = `select id from meeteenew.view_reservation as v
@@ -69,5 +71,3 @@ exports.middleWare = (request, response, next) => {
     }
   });
 };
-
-function checkPastTime() {}
