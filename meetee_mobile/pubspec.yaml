@@ -36,6 +36,7 @@ dependencies:
   flutter_statusbarcolor: ^0.2.2
   shared_preferences: ^0.5.4+1
   skeleton_text: ^1.0.0
+  flare_flutter: ^1.7.1
 
 dev_dependencies:
   flutter_test:
@@ -71,20 +72,25 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Product Sans
+    - family: productSans
       fonts:
-        - asset: fonts/product sans/Product Sans Regular.ttf
-        - asset: fonts/product sans/Product Sans Italic.ttf
+        - asset: fonts/product-sans/ProductSansRegular.ttf
+        - asset: fonts/product-sans/ProductSansItalic.ttf
           style: italic
-        - asset: fonts/product sans/Product Sans Bold.ttf
+        - asset: fonts/product-sans/ProductSansBold.ttf
           weight: 700
-        - asset: fonts/product sans/Product Sans Bold Italic.ttf
+        - asset: fonts/product-sans/ProductSansBoldItalic.ttf
           weight: 700
           style: italic
     - family: Oswald
       fonts:
         - asset: fonts/Oswald/static/Oswald-Regular.ttf
         - asset: fonts/Oswald/static/Oswald-Bold.ttf
+          weight: 700
+    - family: HeaventRounded
+      fonts:
+        - asset: fonts/Font-DB/hr.ttf
+        - asset: fonts/Font-DB/hr-bold.ttf
           weight: 700
   #
   # For details regarding fonts from package dependencies,

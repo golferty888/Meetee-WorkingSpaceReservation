@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xFF292b66),
 //        primaryColor: Color(0xFF361FB2),
         scaffoldBackgroundColor: Colors.grey[300],
-        fontFamily: 'Product Sans',
+        fontFamily: 'productSans',
       ),
 //      home: SplashPage(),
     );

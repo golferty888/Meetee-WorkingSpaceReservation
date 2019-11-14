@@ -703,7 +703,7 @@ class _LogInPageState extends State<LogInPage>
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).size.height > 700) {
+    if (MediaQuery.of(context).size.height > 740) {
       print('large');
       setState(() {
         isLargeScreen = true;
@@ -848,13 +848,13 @@ class _LogInPageState extends State<LogInPage>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      'Do not have an accout? ',
+                                      'Do not have an account? ',
                                       style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: isLargeScreen
                                             ? fontSizeH3[0]
                                             : fontSizeH3[1],
-                                        fontWeight: FontWeight.normal,
+                                        fontWeight: FontWeight.bold,
                                         letterSpacing: 1.5,
                                       ),
                                     ),

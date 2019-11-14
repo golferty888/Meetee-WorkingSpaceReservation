@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'dart:convert';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/main.dart';
@@ -19,8 +20,8 @@ class Summary extends StatefulWidget {
   final bool isLargeScreen;
   final int colorCode;
   final DateTime startDate;
-  final DateTime startTime;
-  final DateTime endTime;
+  final int startTime;
+  final int endTime;
   final List facId;
   final String type;
   final List code;
@@ -58,6 +59,8 @@ class _SummaryState extends State<Summary> {
 
   Map<String, String> headers = {"Content-type": "application/json"};
 
+  String _responseFromReserve;
+
   @override
   void initState() {
     super.initState();
@@ -65,8 +68,8 @@ class _SummaryState extends State<Summary> {
     startDateFormattedForApi =
         DateFormat("yyyy-MM-dd").format(widget.startDate);
     startDateFormatted = DateFormat("dd MMMM yyy").format(widget.startDate);
-    startTimeFormatted = DateFormat("HH:00").format(widget.startTime);
-    endTimeFormatted = DateFormat("HH:00").format(widget.endTime);
+    startTimeFormatted = '${widget.startTime}:00:00';
+    endTimeFormatted = '${widget.endTime}:00:00';
   }
 
   Future<dynamic> reserveSeat() async {
@@ -79,7 +82,7 @@ class _SummaryState extends State<Summary> {
         '"totalPrice": ${widget.totalPrice}'
         '}';
 //    String body = '{'
-//        '"userId": $userId, '
+//        '"userId": "${widget.userId}", '
 //        '"startDate": "$startDateFormattedForApi", '
 //        '"startTime": "19:00:00", '
 //        '"endTime": "20:00:00", '
@@ -100,7 +103,10 @@ class _SummaryState extends State<Summary> {
       body: body,
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      setState(() {
+        _responseFromReserve = response.body;
+      });
+      print('_responseFromReserve: $_responseFromReserve');
     } else {
       print(response.body);
     }
@@ -429,14 +435,10 @@ class _SummaryState extends State<Summary> {
       context,
       MaterialPageRoute(
         builder: (context) {
-//          return HomePage(
-//            userName: 'eiei',
-//            upComingBookingJson: _upComingBookingJson,
-//            userId: _userId,
-//          );
           return BookingCompletePage(
             userId: widget.userId,
             isLargeScreen: widget.isLargeScreen,
+            response: _responseFromReserve,
           );
         },
       ),

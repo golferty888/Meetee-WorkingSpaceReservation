@@ -18,8 +18,8 @@ class FacilityDetail extends StatefulWidget {
   final Map categoryDetail;
   final int secondaryColor;
   final DateTime startDate;
-  final DateTime startTime;
-  final DateTime endTime;
+  final int startTime;
+  final int endTime;
 
   FacilityDetail({
     Key key,

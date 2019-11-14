@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:meetee_mobile/components/css.dart';
 
-class PeriodPicker extends StatefulWidget {
+class PeriodPickerToday extends StatefulWidget {
   final ValueChanged<int> returnStartTime;
   final ValueChanged<int> returnEndTime;
   final int color;
   final bool isLargeScreen;
 
-  PeriodPicker({
+  PeriodPickerToday({
     Key key,
     this.returnStartTime,
     this.returnEndTime,
@@ -16,13 +16,18 @@ class PeriodPicker extends StatefulWidget {
     this.isLargeScreen,
   }) : super(key: key);
   @override
-  _PeriodPickerState createState() => _PeriodPickerState();
+  _PeriodPickerTodayState createState() => _PeriodPickerTodayState();
 }
 
-class _PeriodPickerState extends State<PeriodPicker> {
-  int hourNow = 7;
-  int startTime = 8;
-  int endTime = 9;
+class _PeriodPickerTodayState extends State<PeriodPickerToday> {
+//  ScrollController _scrollController;
+
+  int hourNow = DateTime.now().hour;
+//  int hourNow = 12;
+  int startTime = DateTime.now().hour + 1;
+//  int startTime = 13;
+  int endTime = DateTime.now().hour + 2;
+//  int endTime = 14;
 
   @override
   void initState() {
@@ -46,9 +51,6 @@ class _PeriodPickerState extends State<PeriodPicker> {
             style: TextStyle(
               fontSize: widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
             ),
-          ),
-          SizedBox(
-            height: 8.0,
           ),
           Container(
             child: Row(
@@ -105,7 +107,7 @@ class _PeriodPickerState extends State<PeriodPicker> {
                             ),
                           ],
                         ),
-                        startTime < 21
+                        startTime < 22
                             ? GestureDetector(
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -115,7 +117,6 @@ class _PeriodPickerState extends State<PeriodPicker> {
                                   child: Icon(
                                     Icons.keyboard_arrow_right,
                                     size: 24,
-//                            color: Color(widget.color),
                                   ),
                                 ),
                                 onTap: () {
@@ -147,15 +148,12 @@ class _PeriodPickerState extends State<PeriodPicker> {
                 Container(
                   width: 24,
                   height: 40,
-//                  child: Center(
-//                    child: Container(
-//                      width: 1,
-//                      color: Colors.grey,
-//                    ),
-//                  ),
-//                  child: Center(
-//                    child: Text('-'),
-//                  ),
+                  child: Center(
+                    child: Container(
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: Container(

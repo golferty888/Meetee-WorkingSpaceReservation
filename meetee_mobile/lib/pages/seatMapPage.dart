@@ -22,8 +22,8 @@ class SeatMapPage extends StatefulWidget {
   final int cateId;
   final int secondaryColor;
   final DateTime startDate;
-  final DateTime startTime;
-  final DateTime endTime;
+  final int startTime;
+  final int endTime;
   final int price;
   final int type;
 
@@ -51,9 +51,10 @@ class _SeatMapPageState extends State<SeatMapPage> {
   @override
   void initState() {
     startDateFormatted = DateFormat("dd MMM").format(widget.startDate);
-    startTimeFormatted = DateFormat("HH:00").format(widget.startTime);
-    endTimeFormatted = DateFormat("HH:00").format(widget.endTime);
-    totalHour = widget.endTime.difference(widget.startTime).inHours;
+    startTimeFormatted = '${widget.startTime}:00';
+    endTimeFormatted = '${widget.endTime}:00';
+//    totalHour = widget.endTime.difference(widget.startTime).inHours;
+    totalHour = widget.endTime - widget.startTime;
 
     startDateFormattedForApi =
         DateFormat("yyyy-MM-dd").format(widget.startDate);

@@ -40,7 +40,7 @@ class _ActivationPageState extends State<ActivationPage> {
           DateTime.now(),
         )
         .inSeconds;
-    _start = 7200;
+//    _start = 7200;
 //    _start = 172850;
     print('seconds: $_start');
 

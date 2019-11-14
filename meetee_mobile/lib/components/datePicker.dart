@@ -180,7 +180,7 @@ class _DatePickerState extends State<DatePicker> {
                     timeOut == false
                         ? selectedDateWithText(today, 'Today', 64.0)
                         : disabledButton('Today', 56.0),
-                    selectedDateWithText(today + 1, 'Tomorrow', 88.0),
+                    selectedDateWithText(today + 1, 'Tomorrow', 96.0),
                     selectedDate(today + 2),
                     selectedDate(today + 3),
                     selectedDate(today + 4),

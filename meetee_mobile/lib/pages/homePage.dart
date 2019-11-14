@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/countDownPanel.dart';
+import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
@@ -1029,7 +1030,7 @@ class _HomePageState extends State<HomePage> {
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: Colors.black54,
-                    fontSize: 18.0,
+                    fontSize: _isLargeScreen ? fontSizeH2[0] : fontSizeH2[1],
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -1047,7 +1048,7 @@ class _HomePageState extends State<HomePage> {
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 26.0,
+                      fontSize: _isLargeScreen ? fontSizeH1[0] : fontSizeH1[1],
                       fontWeight: FontWeight.bold,
                     ),
                   ),

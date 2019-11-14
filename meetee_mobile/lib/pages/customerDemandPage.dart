@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/datePicker.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
+import 'package:meetee_mobile/components/periodPickerToday.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'package:meetee_mobile/components/calendarPicker.dart';
@@ -38,26 +39,32 @@ class CustomerDemandPage extends StatefulWidget {
 
 class _CustomerDemandPageState extends State<CustomerDemandPage> {
   DateTime startDate = DateTime.now();
-  DateTime startTime = DateTime.now().add(
-    Duration(hours: 1),
-  );
-  DateTime endTime = DateTime.now().add(
-    Duration(hours: 2),
-  );
+  int startTime = DateTime.now().add(Duration(hours: 1)).hour;
+  int endTime = DateTime.now()
+      .add(
+        Duration(hours: 2),
+      )
+      .hour;
+  bool _isToday = true;
 
   _updateStartDate(DateTime startDate) {
+    if (startDate.day != DateTime.now().day || DateTime.now().hour >= 21) {
+      setState(() {
+        _isToday = false;
+      });
+    }
     setState(() {
       this.startDate = startDate;
     });
   }
 
-  _updateStartTime(DateTime startTime) {
+  _updateStartTime(int startTime) {
     setState(() {
       this.startTime = startTime;
     });
   }
 
-  _updateEndTime(DateTime endTime) {
+  _updateEndTime(int endTime) {
     setState(() {
       this.endTime = endTime;
     });
@@ -65,10 +72,12 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
 
   @override
   void initState() {
+    super.initState();
+
     print(widget.userId);
     urlGetCategoryByFacilityType =
         'http://18.139.12.132:9000/fac/type/${widget.facilityType.typeId}';
-    super.initState();
+
     getCategoryByFacilityType();
   }
 
@@ -150,19 +159,6 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
 
   _buildCategoryCard(index) {
     return Container(
-//      decoration: BoxDecoration(
-//        boxShadow: [
-//          BoxShadow(
-//            color: Colors.grey[400],
-//            blurRadius: 10.0, // has the effect of softening the shadow
-//            spreadRadius: 2, // has the effect of extending the shadow
-//            offset: Offset(
-//              0.0, // horizontal, move right 10
-//              4.0, // vertical, move down 10
-//            ),
-//          )
-//        ],
-//      ),
       child: Stack(
         children: <Widget>[
           Hero(
@@ -325,57 +321,6 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
           child: SafeArea(
             child: Column(
               children: <Widget>[
-//                Container(
-//                  decoration: BoxDecoration(
-//                    color: Color(
-//                      widget.facilityType.secondaryColorCode,
-//                    ),
-//                  ),
-//                  child: Row(
-//                    children: <Widget>[
-////                      Expanded(
-////                        child: GestureDetector(
-////                          onTap: () => Navigator.pop(context),
-////                          child: Container(
-////                            padding:
-////                                EdgeInsets.fromLTRB(40.0, 16.0, 16.0, 16.0),
-////                            height: 160.0,
-////                            child: Hero(
-////                              tag: 'facilityType' + widget.index.toString(),
-////                              child: SvgPicture.asset(
-////                                widget.facilityType.imagePath,
-////                              ),
-////                            ),
-////                          ),
-////                        ),
-////                      ),
-//                      Expanded(
-//                        child: Container(
-////                          height: 80.0,
-//                          child: Row(
-////                            crossAxisAlignment: CrossAxisAlignment.stretch,
-//                            children: <Widget>[
-//                              Expanded(
-//                                flex: 1,
-//                                child: CalendarPicker(
-//                                  returnDate: _updateStartDate,
-//                                  primaryColor: null,
-//                                ),
-//                              ),
-//                              Expanded(
-//                                flex: 1,
-//                                child: PeriodPicker(
-//                                  returnStartTime: _updateStartTime,
-//                                  returnEndTime: _updateEndTime,
-//                                ),
-//                              ),
-//                            ],
-//                          ),
-//                        ),
-//                      )
-//                    ],
-//                  ),
-//                ),
                 DatePicker(
                   primaryColor: widget.facilityType.secondaryColorCode,
                   returnDate: _updateStartDate,
@@ -385,6 +330,19 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                       widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
                   isLargeScreen: widget.isLargeScreen,
                 ),
+                _isToday && DateTime.now().hour >= 31
+                    ? PeriodPickerToday(
+                        returnStartTime: _updateStartTime,
+                        returnEndTime: _updateEndTime,
+                        color: widget.facilityType.secondaryColorCode,
+                        isLargeScreen: widget.isLargeScreen,
+                      )
+                    : PeriodPicker(
+                        returnStartTime: _updateStartTime,
+                        returnEndTime: _updateEndTime,
+                        color: widget.facilityType.secondaryColorCode,
+                        isLargeScreen: widget.isLargeScreen,
+                      ),
                 Expanded(
                   child: _isCategoryLoadDone
                       ? _buildFrontPanel()
