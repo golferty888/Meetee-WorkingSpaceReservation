@@ -11,7 +11,8 @@ CREATE TABLE meeteenew.users(
     create_at   TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
     CONSTRAINT chk_username_min_length CHECK (char_length(username) >= 4)
 );
-
+INSERT INTO meeteenew.users (id, username, password, first_name, last_name, role)
+VALUES (0, 'guest', '$2b$04$q5/WmPTjzSCtT6bbEYwlWOyPxeKxcHE7nEGq4WCuAMnW0Z11Encj2','Guest','Guest','guest');
 INSERT INTO meeteenew.users (username, password, first_name, last_name, role, phone_number, birthday)
 VALUES ('admin', '$2b$04$JlxUcjHySUUkTgZA6Pl9Le2l9kI90AghmCkzTts4oa.qP5DiaI/8S','Tanapat','Choochot','admin','0939452459', '2019-11-17');
 INSERT INTO meeteenew.users (username, password, first_name, last_name, role, birthday)
