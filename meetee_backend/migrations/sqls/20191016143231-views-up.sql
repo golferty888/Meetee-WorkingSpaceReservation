@@ -55,7 +55,7 @@ create MATERIALIZED VIEW meeteenew.view_factype_detail as
 	order by cateId;
 
 create MATERIALIZED VIEW meeteenew.view_faccate_detail as
-	select fe.cate_id cateId, cate."name" cateName, cate.capacity :: int, cate.price :: int, cate.link_url, array_agg(json_build_object('eqid', fe.equipment_id,'eqname', eq."name", 'iconname', eq.icon_name)) eqList
+	select fe.cate_id cateId, cate."name" cateName, cate.capacity :: int, cate.price :: int, cate.link_url, array_agg(json_build_object('eqid', fe.equipment_id,'eqname', eq."name", 'iconcode', eq.icon_code)) eqList
 	from meeteenew.facility_has_equipments fe
 	join meeteenew.equipment eq on fe.equipment_id = eq.id
 	join meeteenew.facility_category cate on fe.cate_id = cate.id
