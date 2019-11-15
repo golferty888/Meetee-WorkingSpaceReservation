@@ -186,7 +186,7 @@ exports.checkStatusAvaialableAllCategories = (request, response, next) => {
   from meeteenew.facility fac
   left join (select v1.cateid, array_agg(distinct v1.facId) as unavailable_list,
     count(distinct v1.facid) as unavailable_count, (select count(fac.id) from meeteenew.facility fac where fac.cate_id = v1.cateid) - count(distinct v1.facid) as available_count
-      from meeteenew.view_factype_status as v1
+      from meeteenew.view_fac_status as v1
       where v1.typeid = $1 and
       (inDate = $2 and
       (v1.status = $3 and ((TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') overlaps (v1.start_time, v1.end_time))) or
