@@ -175,6 +175,48 @@ exports.checkStatusEachFacilityCategory = (request, response, next) => {
   });
 };
 
+exports.checkStatusAvaialableAllCategories = (request, response, next) => {
+  const data = request.body;
+  const typeId = data.typeId;
+  const startDate = data.startDate;
+  const startTime = data.startDate + " " + data.startTime;
+  const endTime = data.startDate + " " + data.endTime;
+  const statement = 
+  `select fac.cate_id cateId, cate.name cateName, case when array_length(unav.unavailable_list, 1) >=1 then count(fac.id) - array_length(unav.unavailable_list, 1) else count(fac.id) end ::int as available_count
+  from meeteenew.facility fac
+  left join (select v1.cateid, array_agg(distinct v1.facId) as unavailable_list,
+    count(distinct v1.facid) as unavailable_count, (select count(fac.id) from meeteenew.facility fac where fac.cate_id = v1.cateid) - count(distinct v1.facid) as available_count
+      from meeteenew.view_factype_status as v1
+      where v1.typeid = $1 and
+      (inDate = $2 and
+      (v1.status = $3 and ((TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') overlaps (v1.start_time, v1.end_time))) or
+      (v1.status = $4 and not ((TIMESTAMP '${startTime}', TIMESTAMP '${endTime}') overlaps (v1.start_time, v1.end_time))))
+      group by 1) unav on unav.cateid = fac.cate_id 
+  join meeteenew.facility_category cate on fac.cate_id = cate.id
+  where cate.type_id = $1
+  group by 1, 2, unav.unavailable_list`;
+  const values = [typeId, startDate, "Booked", "Cancelled"];
+  pool.query(statement, values, (error, results) => {
+    try {
+      if (
+        typeId == null ||
+        startDate == null ||
+        startTime == null ||
+        endTime == null
+      ) {
+        throw new ErrorHandler(400, "Bad Request");
+      } else if (error) {
+        console.log(error);
+        throw new ErrorHandler(500, "Database Error");
+      } else {
+        response.status(200).send(results.rows);
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
+};
+
 exports.lockAndUnlockPendingFacilityInSpecificPeriod = (
   request,
   response,

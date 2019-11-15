@@ -79,6 +79,7 @@ app.get("/fac", consl.req, facility.getAllFacility);
 app.get("/fac/type/:id", consl.req, facility.getFacilityCategoriesFromType);
 app.get("/fac/cate/:id", consl.req, equipment.getFacilityCategoryDetail);
 // Checking Room/Seat Status
+app.post("/facility/type/status/av", consl.req, facStatus.checkStatusAvaialableAllCategories);
 app.post(
   "/facility/cate/status/av",
   consl.req,
