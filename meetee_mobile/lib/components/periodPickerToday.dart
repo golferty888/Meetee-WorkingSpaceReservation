@@ -31,6 +31,7 @@ class _PeriodPickerTodayState extends State<PeriodPickerToday> {
 
   @override
   void initState() {
+    print('today');
     super.initState();
   }
 
@@ -51,6 +52,9 @@ class _PeriodPickerTodayState extends State<PeriodPickerToday> {
             style: TextStyle(
               fontSize: widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
             ),
+          ),
+          SizedBox(
+            height: 4.0,
           ),
           Container(
             child: Row(
@@ -107,7 +111,7 @@ class _PeriodPickerTodayState extends State<PeriodPickerToday> {
                             ),
                           ],
                         ),
-                        startTime < 22
+                        startTime < 21
                             ? GestureDetector(
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -148,12 +152,6 @@ class _PeriodPickerTodayState extends State<PeriodPickerToday> {
                 Container(
                   width: 24,
                   height: 40,
-                  child: Center(
-                    child: Container(
-                      width: 1,
-                      color: Colors.grey,
-                    ),
-                  ),
                 ),
                 Expanded(
                   child: Container(

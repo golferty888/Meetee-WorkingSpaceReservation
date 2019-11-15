@@ -68,8 +68,8 @@ class _SummaryState extends State<Summary> {
     startDateFormattedForApi =
         DateFormat("yyyy-MM-dd").format(widget.startDate);
     startDateFormatted = DateFormat("dd MMMM yyy").format(widget.startDate);
-    startTimeFormatted = '${widget.startTime}:00:00';
-    endTimeFormatted = '${widget.endTime}:00:00';
+    startTimeFormatted = '${widget.startTime}:00';
+    endTimeFormatted = '${widget.endTime}:00';
   }
 
   Future<dynamic> reserveSeat() async {

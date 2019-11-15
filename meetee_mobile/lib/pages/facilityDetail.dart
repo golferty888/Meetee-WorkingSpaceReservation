@@ -1,8 +1,11 @@
 import 'dart:ui';
+import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/seatMapPage.dart';
@@ -41,6 +44,33 @@ class FacilityDetail extends StatefulWidget {
 }
 
 class FacilityDetailState extends State<FacilityDetail> {
+  void initState() {
+    super.initState();
+    getEquipmentByCateId();
+  }
+
+  List _equipmentList;
+  bool _isEquipmentLoadDone = false;
+
+  List _tmpIcon = [Icons.power, Icons.network_wifi];
+
+  Future<dynamic> getEquipmentByCateId() async {
+    final response = await http.get(
+      'http://18.139.12.132:9000/fac/cate/${widget.cateId}',
+    );
+    if (response.statusCode == 200) {
+      print(json.decode(response.body));
+      setState(() {
+        _equipmentList = (json.decode(response.body))["eqlist"];
+        _isEquipmentLoadDone = true;
+      });
+      print(_equipmentList);
+    } else {
+      print('400');
+      throw Exception('Failed to load post');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +94,58 @@ class FacilityDetailState extends State<FacilityDetail> {
 //                  color: Colors.grey,
                   height: 56.0,
                 ),
-                Expanded(child: Container()),
+                Expanded(
+                  child: Container(),
+                ),
+                _isEquipmentLoadDone
+                    ? Center(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 5 / 6,
+//                        padding: EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                          height: 40,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _equipmentList.length,
+                              reverse: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  margin: EdgeInsets.only(left: 8.0),
+                                  child: ClipOval(
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                        sigmaX: 5.0,
+                                        sigmaY: 5.0,
+                                      ),
+                                      child: Container(
+                                        padding: EdgeInsets.all(8.0),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.5),
+                                        ),
+                                        child: Tooltip(
+                                          preferBelow: false,
+                                          margin: EdgeInsets.only(bottom: 8.0),
+                                          height: 40,
+                                          message: _equipmentList[index]
+                                              ["eqname"],
+                                          child: Icon(
+                                            IconData(
+                                                _equipmentList[index]
+                                                    ["iconcode"],
+                                                fontFamily: 'MaterialIcons'),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
+                      )
+                    : Container(),
+                SizedBox(
+                  height: 16.0,
+                ),
                 Center(
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 5000),
@@ -236,44 +317,41 @@ class FacilityDetailState extends State<FacilityDetail> {
                   ),
                 ),
                 SizedBox(
-                  height: 20.0,
+                  height: 16.0,
                 ),
-                Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(16.0),
-                    ),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: 5.0,
-                        sigmaY: 5.0,
-                      ),
-                      child: Container(
-                        color: Colors.black.withOpacity(0.5),
-                        padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              'More detail',
-                              style: TextStyle(
-                                color: Colors.white,
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 12.0,
-                ),
+//                Center(
+//                  child: ClipRRect(
+//                    borderRadius: BorderRadius.all(
+//                      Radius.circular(16.0),
+//                    ),
+//                    child: BackdropFilter(
+//                      filter: ImageFilter.blur(
+//                        sigmaX: 5.0,
+//                        sigmaY: 5.0,
+//                      ),
+//                      child: Container(
+//                        color: Colors.black.withOpacity(0.5),
+//                        padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),
+//                        child: Row(
+//                          mainAxisSize: MainAxisSize.min,
+//                          children: <Widget>[
+//                            Text(
+//                              'More detail',
+//                              style: TextStyle(
+//                                color: Colors.white,
+//                                letterSpacing: 1.5,
+//                              ),
+//                            ),
+//                            Icon(
+//                              Icons.keyboard_arrow_down,
+//                              color: Colors.white,
+//                            ),
+//                          ],
+//                        ),
+//                      ),
+//                    ),
+//                  ),
+//                ),
               ],
             ),
           ),

@@ -224,7 +224,6 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                         builder: (context) {
                           return HomePage(
                             userName: 'eiei',
-                            upComingBookingJson: _upComingBookingJson,
                             userId: widget.userId,
                           );
                         },

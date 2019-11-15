@@ -73,7 +73,10 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
   @override
   void initState() {
     super.initState();
-
+    if (DateTime.now().hour >= 0) {
+      startTime = 8;
+      endTime = 9;
+    }
     print(widget.userId);
     urlGetCategoryByFacilityType =
         'http://18.139.12.132:9000/fac/type/${widget.facilityType.typeId}';
@@ -171,6 +174,37 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 16.0,
+            right: 16.0,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+//            width: 100,
+              decoration: BoxDecoration(
+//                borderRadius: BorderRadius.horizontal(
+//                  left: Radius.circular(
+//                    8.0,
+//                  ),
+//                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16.0),
+                ),
+                color: Colors.black.withOpacity(0.5),
+//                color: Color(
+//                  widget.facilityType.secondaryColorCode,
+//                ),
+              ),
+              child: Text(
+                '4 seats available',
+                style: TextStyle(
+                  fontSize:
+                      widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
+                  color: Colors.red[400],
+                  letterSpacing: 1.0,
                 ),
               ),
             ),
@@ -330,7 +364,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                       widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
                   isLargeScreen: widget.isLargeScreen,
                 ),
-                _isToday && DateTime.now().hour >= 31
+                _isToday && DateTime.now().hour <= 21
                     ? PeriodPickerToday(
                         returnStartTime: _updateStartTime,
                         returnEndTime: _updateEndTime,

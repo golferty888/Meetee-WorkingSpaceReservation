@@ -138,23 +138,27 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                 _seatsList[index]["code"],
                               ),
                               child: Container(
-//                            margin: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+//                                margin: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                                 decoration: BoxDecoration(
                                   color: _selectedSeatList
                                           .contains(_seatsList[index]["facid"])
                                       ? Color(widget.secondaryColor)
-                                      : Colors.grey[200],
-//                              borderRadius: BorderRadius.circular(8.0),
+                                      : Colors.white,
+//                                  borderRadius: BorderRadius.circular(16.0),
                                 ),
                                 width: 64,
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
-                                    SvgPicture.asset(
-                                      'images/categoryIcon/single-sofa.svg',
-                                      height: 32,
+//                                    SvgPicture.asset(
+//                                      'images/categoryIcon/single-sofa.svg',
+//                                      height: 32,
+//                                    ),
+                                    Icon(
+                                      Icons.airline_seat_recline_normal,
                                     ),
+
                                     Center(
                                       child: Text(
                                         _seatsList[index]["code"].toString(),
@@ -171,20 +175,25 @@ class _SeatMapPageState extends State<SeatMapPage> {
                             )
                           : Container(
                               width: 64,
+                              color: Colors.grey[200],
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                                  SvgPicture.asset(
-                                    'images/categoryIcon/single-sofa.svg',
-                                    color: Colors.grey[800],
-                                    height: 32,
+//                                  SvgPicture.asset(
+//                                    'images/categoryIcon/single-sofa.svg',
+//                                    color: Colors.grey[600],
+//                                    height: 32,
+//                                  ),
+                                  Icon(
+                                    Icons.airline_seat_recline_normal,
+                                    color: Colors.grey[400],
                                   ),
                                   Center(
                                     child: Text(
                                       _seatsList[index]["code"].toString(),
                                       style: TextStyle(
-                                        color: Colors.grey[800],
+                                        color: Colors.grey[400],
                                         fontWeight: FontWeight.normal,
 //                                    letterSpacing: 1.5,
                                       ),
@@ -371,10 +380,16 @@ class _SeatMapPageState extends State<SeatMapPage> {
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-                    child: Image(
-                      image: AssetImage('images/map.jpg'),
-                      fit: BoxFit.fill,
+//                  padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                    child: FittedBox(
+                      child: Container(
+                        color: Colors.white,
+                        child: SvgPicture.asset(
+                          'images/map/meetee-map-sm.svg',
+                          width: MediaQuery.of(context).size.width,
+//                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -477,60 +492,9 @@ class _SeatMapPageState extends State<SeatMapPage> {
                               'Available',
                             ),
                             _buildLegends(
-                              Colors.black,
+                              Colors.grey[500],
                               'Booked',
                             ),
-//                              Row(
-//                                children: <Widget>[
-//                                  Container(
-//                                    height: 16.0,
-//                                    width: 24.0,
-//                                    decoration: BoxDecoration(
-//                                      color: Color(widget.secondaryColor),
-//                                      borderRadius: BorderRadius.circular(4.0),
-//                                    ),
-//                                  ),
-//                                  Padding(
-//                                    padding:
-//                                        EdgeInsets.symmetric(horizontal: 8.0),
-//                                    child: Text(
-//                                      'Selected',
-//                                      style: TextStyle(
-//                                        fontSize: 10.0,
-//                                        color: Colors.white,
-//                                      ),
-//                                    ),
-//                                  ),
-//                                ],
-//                              ),
-//                              Row(
-//                                children: <Widget>[
-//                                  Container(
-//                                    height: 16.0,
-//                                    width: 10.0,
-//                                    decoration: BoxDecoration(
-//                                      color: Colors.transparent,
-//                                      borderRadius: BorderRadius.circular(4.0),
-//                                      border: Border.all(
-//                                        color:
-//                                            Colors.grey[200].withOpacity(0.3),
-//                                      ),
-//                                    ),
-//                                  ),
-//                                  Padding(
-//                                    padding:
-//                                        EdgeInsets.symmetric(horizontal: 8.0),
-//                                    child: Text(
-//                                      'Booked',
-//                                      textAlign: TextAlign.end,
-//                                      style: TextStyle(
-//                                        fontSize: 10.0,
-//                                        color: Colors.white,
-//                                      ),
-//                                    ),
-//                                  ),
-//                                ],
-//                              ),
                           ],
                         ),
                       ),

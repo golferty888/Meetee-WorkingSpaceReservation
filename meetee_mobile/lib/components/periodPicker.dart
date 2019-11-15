@@ -26,6 +26,7 @@ class _PeriodPickerState extends State<PeriodPicker> {
 
   @override
   void initState() {
+    print('not today');
     super.initState();
   }
 
@@ -48,7 +49,7 @@ class _PeriodPickerState extends State<PeriodPicker> {
             ),
           ),
           SizedBox(
-            height: 8.0,
+            height: 4.0,
           ),
           Container(
             child: Row(
@@ -115,7 +116,6 @@ class _PeriodPickerState extends State<PeriodPicker> {
                                   child: Icon(
                                     Icons.keyboard_arrow_right,
                                     size: 24,
-//                            color: Color(widget.color),
                                   ),
                                 ),
                                 onTap: () {
@@ -147,15 +147,6 @@ class _PeriodPickerState extends State<PeriodPicker> {
                 Container(
                   width: 24,
                   height: 40,
-//                  child: Center(
-//                    child: Container(
-//                      width: 1,
-//                      color: Colors.grey,
-//                    ),
-//                  ),
-//                  child: Center(
-//                    child: Text('-'),
-//                  ),
                 ),
                 Expanded(
                   child: Container(

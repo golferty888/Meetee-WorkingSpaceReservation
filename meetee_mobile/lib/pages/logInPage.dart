@@ -68,15 +68,12 @@ class _LogInPageState extends State<LogInPage>
         builder: (context) {
           return HomePage(
             userName: _userName,
-            upComingBookingJson: _upComingBookingJson,
             userId: _userId,
           );
         },
       ),
     );
   }
-
-  var _upComingBookingJson;
 
   _loadUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -115,7 +112,6 @@ class _LogInPageState extends State<LogInPage>
             },
           );
           print(_userId);
-          countDownToUnlock();
           Future.delayed(
             Duration(milliseconds: 1000),
             () {
@@ -153,7 +149,6 @@ class _LogInPageState extends State<LogInPage>
         _userId = jsonData["userId"];
         _userName = userNameController.text;
       });
-      countDownToUnlock();
       Future.delayed(
         Duration(milliseconds: 1500),
         () {
@@ -199,7 +194,7 @@ class _LogInPageState extends State<LogInPage>
         _userId = jsonData["userId"];
         _userName = userNameSignUpController.text;
       });
-      countDownToUnlock();
+
       Future.delayed(
         Duration(milliseconds: 1500),
         () {
@@ -236,25 +231,6 @@ class _LogInPageState extends State<LogInPage>
   }
 
 //  DateTime _startTime;
-
-  Future countDownToUnlock() async {
-    String body = '{'
-        '"userId": $_userId'
-        '}';
-    final response = await http.post(
-      countDownUrl,
-      body: body,
-      headers: headers,
-    );
-    print(json.decode(response.body));
-    if (response.statusCode == 200) {
-      setState(() {
-        _upComingBookingJson = json.decode(response.body);
-      });
-    } else {
-      print('ereer');
-    }
-  }
 
   @override
   void dispose() {

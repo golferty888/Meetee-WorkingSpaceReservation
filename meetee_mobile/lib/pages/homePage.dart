@@ -19,13 +19,11 @@ import 'package:meetee_mobile/pages/selectFacility.dart';
 
 class HomePage extends StatefulWidget {
   final String userName;
-  final upComingBookingJson;
   final int userId;
 
   HomePage({
     Key key,
     this.userName,
-    this.upComingBookingJson,
     this.userId,
   }) : super(key: key);
   @override
@@ -44,8 +42,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     print('userId: ${widget.userId}');
+    countDownToUnlock();
     getHistoryByUserId();
-    print('upComingBookingJson: ${widget.upComingBookingJson}');
 //    _scrollController.addListener(onScroll);
     super.initState();
   }
@@ -56,8 +54,34 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  var _upComingBookingJson;
+  bool _isUpComingBookingLoadDone = false;
+
   List historiesList;
   bool _isHasHistory = false;
+
+  Future countDownToUnlock() async {
+    String body = '{'
+        '"userId": ${widget.userId}'
+        '}';
+    final response = await http.post(
+      countDownUrl,
+      body: body,
+      headers: headers,
+    );
+    print(json.decode(response.body));
+    if (response.statusCode == 200) {
+      setState(() {
+        _upComingBookingJson = json.decode(response.body);
+        _isUpComingBookingLoadDone = true;
+      });
+    } else {
+      print('ereer');
+      setState(() {
+        _isUpComingBookingLoadDone = true;
+      });
+    }
+  }
 
   Future<dynamic> getHistoryByUserId() async {
     final response = await http.post(
@@ -107,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                 userId: widget.userId,
                 index: index,
                 userName: widget.userName,
-                upComingBookingJson: widget.upComingBookingJson,
+                upComingBookingJson: _upComingBookingJson,
               ),
             ),
           );
@@ -147,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         '${DateFormat("HH:00").format(
                           DateTime.parse(
-                              widget.upComingBookingJson[index]["start_time"]),
+                              _upComingBookingJson[index]["start_time"]),
                         )}',
                         style: TextStyle(
                           color: Colors.white,
@@ -157,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         '${DateFormat("d MMMM").format(
                           DateTime.parse(
-                              widget.upComingBookingJson[index]["start_time"]),
+                              _upComingBookingJson[index]["start_time"]),
                         )}',
                         style: TextStyle(
                           color: Colors.white70,
@@ -988,7 +1012,7 @@ class _HomePageState extends State<HomePage> {
           onNotification: (t) {
 //            print(_scrollController.position.pixels);
             if (_scrollController.position.pixels.floor() >= 60 &&
-                _scrollController.position.pixels.floor() <= 760) {
+                _scrollController.position.pixels.floor() <= 700) {
               setState(() {
                 _isShowFloatingActionButton = true;
               });
@@ -1231,28 +1255,109 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              SliverToBoxAdapter(
-                child: widget.upComingBookingJson.length == 0
-                    ? Container(
-                        height: 80,
-                        child: Center(
-                          child: Text('No upcoming booking'),
-                        ),
-                      )
-                    : Container(
-                        height: MediaQuery.of(context).size.height * 2 / 3,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: widget.upComingBookingJson == null
-                              ? 0
-                              : widget.upComingBookingJson.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return _buildUpComingBookingCard(index);
-                          },
+              _isUpComingBookingLoadDone
+                  ? SliverToBoxAdapter(
+                      child: _upComingBookingJson.length == 0
+                          ? Container(
+                              height: 80,
+                              child: Center(
+                                child: Text('No upcoming booking'),
+                              ),
+                            )
+                          : Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 2 / 3,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: _upComingBookingJson == null
+                                    ? 0
+                                    : _upComingBookingJson.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _buildUpComingBookingCard(index);
+                                },
+                              ),
+                            ),
+                    )
+                  : SliverToBoxAdapter(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 1 / 3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15.0,
+                                bottom: 5.0,
+                                top: 8.0,
+                              ),
+                              child: SkeletonAnimation(
+                                child: Container(
+                                  height: 15,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.grey[300]),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15.0,
+                                bottom: 5.0,
+                                top: 8.0,
+                              ),
+                              child: SkeletonAnimation(
+                                child: Container(
+                                  height: 15,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.grey[300]),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15.0,
+                                bottom: 5.0,
+                                top: 8.0,
+                              ),
+                              child: SkeletonAnimation(
+                                child: Container(
+                                  height: 15,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.grey[300]),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: SkeletonAnimation(
+                                  child: Container(
+                                    width: 60,
+                                    height: 13,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        color: Colors.grey[300]),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-              ),
+                    ),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.only(top: 32.0),
@@ -1291,35 +1396,11 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-//                  Container(
-//                    height: 3.0,
-//                    margin: EdgeInsets.fromLTRB(
-//                      16.0,
-//                      4.0,
-//                      MediaQuery.of(context).size.width - 64.0,
-//                      4.0,
-//                    ),
-//                    decoration: BoxDecoration(
-//                      color: Colors.grey[800],
-//                      borderRadius: BorderRadius.all(
-//                        Radius.circular(2.0),
-//                      ),
-//                    ),
-//                  )
                   ],
                 ),
               ),
               _isHistoryLoadDone
-                  ?
-//            SliverList(
-//                    delegate: SliverChildBuilderDelegate(
-//                      (BuildContext context, int index) {
-//                        return _buildHistoryList(index);
-//                      },
-//                      childCount: historiesList.length,
-//                    ),
-//                  )
-                  _isHasHistory
+                  ? _isHasHistory
                       ? SliverToBoxAdapter(
                           child: _buildHistoryList(0),
                         )
