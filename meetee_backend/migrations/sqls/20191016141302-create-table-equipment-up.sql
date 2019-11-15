@@ -7,7 +7,7 @@ CREATE TABLE meeteenew.equipment_type(
 CREATE TABLE meeteenew.equipment(
     id      SERIAL  PRIMARY KEY,
     name    VARCHAR(256) NOT NULL,
-    icon_name VARCHAR(256),
+    icon_code INT,
     type_id  INT    NOT NULL,
     FOREIGN KEY(type_id) REFERENCES meeteenew.equipment_type(id)
 );
@@ -25,19 +25,19 @@ INSERT INTO meeteenew.equipment_type (name) VALUES ('Furniture');
 
 -- EQUIP LISTS
 -- White Boards
-INSERT INTO meeteenew.equipment (name, icon_name, type_id) VALUES ('Whiteboard 120x180cm', 'crop_5_4', 1); --1
-INSERT INTO meeteenew.equipment (name, icon_name, type_id) VALUES ('Whiteboard 120x240cm', 'crop_3_2', 1); --2
-INSERT INTO meeteenew.equipment (name, icon_name, type_id) VALUES ('Whiteboard 120x300cm', 'crop_16_9', 1); --3
+INSERT INTO meeteenew.equipment (name, icon_code, type_id) VALUES ('Whiteboard 120x180cm', '58303', 1); --1
+INSERT INTO meeteenew.equipment (name, icon_code, type_id) VALUES ('Whiteboard 120x240cm', '58301', 1); --2
+INSERT INTO meeteenew.equipment (name, icon_code, type_id) VALUES ('Whiteboard 120x300cm', '58300', 1); --3
 -- Televisions
-INSERT INTO meeteenew.equipment (name, icon_name, type_id) VALUES ('LED TV 40in', 'tv', 2); --4
+INSERT INTO meeteenew.equipment (name, icon_code, type_id) VALUES ('LED TV 40in', '58163', 2); --4
 -- Projectors
-INSERT INTO meeteenew.equipment (name, icon_name, type_id) VALUES ('Projector 8ft"', 'picture_in_picture', 2); --5
-INSERT INTO meeteenew.equipment (name, icon_name, type_id) VALUES ('Projector 16ft', 'picture_in_picture', 2); --6
+INSERT INTO meeteenew.equipment (name, icon_code, type_id) VALUES ('Projector 8ft"', '59562', 2); --5
+INSERT INTO meeteenew.equipment (name, icon_code, type_id) VALUES ('Projector 16ft', '59562', 2); --6
 -- Wifi
-INSERT INTO meeteenew.equipment (name, icon_name, type_id) VALUES ('High Speed Wifi', 'network_wifi', 2); --7
+INSERT INTO meeteenew.equipment (name, icon_code, type_id) VALUES ('High Speed Wifi', '57786', 2); --7
 -- Power Bar
-INSERT INTO meeteenew.equipment (name, icon_name, type_id) VALUES ('PowerBar 1 Slot', 'power', 2); --8
-INSERT INTO meeteenew.equipment (name, icon_name, type_id) VALUES ('PowerBar 2 Slots', 'power', 2); --9
+INSERT INTO meeteenew.equipment (name, icon_code, type_id) VALUES ('PowerBar 1 Slot', '58940', 2); --8
+INSERT INTO meeteenew.equipment (name, icon_code, type_id) VALUES ('PowerBar 2 Slots', '58940', 2); --9
 
 -- EQUIP LINK FAC_CATE
 -- 1 Meet S
@@ -51,10 +51,14 @@ VALUES (1, 7);
 INSERT INTO meeteenew.facility_has_equipments (cate_id, equipment_id) 
 VALUES (2, 2);
 INSERT INTO meeteenew.facility_has_equipments (cate_id, equipment_id) 
+VALUES (2, 5);
+INSERT INTO meeteenew.facility_has_equipments (cate_id, equipment_id) 
 VALUES (2, 7);
 -- 3 Meet L
 INSERT INTO meeteenew.facility_has_equipments (cate_id, equipment_id) 
 VALUES (3, 3);
+INSERT INTO meeteenew.facility_has_equipments (cate_id, equipment_id) 
+VALUES (3, 6);
 INSERT INTO meeteenew.facility_has_equipments (cate_id, equipment_id) 
 VALUES (3, 7);
 -- 4 Single Chair
