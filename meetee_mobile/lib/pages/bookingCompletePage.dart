@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:meetee_mobile/components/countDownPanel.dart';
+import 'package:meetee_mobile/components/countDownText.dart';
 
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
@@ -53,11 +55,37 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
 
   int _start;
 
+  Timer _timer;
+
   @override
   void initState() {
     countDownToUnlock();
-
+    startTimer();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (_start < 1) {
+            print('cancel');
+            timer.cancel();
+            _start = 0;
+          } else {
+            _start = _start - 1;
+          }
+        },
+      ),
+    );
   }
 
   Future countDownToUnlock() async {
@@ -79,11 +107,69 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
               DateTime.now(),
             )
             .inSeconds;
-        _start = 230;
+//        _start = 230;
       });
       print(_upComingBookingJson);
     } else {
       print('ereer');
+    }
+  }
+
+  _buildTimerText() {
+    if (_start > 0 && _start < 60) {
+//      return Text(
+//        'You can activate your facilities in '
+//        '${(_start / 60 / 60 % 24).floor().toString().padLeft(2, '0')}'
+//        ':'
+//        '${(_start / 60 % 60).floor().toString().padLeft(2, '0')}'
+//        ':'
+//        '${(_start % 60).toString().padLeft(2, '0')}',
+//        style: TextStyle(
+//          fontSize: 16.0,
+//        ),
+//      );
+      return Text(
+        'You can activate your facilities in '
+        ' ${(_start % 60).toString().padLeft(2, '0')}'
+        ' seconds',
+        style: TextStyle(
+          fontSize: 12.0,
+        ),
+      );
+    } else if (_start >= 60 && _start < 3600) {
+      return Text(
+        'You can activate your facilities in '
+        '${(_start / 60 % 60).floor().toString()}'
+        ' minutes',
+        style: TextStyle(
+          fontSize: 12.0,
+        ),
+      );
+    } else if (_start >= 3600 && _start < 86400) {
+      return Text(
+        'You can activate your facilities in '
+        '${(_start / 60 / 60 % 24).floor().toString()}'
+        ' hours',
+        style: TextStyle(
+          fontSize: 12.0,
+        ),
+      );
+    } else if (_start >= 86400 && _start < 172800) {
+      return Text(
+        'You can activate your facilities in '
+        '${(_start / 60 / 60 / 24 % 30).floor().toString()} day',
+        style: TextStyle(
+          fontSize: 14.0,
+        ),
+      );
+    } else if (_start >= 172800) {
+      Text(
+        'You can activate your facilities in  '
+        '${(_start / 60 / 60 / 24 % 30).floor().toString()} days',
+        style: TextStyle(
+          fontSize: 14.0,
+        ),
+      );
     }
   }
 
@@ -157,14 +243,15 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
               Expanded(
                 child: Container(),
               ),
-              Text(
-                'You can activate your facilities in 02:51',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize:
-                      widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
-                ),
-              ),
+//              Text(
+//                'You can activate your facilities in 02:51',
+//                textAlign: TextAlign.center,
+//                style: TextStyle(
+//                  fontSize:
+//                      widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
+//                ),
+//              ),
+              _buildTimerText(),
 //              Container(
 //                height: 40,
 //                child: CountDownPanel(

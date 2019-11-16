@@ -52,6 +52,10 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
       setState(() {
         _isToday = false;
       });
+    } else if (startDate.day == DateTime.now().day) {
+      setState(() {
+        _isToday = true;
+      });
     }
     setState(() {
       this.startDate = startDate;
@@ -73,10 +77,11 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
   @override
   void initState() {
     super.initState();
-    if (DateTime.now().hour >= 0) {
-      startTime = 8;
-      endTime = 9;
-    }
+//    if (DateTime.now().hour >= 0) {
+//      startTime = 8;
+//      endTime = 9;
+//      _isToday = false;
+//    }
     print(widget.userId);
     urlGetCategoryByFacilityType =
         'http://18.139.12.132:9000/fac/type/${widget.facilityType.typeId}';
@@ -145,7 +150,9 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
               userId: widget.userId,
               type: widget.index,
               index: index,
-              imgPath: categoriesMap[index]["link_url"],
+              imgPath: categoriesMap[index]["image_url"],
+              mapPath: categoriesMap[index]["map_url"],
+              categoryIcon: categoriesMap[index]["icon_url"],
               cateId: categoriesMap[index]["cateid"],
               categoryName: categoriesMap[index]["catename"],
               categoryDetail: categoriesMap[index],
@@ -170,7 +177,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
               borderRadius: BorderRadius.circular(16.0),
               child: Container(
                 child: Image.network(
-                  _categoriesList[index]["link_url"],
+                  _categoriesList[index]["image_url"],
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.cover,
@@ -179,10 +186,10 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
             ),
           ),
           Positioned(
-            top: 16.0,
-            right: 16.0,
+            top: 8.0,
+            right: 8.0,
             child: Container(
-              padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+              padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
 //            width: 100,
               decoration: BoxDecoration(
 //                borderRadius: BorderRadius.horizontal(
@@ -191,7 +198,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
 //                  ),
 //                ),
                 borderRadius: BorderRadius.all(
-                  Radius.circular(16.0),
+                  Radius.circular(8.0),
                 ),
                 color: Colors.black.withOpacity(0.5),
 //                color: Color(
@@ -203,7 +210,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                 style: TextStyle(
                   fontSize:
                       widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
-                  color: Colors.red[400],
+                  color: Colors.white,
                   letterSpacing: 1.0,
                 ),
               ),
@@ -241,12 +248,12 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                       ),
                       child: Container(
                         color: Colors.black.withOpacity(0.5),
-                        padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 16.0),
+                        padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 12.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(
                                   _categoriesList[index]["catename"].toString(),
@@ -258,10 +265,17 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                                     color: Colors.white,
                                   ),
                                 ),
+                                SvgPicture.network(
+                                  _categoriesList[index]["icon_url"],
+                                  height: widget.isLargeScreen
+                                      ? fontSizeH1[0]
+                                      : fontSizeH1[1],
+                                  color: Colors.white,
+                                ),
                               ],
                             ),
                             SizedBox(
-                              height: 4.0,
+                              height: 6.0,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -324,6 +338,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
 
   @override
   Widget build(BuildContext context) {
+//    print(_isToday);
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -364,13 +379,20 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                       widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
                   isLargeScreen: widget.isLargeScreen,
                 ),
-                _isToday && DateTime.now().hour <= 21
-                    ? PeriodPickerToday(
-                        returnStartTime: _updateStartTime,
-                        returnEndTime: _updateEndTime,
-                        color: widget.facilityType.secondaryColorCode,
-                        isLargeScreen: widget.isLargeScreen,
-                      )
+                _isToday
+                    ? DateTime.now().hour <= 21
+                        ? PeriodPickerToday(
+                            returnStartTime: _updateStartTime,
+                            returnEndTime: _updateEndTime,
+                            color: widget.facilityType.secondaryColorCode,
+                            isLargeScreen: widget.isLargeScreen,
+                          )
+                        : PeriodPicker(
+                            returnStartTime: _updateStartTime,
+                            returnEndTime: _updateEndTime,
+                            color: widget.facilityType.secondaryColorCode,
+                            isLargeScreen: widget.isLargeScreen,
+                          )
                     : PeriodPicker(
                         returnStartTime: _updateStartTime,
                         returnEndTime: _updateEndTime,

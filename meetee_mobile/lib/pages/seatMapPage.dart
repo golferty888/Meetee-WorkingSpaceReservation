@@ -18,6 +18,8 @@ class SeatMapPage extends StatefulWidget {
   final int userId;
   final int index;
   final String imgPath;
+  final String mapPath;
+  final String categoryIcon;
   final String categoryName;
   final int cateId;
   final int secondaryColor;
@@ -34,6 +36,8 @@ class SeatMapPage extends StatefulWidget {
       this.userId,
       this.index,
       this.imgPath,
+      this.mapPath,
+      this.categoryIcon,
       this.categoryName,
       this.cateId,
       this.secondaryColor,
@@ -123,6 +127,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
             _seatsList = json.decode(snapshot.data.body);
             _isFetched = true;
 //            print(_seatsList);
+
             return Container(
               height: 64,
               child: Stack(
@@ -130,160 +135,196 @@ class _SeatMapPageState extends State<SeatMapPage> {
                   ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: _seatsList.length,
+                    padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
                     itemBuilder: (BuildContext context, int index) {
-                      return _seatsList[index]["status"] == "available"
-                          ? GestureDetector(
-                              onTap: () => _onSelectedSeat(
-                                _seatsList[index]["facid"],
-                                _seatsList[index]["code"],
-                              ),
-                              child: Container(
-//                                margin: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                                decoration: BoxDecoration(
-                                  color: _selectedSeatList
-                                          .contains(_seatsList[index]["facid"])
-                                      ? Color(widget.secondaryColor)
-                                      : Colors.white,
-//                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                width: 64,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-//                                    SvgPicture.asset(
-//                                      'images/categoryIcon/single-sofa.svg',
-//                                      height: 32,
+                      return _buildSelectableGrid(_seatsList, index);
+//                      return _seatsList[index]["status"] == "available"
+//                          ? GestureDetector(
+//                              onTap: () => _onSelectedSeat(
+//                                _seatsList[index]["facid"],
+//                                _seatsList[index]["code"],
+//                              ),
+//                              child: Container(
+//                                margin: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+//                                decoration: BoxDecoration(
+//                                  color: _selectedSeatList
+//                                          .contains(_seatsList[index]["facid"])
+//                                      ? Color(widget.secondaryColor)
+//                                      : Colors.transparent,
+//                                  borderRadius: BorderRadius.circular(8.0),
+////                                  border: Border.all(
+////                                    color: Colors.grey[900].withOpacity(0.2),
+////                                  ),
+//                                ),
+//                                width: 64,
+//                                child: Column(
+//                                  mainAxisAlignment:
+//                                      MainAxisAlignment.spaceEvenly,
+//                                  children: <Widget>[
+//                                    SvgPicture.network(
+//                                      widget.categoryIcon,
+//                                      height: 24,
+//                                      color: _selectedSeatList.contains(
+//                                              _seatsList[index]["facid"])
+//                                          ? Colors.black
+//                                          : Colors.white,
 //                                    ),
-                                    Icon(
-                                      Icons.airline_seat_recline_normal,
-                                    ),
-
-                                    Center(
-                                      child: Text(
-                                        _seatsList[index]["code"].toString(),
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-//                                      letterSpacing: 1.0,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Container(
-                              width: 64,
-                              color: Colors.grey[200],
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-//                                  SvgPicture.asset(
-//                                    'images/categoryIcon/single-sofa.svg',
-//                                    color: Colors.grey[600],
-//                                    height: 32,
+//                                    Center(
+//                                      child: Text(
+//                                        _seatsList[index]["code"].toString(),
+//                                        style: TextStyle(
+//                                          color: _selectedSeatList.contains(
+//                                                  _seatsList[index]["facid"])
+//                                              ? Colors.black
+//                                              : Colors.white,
+//                                          fontWeight: FontWeight.normal,
+////                                      letterSpacing: 1.0,
+//                                        ),
+//                                      ),
+//                                    ),
+//                                  ],
+//                                ),
+//                              ),
+//                            )
+//                          : Container(
+//                              width: 64,
+//                              margin: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+//                              color: Colors.transparent,
+//                              child: Column(
+//                                mainAxisAlignment:
+//                                    MainAxisAlignment.spaceEvenly,
+//                                children: <Widget>[
+//                                  SvgPicture.network(
+//                                    widget.categoryIcon,
+//                                    height: 24,
+//                                    color: Colors.grey[800].withOpacity(0.4),
 //                                  ),
-                                  Icon(
-                                    Icons.airline_seat_recline_normal,
-                                    color: Colors.grey[400],
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      _seatsList[index]["code"].toString(),
-                                      style: TextStyle(
-                                        color: Colors.grey[400],
-                                        fontWeight: FontWeight.normal,
-//                                    letterSpacing: 1.5,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
+//                                  Center(
+//                                    child: Text(
+////                                      _seatsList[index]["code"].toString(),
+//                                      'Booked',
+//                                      style: TextStyle(
+//                                        color:
+//                                            Colors.grey[800].withOpacity(0.5),
+//                                        fontWeight: FontWeight.normal,
+////                                    letterSpacing: 1.5,
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ],
+//                              ),
+//                            );
                     },
                   ),
-//                  Align(
-//                    alignment: Alignment.centerRight,
-//                    child: Container(
-//                      width: 4,
-//                      color: Colors.black.withOpacity(0.5),
-//                    ),
-//                  ),
                 ],
               ),
             );
-//            return Padding(
-//              padding: EdgeInsets.all(8.0),
-//              child: GridView.count(
-//                shrinkWrap: true,
-//                primary: false,
-//                crossAxisCount: 3,
-//                childAspectRatio: 1.7,
-//                children: List.generate(
-//                  _seatsList.length,
-//                  (index) {
-//                    return _seatsList[index]["status"] == "available"
-//                        ? GestureDetector(
-//                            onTap: () => _onSelectedSeat(
-//                              _seatsList[index]["facid"],
-//                              _seatsList[index]["code"],
-//                            ),
-//                            child: Container(
-//                              margin: EdgeInsets.all(8.0),
-//                              decoration: BoxDecoration(
-//                                color: _selectedSeatList
-//                                        .contains(_seatsList[index]["facid"])
-//                                    ? Color(widget.secondaryColor)
-//                                    : Colors.grey[200],
-//                                borderRadius: BorderRadius.circular(8.0),
-//                              ),
-//                              child: Center(
-//                                child: Text(
-//                                  _seatsList[index]["code"],
-//                                  style: TextStyle(
-//                                    fontSize: widget.isLargeScreen
-//                                        ? fontSizeH3[0]
-//                                        : fontSizeH3[1],
-//                                    fontWeight: FontWeight.normal,
-//                                    letterSpacing: 1.5,
-//                                  ),
-//                                ),
-//                              ),
-//                            ),
-//                          )
-//                        : Container(
-//                            margin: EdgeInsets.all(8.0),
-//                            decoration: BoxDecoration(
-//                              color: Colors.transparent,
-//                              borderRadius: BorderRadius.circular(8.0),
-//                              border: Border.all(
-//                                color: Colors.grey[200].withOpacity(0.3),
-//                              ),
-//                            ),
-//                            child: Center(
-//                              child: Text(
-//                                _seatsList[index]["code"],
-//                                style: TextStyle(
-//                                  fontSize: widget.isLargeScreen
-//                                      ? fontSizeH3[0]
-//                                      : fontSizeH3[1],
-//                                  color: Colors.white.withOpacity(0.3),
-//                                  fontWeight: FontWeight.normal,
-//                                  letterSpacing: 1.5,
-//                                ),
-//                              ),
-//                            ),
-//                          );
-//                  },
-//                ),
-//              ),
-//            );
         }
         return null;
       },
     );
+  }
+
+  _buildSelectableGrid(List seatsList, int index) {
+//    print(seatsList[index]["status"]);
+    if (seatsList[index]["status"] == "available") {
+      return GestureDetector(
+        onTap: () => _onSelectedSeat(
+          _seatsList[index]["facid"],
+          _seatsList[index]["code"],
+        ),
+        child: Container(
+          margin: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+          decoration: BoxDecoration(
+            color: _selectedSeatList.contains(_seatsList[index]["facid"])
+                ? Color(widget.secondaryColor)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(
+              color: _selectedSeatList.contains(_seatsList[index]["facid"])
+                  ? Colors.transparent
+                  : Colors.grey[500].withOpacity(0.4),
+            ),
+          ),
+          width: 64,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              SvgPicture.network(
+                widget.categoryIcon,
+                height: 24,
+                color: _selectedSeatList.contains(_seatsList[index]["facid"])
+                    ? Colors.black
+                    : Colors.white,
+              ),
+              Center(
+                child: Text(
+                  _seatsList[index]["code"].toString(),
+                  style: TextStyle(
+                    color:
+                        _selectedSeatList.contains(_seatsList[index]["facid"])
+                            ? Colors.black
+                            : Colors.white,
+                    fontWeight: FontWeight.normal,
+//                                      letterSpacing: 1.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else if (seatsList[index]["status"] == "unavailable") {
+      return Container(
+        width: 64,
+        margin: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            SvgPicture.network(
+              widget.categoryIcon,
+              height: 24,
+              color: Colors.grey[800].withOpacity(0.4),
+            ),
+            Center(
+              child: Text(
+                'Booked',
+                style: TextStyle(
+                  color: Colors.grey[800].withOpacity(0.5),
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (seatsList[index]["status"] == "pending") {
+      return Container(
+        width: 64,
+        margin: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            SvgPicture.network(
+              widget.categoryIcon,
+              height: 24,
+              color: Colors.amber[600].withOpacity(0.7),
+            ),
+            Center(
+              child: Text(
+                'Pending',
+                style: TextStyle(
+                  color: Colors.amber[600].withOpacity(0.7),
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   _buildLegends(Color color, String text) {
@@ -313,6 +354,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
 
   @override
   Widget build(BuildContext context) {
+//    print(widget.categoryIcon);
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -334,6 +376,9 @@ class _SeatMapPageState extends State<SeatMapPage> {
                 color: Colors.black.withOpacity(0.5),
               ),
             ),
+          ),
+          Container(
+            color: Colors.black.withOpacity(0.7),
           ),
           SafeArea(
             child: Container(
@@ -380,34 +425,34 @@ class _SeatMapPageState extends State<SeatMapPage> {
                 ),
                 Expanded(
                   child: Container(
-//                  padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-                    child: FittedBox(
-                      child: Container(
-                        color: Colors.white,
-                        child: SvgPicture.asset(
-                          'images/map/meetee-map-sm.svg',
-                          width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                    child: Container(
+//                      color: Colors.black.withOpacity(0.7),
+                      child: SvgPicture.network(
+                        widget.mapPath,
+//                        'images/map/meetee-map.svg',
+//                          width: MediaQuery.of(context).size.width,
 //                          fit: BoxFit.fitWidth,
-                        ),
                       ),
+//                        child: Image.asset('images/map/meetee-map-test-01.png'),
                     ),
                   ),
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
+//                    color: Colors.black.withOpacity(0.7),
 //                      border: Border.all(
 //                        color: Colors.grey[200].withOpacity(0.5),
 //                      ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  margin: EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 8.0),
-//                    padding: EdgeInsets.all(8.0),
+//                    borderRadius: BorderRadius.circular(8.0),
+                      ),
+//                  margin: EdgeInsets.fromLTRB(32.0, 8.0, 32.0, 8.0),
+//                  padding: EdgeInsets.fromLTRB(24, 0.0, 24, 0.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Container(
-                        padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                        padding: EdgeInsets.fromLTRB(48.0, 0.0, 48.0, 8.0),
                         child: Text(
                           widget.categoryName,
                           textAlign: TextAlign.start,
@@ -425,7 +470,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
                           borderRadius:
                               BorderRadius.vertical(top: Radius.circular(8.0)),
                         ),
-                        padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+                        padding: EdgeInsets.fromLTRB(48.0, 0.0, 48.0, 16.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -477,9 +522,10 @@ class _SeatMapPageState extends State<SeatMapPage> {
                         decoration: BoxDecoration(
 //                            color: Colors.black.withOpacity(0.5),
                           borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(8.0)),
+                            bottom: Radius.circular(8.0),
+                          ),
                         ),
-                        padding: EdgeInsets.all(16.0),
+                        padding: EdgeInsets.fromLTRB(48.0, 16.0, 48.0, 16.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -492,8 +538,9 @@ class _SeatMapPageState extends State<SeatMapPage> {
                               'Available',
                             ),
                             _buildLegends(
-                              Colors.grey[500],
-                              'Booked',
+//                              Colors.grey[800].withOpacity(0.4),
+                              Colors.amber,
+                              'Pending',
                             ),
                           ],
                         ),
@@ -504,18 +551,19 @@ class _SeatMapPageState extends State<SeatMapPage> {
                 Container(
                   height: 48.0,
                   margin: EdgeInsets.fromLTRB(
-                    32.0,
+                    24.0,
                     8.0,
-                    32.0,
+                    24.0,
                     16.0,
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Flexible(
                         flex: 1,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.grey[500],
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Center(
@@ -523,8 +571,8 @@ class _SeatMapPageState extends State<SeatMapPage> {
                               '฿${_totalPrice.toString()}',
                               style: TextStyle(
                                 letterSpacing: 2.0,
-//                                    fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -542,7 +590,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
                           ),
                           color: Color(widget.secondaryColor),
                           disabledColor:
-                              Color(widget.secondaryColor).withOpacity(0.5),
+                              Color(widget.secondaryColor).withOpacity(0.3),
                           onPressed: _selectedSeatList.length == 0
                               ? null
                               :
@@ -579,7 +627,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                         style: TextStyle(
                                           letterSpacing: 1.5,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.grey[800],
+                                          color: Colors.grey[700],
                                         ),
                                       )
                                     : Text(
@@ -587,7 +635,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                         style: TextStyle(
                                           letterSpacing: 1.5,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.grey[800],
+                                          color: Colors.grey[700],
                                         ),
                                       )
                                 : Row(

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +17,8 @@ class FacilityDetail extends StatefulWidget {
   final int type;
   final int index;
   final String imgPath;
+  final String mapPath;
+  final String categoryIcon;
   final int cateId;
   final String categoryName;
   final Map categoryDetail;
@@ -31,6 +34,8 @@ class FacilityDetail extends StatefulWidget {
     this.type,
     this.index,
     this.imgPath,
+    this.mapPath,
+    this.categoryIcon,
     this.cateId,
     this.categoryName,
     this.categoryDetail,
@@ -125,6 +130,7 @@ class FacilityDetailState extends State<FacilityDetail> {
                                           preferBelow: false,
                                           margin: EdgeInsets.only(bottom: 8.0),
                                           height: 40,
+                                          waitDuration: Duration(seconds: 100),
                                           message: _equipmentList[index]
                                               ["eqname"],
                                           child: Icon(
@@ -177,12 +183,13 @@ class FacilityDetailState extends State<FacilityDetail> {
                             child: Container(
                               color: Colors.black.withOpacity(0.5),
                               padding:
-                                  EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 12.0),
+                                  EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 12.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
                                         widget.categoryName,
@@ -194,10 +201,17 @@ class FacilityDetailState extends State<FacilityDetail> {
                                           color: Colors.white,
                                         ),
                                       ),
+                                      SvgPicture.network(
+                                        widget.categoryIcon,
+                                        height: widget.isLargeScreen
+                                            ? fontSizeH1[0]
+                                            : fontSizeH1[1],
+                                        color: Colors.white,
+                                      ),
                                     ],
                                   ),
                                   SizedBox(
-                                    height: 4.0,
+                                    height: 6.0,
                                   ),
                                   Row(
                                     mainAxisAlignment:
@@ -268,6 +282,8 @@ class FacilityDetailState extends State<FacilityDetail> {
                                                   widget.isLargeScreen,
                                               index: widget.index,
                                               imgPath: widget.imgPath,
+                                              mapPath: widget.mapPath,
+                                              categoryIcon: widget.categoryIcon,
                                               secondaryColor:
                                                   widget.secondaryColor,
                                               cateId: widget.cateId,

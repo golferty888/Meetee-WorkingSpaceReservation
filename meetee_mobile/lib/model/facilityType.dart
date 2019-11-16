@@ -33,6 +33,7 @@ List<FacilityType> facilityTypeList = [
     {
       'Single chair': {
         'cateImage': 'images/category/seat/single_chair.jpg',
+        'cateIcon': '',
         'cateId': '4',
         'capacity': 1,
         'price': 30,
@@ -51,6 +52,7 @@ List<FacilityType> facilityTypeList = [
       },
       'Twin sofa': {
         'cateImage': 'images/category/seat/twin_sofa.jpg',
+        'cateIcon': 'images/categoryIcon/twin-sofa.svg',
         'cateId': '7',
         'capacity': 2,
         'price': 60,
