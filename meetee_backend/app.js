@@ -49,7 +49,7 @@ app.use(
   })
 );
 
-const facility = require("./controllers/query/facility");
+const facDetail = require("./controllers/query/facilityDetail");
 const equipment = require("./controllers/query/equipment");
 const facStatus = require("./controllers/query/facilityStatus");
 const user = require("./controllers/query/user");
@@ -75,8 +75,8 @@ app.post(
 
 // Rest API
 // Getting Room/Seat Information
-app.get("/fac", consl.req, facility.getAllFacility);
-app.get("/fac/type/:id", consl.req, facility.getFacilityCategoriesFromType);
+app.get("/fac", consl.req, facDetail.getAllFacility);
+app.get("/fac/type/:id", consl.req, facDetail.getFacilityCategoriesFromType);
 app.get("/fac/cate/:id", consl.req, equipment.getFacilityCategoryDetail);
 // Checking Room/Seat Status
 app.post("/facility/type/status/av", consl.req, facStatus.checkStatusAvaialableAllCategories);
