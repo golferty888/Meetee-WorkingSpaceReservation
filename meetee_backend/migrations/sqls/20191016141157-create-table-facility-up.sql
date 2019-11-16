@@ -11,7 +11,8 @@ CREATE TABLE meeteenew.facility_category(
     name    VARCHAR(256) NOT NULL,
     capacity    VARCHAR(256) NOT NULL,
     price   NUMERIC(5, 2) NOT NULL CHECK(price > 0),
-    link_url VARCHAR(256) NOT NULL,
+    image_url VARCHAR(256) NOT NULL,
+    icon_url VARCHAR(256) NOT NULL,
     detail  VARCHAR(1024),
     type_id  INT    NOT NULL,
     FOREIGN KEY(type_id) REFERENCES meeteenew.facility_type(id)
@@ -29,22 +30,22 @@ INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Meeting Room', '0x
 INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Private Seat', '0xFFFF8989');
 INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Seminar Room',  '0xFF92D2FC');
 --CATEGORY
-INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
-VALUES('Meeting Room S', '4', 120, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-s.jpg', 1);
-INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
-VALUES('Meeting Room M', '8', 250, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-m.jpg', 1);
-INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
-VALUES('Meeting Room L', '12', 400, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-l.jpg', 1);
-INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
-VALUES('Single Chair', '1', 30, 'https://storage.googleapis.com/meetee-file-storage/img/fac/single-chair.jpg', 2);
-INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
-VALUES('Bar Table', '1', 30, 'https://storage.googleapis.com/meetee-file-storage/img/fac/bar-chair.jpg', 2);
-INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
-VALUES('Single Sofa', '1', 40, 'https://storage.googleapis.com/meetee-file-storage/img/fac/single-sofa.jpg', 2);
-INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
-VALUES('Twin Sofa', '2', 60, 'https://storage.googleapis.com/meetee-file-storage/img/fac/twin-sofa.jpg', 2);
-INSERT INTO meeteenew.facility_category(name, capacity, price, link_url, type_id)
-VALUES('Hall room', '30', 950, 'https://storage.googleapis.com/meetee-file-storage/img/fac/hall-room.jpg', 3);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
+VALUES('Meeting Room S', '4', 120, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-s.jpg', '-', 1);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
+VALUES('Meeting Room M', '8', 250, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-m.jpg', '-', 1);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
+VALUES('Meeting Room L', '12', 400, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-l.jpg', '-', 1);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
+VALUES('Single Chair', '1', 30, 'https://storage.googleapis.com/meetee-file-storage/img/fac/single-chair.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/single-chair.svg', 2);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
+VALUES('Bar Table', '1', 30, 'https://storage.googleapis.com/meetee-file-storage/img/fac/bar-chair.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/bar-chair.svg', 2);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
+VALUES('Single Sofa', '1', 40, 'https://storage.googleapis.com/meetee-file-storage/img/fac/single-sofa.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/single-sofa.svg', 2);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
+VALUES('Twin Sofa', '2', 60, 'https://storage.googleapis.com/meetee-file-storage/img/fac/twin-sofa.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/twin-sofa.svg', 2);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
+VALUES('Hall room', '30', 950, 'https://storage.googleapis.com/meetee-file-storage/img/fac/hall-room.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/hall-room.svg', 3);
 -- --ITEMS
 -- cateId: 1 Meeting Room S
 INSERT INTO meeteenew.facility(code, floor, cate_id)
@@ -67,27 +68,27 @@ VALUES('MM-04', 1, 2);
 -- cateId: 3 Meeting Room L
 INSERT INTO meeteenew.facility(code, floor, cate_id)
 VALUES('ML-01', 1, 3);
--- cateId: 4 Chair Single CS
+-- cateId: 4 Single Chair SC
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-01', 1, 4);
+VALUES('SC-01', 1, 4);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-02', 1, 4);
+VALUES('SC-02', 1, 4);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-03', 1, 4);
+VALUES('SC-03', 1, 4);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-04', 1, 4);
+VALUES('SC-04', 1, 4);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-05', 1, 4);
+VALUES('SC-05', 1, 4);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-06', 1, 4);
+VALUES('SC-06', 1, 4);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-07', 1, 4);
+VALUES('SC-07', 1, 4);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-08', 1, 4);
+VALUES('SC-08', 1, 4);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-09', 1, 4);
+VALUES('SC-09', 1, 4);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('CS-10', 1, 4);
+VALUES('SC-10', 1, 4);
 -- cateId: 5 Bar Table BT
 INSERT INTO meeteenew.facility(code, floor, cate_id)
 VALUES('BT-01', 1, 5);
@@ -118,15 +119,15 @@ INSERT INTO meeteenew.facility(code, floor, cate_id)
 VALUES('SS-04', 1, 6);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
 VALUES('SS-05', 1, 6);
--- cateId: 7 Sofa Twin  ST
+-- cateId: 7 Twin Sofa TS
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('ST-01', 1, 7);
+VALUES('TS-01', 1, 7);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('ST-02', 1, 7);
+VALUES('TS-02', 1, 7);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('ST-03', 1, 7);
+VALUES('TS-03', 1, 7);
 INSERT INTO meeteenew.facility(code, floor, cate_id)
-VALUES('ST-04', 1, 7);
+VALUES('TS-04', 1, 7);
 -- cateId: 8 Hall room
 INSERT INTO meeteenew.facility(code, floor, cate_id)
 VALUES('HR-01', 1, 8);
