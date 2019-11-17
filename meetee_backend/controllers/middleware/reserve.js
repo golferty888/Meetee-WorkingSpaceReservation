@@ -14,7 +14,7 @@ exports.middleWare = (request, response, next) => {
   const statement = `select id from meeteenew.reservation
     where user_id = $1 and start_time = $2 and end_time = $3`;
   const values = [userId, start_time, end_time];
-  pool.query(statement, values, async (error, results) => {
+  pool.query(statement, values, (error, results) => {
     try {
       if (
         userId == null ||
@@ -54,6 +54,7 @@ exports.middleWare = (request, response, next) => {
               if (i == facList.length - 1)
                 try {
                   if (errDetect) {
+                    console.log("#Redundancy Booking is detected")
                     throw new ErrorHandler(500, "Sorry about the redundancy.");
                   } else {
                     next();

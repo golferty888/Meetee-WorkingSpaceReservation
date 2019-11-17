@@ -108,7 +108,7 @@ app.post(
 );
 // Do Reserve Room/Seat
 // app.post("/reserve", consl.req, reserve.middleWare, reservation.reserve);
-app.post("/reserve", consl.req, redundancy.middleWare, booking.reserve);
+app.post("/reserve", consl.req, reserve.middleWare, booking.reserve);
 // Reservation Information
 app.post("/user/history", consl.req, user.getReservationHistoryList);
 app.post(
