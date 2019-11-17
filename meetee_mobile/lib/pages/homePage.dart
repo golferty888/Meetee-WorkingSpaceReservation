@@ -519,6 +519,155 @@ class _HomePageState extends State<HomePage>
               ),
               SliverToBoxAdapter(
                 child: Padding(
+                  padding: EdgeInsets.only(top: 0.0),
+                  child: Divider(
+                    indent: 16.0,
+                    endIndent: 16.0,
+                    color: Colors.grey[400],
+                  ),
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate.fixed(
+                  [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
+                      child: Text(
+                        'Upcoming bookings',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+                      child: Text(
+                        'You can activate your facilities here.',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _isUpComingBookingLoadDone
+                  ? SliverToBoxAdapter(
+                      child: _upComingBookingJson.length == 0
+                          ? Container(
+                              height: 80,
+                              child: Center(
+                                child: Text('No upcoming booking'),
+                              ),
+                            )
+                          : Container(
+                              height: 184,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: _upComingBookingJson == null
+                                    ? 0
+                                    : _upComingBookingJson.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _buildUpComingBookingCard(index);
+                                },
+                              ),
+                            ),
+                    )
+                  : SliverToBoxAdapter(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 1 / 3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15.0,
+                                bottom: 5.0,
+                                top: 8.0,
+                              ),
+                              child: SkeletonAnimation(
+                                child: Container(
+                                  height: 15,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.grey[300]),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15.0,
+                                bottom: 5.0,
+                                top: 8.0,
+                              ),
+                              child: SkeletonAnimation(
+                                child: Container(
+                                  height: 15,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.grey[300]),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 15.0,
+                                bottom: 5.0,
+                                top: 8.0,
+                              ),
+                              child: SkeletonAnimation(
+                                child: Container(
+                                  height: 15,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.grey[300]),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: SkeletonAnimation(
+                                  child: Container(
+                                    width: 60,
+                                    height: 13,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        color: Colors.grey[300]),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 8.0, bottom: 24),
+                  child: Divider(
+                    indent: 16.0,
+                    endIndent: 16.0,
+                    color: Colors.grey[400],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
                   padding: EdgeInsets.fromLTRB(
                     16.0,
                     0.0,
@@ -698,145 +847,6 @@ class _HomePageState extends State<HomePage>
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.only(top: 32.0),
-                  child: Divider(
-                    indent: 16.0,
-                    endIndent: 16.0,
-                    color: Colors.grey[400],
-                  ),
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate.fixed(
-                  [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(16.0, 16.0, 0.0, 8.0),
-                      child: Text(
-                        'Upcoming bookings',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
-                      child: Text(
-                        'You can activate your facilities here.',
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _isUpComingBookingLoadDone
-                  ? SliverToBoxAdapter(
-                      child: _upComingBookingJson.length == 0
-                          ? Container(
-                              height: 80,
-                              child: Center(
-                                child: Text('No upcoming booking'),
-                              ),
-                            )
-                          : Container(
-                              height: 184,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: _upComingBookingJson == null
-                                    ? 0
-                                    : _upComingBookingJson.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return _buildUpComingBookingCard(index);
-                                },
-                              ),
-                            ),
-                    )
-                  : SliverToBoxAdapter(
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 1 / 3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 15.0,
-                                bottom: 5.0,
-                                top: 8.0,
-                              ),
-                              child: SkeletonAnimation(
-                                child: Container(
-                                  height: 15,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[300]),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 15.0,
-                                bottom: 5.0,
-                                top: 8.0,
-                              ),
-                              child: SkeletonAnimation(
-                                child: Container(
-                                  height: 15,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[300]),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 15.0,
-                                bottom: 5.0,
-                                top: 8.0,
-                              ),
-                              child: SkeletonAnimation(
-                                child: Container(
-                                  height: 15,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[300]),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15.0),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 5.0),
-                                child: SkeletonAnimation(
-                                  child: Container(
-                                    width: 60,
-                                    height: 13,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        color: Colors.grey[300]),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 24.0),
                   child: Divider(
                     indent: 16.0,
                     endIndent: 16.0,
