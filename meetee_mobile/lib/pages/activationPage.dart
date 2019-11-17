@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -36,9 +37,9 @@ class _ActivationPageState extends State<ActivationPage>
 
   @override
   void initState() {
-    print('init: ${widget.upComingBookingJson}');
+//    print('init: ${widget.upComingBookingJson}');
     _fadeController = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 200),
       vsync: this,
     );
     _fadeAnimation = Tween(
@@ -51,7 +52,7 @@ class _ActivationPageState extends State<ActivationPage>
           DateTime.now(),
         )
         .inSeconds;
-//    _start = 10;
+//    _start = 4;
 //    _start = 172850;
     startTimer();
     print('seconds: $_start');
@@ -75,7 +76,7 @@ class _ActivationPageState extends State<ActivationPage>
       (Timer timer) => setState(
         () {
           if (_start < 1) {
-            print('cancel');
+            print('time\' up');
             timer.cancel();
             _start = 0;
           } else {
@@ -110,7 +111,7 @@ class _ActivationPageState extends State<ActivationPage>
 
   _buildUpComingFacilities(int index) {
     return Container(
-      padding: EdgeInsets.all(8.0),
+      padding: EdgeInsets.fromLTRB(8, 8, 12, 8),
       margin: EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: Color(
@@ -119,38 +120,67 @@ class _ActivationPageState extends State<ActivationPage>
         borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[700],
-            blurRadius: 16.0, // has the effect of softening the shadow
-            spreadRadius: -8, // has the effect of extending the shadow
-            offset: Offset(
-              0.0, // horizontal, move right 10
-              8.0, // vertical, move down 10
-            ),
-          )
-        ],
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            '${widget.upComingBookingJson["faclist"][index]["cateName"]}',
-            style: TextStyle(
-              color: Colors.black54,
-              fontSize: 14.0,
-            ),
+          Row(
+            children: <Widget>[
+              SvgPicture.network(
+                widget.upComingBookingJson["faclist"][index]["icon_url"],
+                color: Colors.black,
+                height: 48,
+              ),
+              SizedBox(
+                width: 6,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Until ',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      Text(
+                        '${DateFormat("hh:00").format(
+                          DateTime.parse(widget.upComingBookingJson["faclist"]
+                              [index]["end_time"]),
+                        )}',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          wordSpacing: 2,
+                          fontSize: 14.0,
+//                  fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '${widget.upComingBookingJson["faclist"][index]["cateName"]}',
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  Text(
+                    '${widget.upComingBookingJson["faclist"][index]["code"]}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      wordSpacing: 2,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
-          Text(
-            '${widget.upComingBookingJson["faclist"][index]["code"]}',
-            style: TextStyle(
-              color: Colors.black,
-              wordSpacing: 2,
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-            ),
-          )
         ],
       ),
     );
@@ -165,15 +195,16 @@ class _ActivationPageState extends State<ActivationPage>
           color: Colors.black,
         ),
       );
-    } else if (_start == 1) {
-      Text(
+    } else if (_start <= 1) {
+      print('prepare');
+      return Text(
         'Preparing',
         style: TextStyle(
           fontSize: 24.0,
           color: Colors.amber[400],
         ),
       );
-    } else if (_start > 0 && _start < 86400) {
+    } else if (_start > 1 && _start < 86400) {
       return Text(
         '${(_start / 60 / 60 % 24).floor().toString().padLeft(2, '0')}'
         ':'
@@ -186,7 +217,7 @@ class _ActivationPageState extends State<ActivationPage>
         ),
       );
     } else if (_start >= 86400 && _start < 172800) {
-      Text(
+      return Text(
         '${(_start / 60 / 60 / 24 % 30).floor().toString()} day',
         style: TextStyle(
           fontSize: 24.0,
@@ -194,7 +225,7 @@ class _ActivationPageState extends State<ActivationPage>
         ),
       );
     } else if (_start >= 172800) {
-      Text(
+      return Text(
         '${(_start / 60 / 60 / 24 % 30).floor().toString()} days',
         style: TextStyle(
           fontSize: 24.0,
@@ -238,7 +269,7 @@ class _ActivationPageState extends State<ActivationPage>
                         FadeTransition(
                           opacity: _fadeAnimation,
                           child: Container(
-                            height: MediaQuery.of(context).size.height * 1 / 10,
+                            height: 72,
                             child: ListView.builder(
                               shrinkWrap: true,
                               padding: EdgeInsets.symmetric(horizontal: 16.0),

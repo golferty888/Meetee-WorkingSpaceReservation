@@ -106,6 +106,7 @@ class _HomePageState extends State<HomePage>
           _isHasHistory = true;
           historiesList = (json.decode(response.body))["results"];
         });
+        print('history: $historiesList');
       } else if (jsonData["errorCode"] == '01') {
         print('error 01');
         setState(() {
@@ -121,12 +122,12 @@ class _HomePageState extends State<HomePage>
   }
 
   _buildUpComingBookingCard(int index) {
-    return Padding(
+    return Container(
       padding: EdgeInsets.fromLTRB(
         16.0,
         8.0,
         16.0,
-        0.0,
+        16.0,
       ),
       child: GestureDetector(
         onTap: () {
@@ -144,7 +145,7 @@ class _HomePageState extends State<HomePage>
           });
         },
         child: Hero(
-          tag: 'activationPanelTag$index',
+          tag: 'activationPanelTag${_upComingBookingJson[index]["start_time"]}',
           child: Container(
             padding: EdgeInsets.all(16.0),
             width: MediaQuery.of(context).size.width * 2 / 3,
@@ -157,11 +158,11 @@ class _HomePageState extends State<HomePage>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey[700],
-                  blurRadius: 16.0, // has the effect of softening the shadow
-                  spreadRadius: -8, // has the effect of extending the shadow
+                  color: Colors.grey[500],
+                  blurRadius: 8.0, // has the effect of softening the shadow
+                  spreadRadius: -2, // has the effect of extending the shadow
                   offset: Offset(
-                    0.0, // horizontal, move right 10
+                    8.0, // horizontal, move right 10
                     8.0, // vertical, move down 10
                   ),
                 )
@@ -229,668 +230,162 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  _buildHistoryList(int index) {
-//    return ListTile(
-//      title: Text('dfgdfgd $index'),
-//    );
+  _buildHistoryList() {
     return Container(
-      padding: EdgeInsets.fromLTRB(
-        16.0,
-        0.0,
-        16.0,
-        0.0,
+      height: MediaQuery.of(context).size.height * 1 / 3,
+      child: Scrollbar(
+        child: ListView.builder(
+          shrinkWrap: true,
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          scrollDirection: Axis.vertical,
+          itemCount: historiesList.length,
+          reverse: false,
+          itemBuilder: (BuildContext context, int index) {
+            return _buildHistories(index);
+          },
+        ),
       ),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  'Today',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  width: 4.0,
-                ),
-                Text(
-                  'Reservations',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-//              SizedBox(
-//                width: 4.0,
-//              ),
-                Container(
-                  width: 12.0,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.expand_more,
-                      color: Colors.black38,
-                    ),
-                    onPressed: () {},
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(16.0),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[350],
-                  blurRadius: 16.0, // has the effect of softening the shadow
-                  spreadRadius: -8, // has the effect of extending the shadow
-                  offset: Offset(
-                    -3.0, // horizontal, move right 10
-                    8.0, // vertical, move down 10
-                  ),
-                )
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(
-                        0.0,
-                        4.0,
-                        0.0,
-                        0.0,
-                      ),
-                      child: Text(
-                        '12:00',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                ' - ',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Text(
-                                '13:00',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              16.0, 0.0, 8.0, 0.0),
-                                          padding: EdgeInsets.fromLTRB(
-                                              8.0, 4.0, 8.0, 4.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.pink[200],
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'MR-S',
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'x 1',
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      '฿130',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                ' - ',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Text(
-                                '13:00',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              16.0, 2.0, 8.0, 0.0),
-                                          padding: EdgeInsets.fromLTRB(
-                                              8.0, 4.0, 8.0, 4.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.yellow[600],
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'BT',
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'x 2',
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      '฿120',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                ' - ',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Text(
-                                '15:00',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              16.0, 2.0, 8.0, 0.0),
-                                          padding: EdgeInsets.fromLTRB(
-                                              8.0, 4.0, 8.0, 4.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.yellow[600],
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'TSF',
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'x 2',
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      '฿120',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                ' - ',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Text(
-                                '19:00',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              16.0, 2.0, 8.0, 0.0),
-                                          padding: EdgeInsets.fromLTRB(
-                                              8.0, 4.0, 8.0, 4.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue[300],
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'SR',
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'x 1',
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      '฿1200',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    'Total    ฿1500',
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
-//          Divider(
-//            color: Colors.black38,
-//          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(16.0),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[350],
-                  blurRadius: 16.0, // has the effect of softening the shadow
-                  spreadRadius: -8, // has the effect of extending the shadow
-                  offset: Offset(
-                    -3.0, // horizontal, move right 10
-                    8.0, // vertical, move down 10
-                  ),
-                )
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(
-                        0.0,
-                        4.0,
-                        0.0,
-                        0.0,
-                      ),
-                      child: Text(
-                        '14:00',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                ' - ',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Text(
-                                '16:00',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              16.0, 0.0, 8.0, 0.0),
-                                          padding: EdgeInsets.fromLTRB(
-                                              8.0, 4.0, 8.0, 4.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.pink[200],
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'MR-L',
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'x 1',
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      '฿300',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-                  child: Text(
-                    'Total    ฿300',
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
+    );
+  }
 
-          Padding(
-            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  '8 Nov',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+  _buildHistories(int index) {
+    return Container(
+      height: 80,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: 40.0,
+            height: 40.0,
+            decoration: BoxDecoration(
+              color: Color(int.parse(historiesList[index]["typecolor"])),
+              shape: BoxShape.circle,
+            ),
+            child: FittedBox(
+              child: Container(
+                height: 10,
+                child: SvgPicture.network(
+                  historiesList[index]["icon_url"],
+                  color: Colors.black,
+                  height: 4,
                 ),
-                SizedBox(
-                  width: 4.0,
-                ),
-                Text(
-                  'Reservations',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-//              SizedBox(
-//                width: 4.0,
-//              ),
-                Container(
-                  width: 12.0,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.expand_more,
-                      color: Colors.black38,
-                    ),
-                    onPressed: () {},
-                  ),
-                )
-              ],
+              ),
             ),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-            padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(16.0),
+          SizedBox(
+            width: 16,
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+              margin: EdgeInsets.only(bottom: 4, top: 4),
+              decoration: BoxDecoration(
+//                color: Color(int.parse(historiesList[index]["typecolor"])),
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(16.0),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey[350],
+                    blurRadius: 16.0, // has the effect of softening the shadow
+                    spreadRadius: -14, // has the effect of extending the shadow
+                    offset: Offset(
+                      -3.0, // horizontal, move right 10
+                      8.0, // vertical, move down 10
+                    ),
+                  )
+                ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[350],
-                  blurRadius: 16.0, // has the effect of softening the shadow
-                  spreadRadius: -8, // has the effect of extending the shadow
-                  offset: Offset(
-                    -3.0, // horizontal, move right 10
-                    8.0, // vertical, move down 10
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '${DateFormat("d MMMM yyyy").format(
+                            DateTime.parse(historiesList[index]["starttime"]),
+                          )}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          '${historiesList[index]["period"]}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Container(
+                          height: 14,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: historiesList[index]["faclist"].length,
+                            itemBuilder: (BuildContext context, int i) {
+                              return Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
+                                child: Text(
+                                  '${historiesList[index]["faclist"][i]["facCode"]}',
+                                  style: TextStyle(
+                                    color: Colors.black54, fontSize: 12,
+//                                  fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                )
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(
-                        0.0,
-                        4.0,
-                        0.0,
-                        0.0,
-                      ),
-                      child: Text(
-                        '09:00',
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        '${historiesList[index]["catename"]}',
                         style: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 12,
+                          color: Colors.black54,
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                ' - ',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Text(
-                                '12:00',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              16.0, 0.0, 8.0, 0.0),
-                                          padding: EdgeInsets.fromLTRB(
-                                              8.0, 4.0, 8.0, 4.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.yellow[600],
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            'SC',
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'x 3',
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      '฿90',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                      Text(
+                        '฿ ${historiesList[index]["totalprice"]}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-                  child: Text(
-                    'Total    ฿90',
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ),
-//          Divider(
-//            color: Colors.black38,
-//          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  '11 Nov',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  width: 4.0,
-                ),
-                Text(
-                  'Reservations',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-//              SizedBox(
-//                width: 4.0,
-//              ),
-                Container(
-                  width: 12.0,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.expand_less,
-                      color: Colors.black38,
-                    ),
-                    onPressed: () {},
-                  ),
-                )
-              ],
+//
+//                  Row(
+//                    children: <Widget>[
+//                      Text(
+//                        '${historiesList[index]["faclist"].length}',
+//                        style: TextStyle(
+//                          fontSize: 20,
+//                          color: Colors.black54,
+//                        ),
+//                      ),
+//                      SizedBox(
+//                        width: 8,
+//                      ),
+//                      SvgPicture.network(
+//                        historiesList[index]["icon_url"],
+//                        color: Colors.black,
+//                        height: 32,
+//                      ),
+//                    ],
+//                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -956,7 +451,7 @@ class _HomePageState extends State<HomePage>
           onNotification: (t) {
 //            print(_scrollController.position.pixels);
             if (_scrollController.position.pixels.floor() >= 60 &&
-                _scrollController.position.pixels.floor() <= 700) {
+                _scrollController.position.pixels.floor() <= 800) {
               setState(() {
                 _isShowFloatingActionButton = true;
               });
@@ -1033,15 +528,6 @@ class _HomePageState extends State<HomePage>
                   child: AnimatedBuilder(
                     animation: _mostBookingController,
                     child: GestureDetector(
-//                      onTapDown: (e) {
-//                        _mostBookingController.forward();
-//                      },
-//                      onTapUp: (e) {
-//                        _mostBookingController.reverse();
-//                      },
-//                      onVerticalDragEnd: (e) {
-//                        _mostBookingController.reverse();
-//                      },
                       onTapDown: (d) {
                         _mostBookingController.forward().whenComplete(() {
                           _mostBookingController.reverse();
@@ -1053,6 +539,19 @@ class _HomePageState extends State<HomePage>
                           borderRadius: BorderRadius.all(
                             Radius.circular(16.0),
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey[500],
+                              blurRadius:
+                                  8.0, // has the effect of softening the shadow
+                              spreadRadius:
+                                  -2, // has the effect of extending the shadow
+                              offset: Offset(
+                                8.0, // horizontal, move right 10
+                                8.0, // vertical, move down 10
+                              ),
+                            )
+                          ],
                           image: DecorationImage(
                             image: AssetImage(
                               'images/single_chair.jpg',
@@ -1243,8 +742,7 @@ class _HomePageState extends State<HomePage>
                               ),
                             )
                           : Container(
-                              height:
-                                  MediaQuery.of(context).size.height * 1 / 3,
+                              height: 184,
                               child: ListView.builder(
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
@@ -1338,7 +836,7 @@ class _HomePageState extends State<HomePage>
                     ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 32.0),
+                  padding: EdgeInsets.only(top: 24.0),
                   child: Divider(
                     indent: 16.0,
                     endIndent: 16.0,
@@ -1350,7 +848,7 @@ class _HomePageState extends State<HomePage>
                 delegate: SliverChildListDelegate.fixed(
                   [
                     Padding(
-                      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                      padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -1380,7 +878,7 @@ class _HomePageState extends State<HomePage>
               _isHistoryLoadDone
                   ? _isHasHistory
                       ? SliverToBoxAdapter(
-                          child: _buildHistoryList(0),
+                          child: _buildHistoryList(),
                         )
                       : SliverToBoxAdapter(
                           child: Container(

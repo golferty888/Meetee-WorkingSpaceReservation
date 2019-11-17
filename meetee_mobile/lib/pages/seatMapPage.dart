@@ -286,13 +286,13 @@ class _SeatMapPageState extends State<SeatMapPage> {
             SvgPicture.network(
               widget.categoryIcon,
               height: 24,
-              color: Colors.grey[800].withOpacity(0.4),
+              color: Colors.grey[600].withOpacity(0.4),
             ),
             Center(
               child: Text(
                 'Booked',
                 style: TextStyle(
-                  color: Colors.grey[800].withOpacity(0.5),
+                  color: Colors.grey[600].withOpacity(0.5),
                   fontWeight: FontWeight.normal,
                 ),
               ),

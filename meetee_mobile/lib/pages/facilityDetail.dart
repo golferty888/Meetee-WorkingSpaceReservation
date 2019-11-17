@@ -101,7 +101,7 @@ class FacilityDetailState extends State<FacilityDetail>
     if (count == 1) {
       return Colors.red;
     } else if (count == 0) {
-      return Colors.grey[300].withOpacity(0.7);
+      return Colors.grey[300];
     } else {
       return Color(0xFF292b66);
     }
@@ -122,7 +122,7 @@ class FacilityDetailState extends State<FacilityDetail>
             ),
           ),
           Positioned(
-            top: 32.0,
+            top: 0.0 + MediaQuery.of(context).padding.top,
             right: 32.0,
             child: FadeTransition(
               opacity: _fadeAnimation,
@@ -136,6 +136,18 @@ class FacilityDetailState extends State<FacilityDetail>
                       4.0,
                     ),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black54,
+                      blurRadius: 4.0, // has the effect of softening the shadow
+                      spreadRadius:
+                          -2, // has the effect of extending the shadow
+                      offset: Offset(
+                        4.0, // horizontal, move right 10
+                        4.0, // vertical, move down 10
+                      ),
+                    )
+                  ],
                   color: _countColor(widget.availableSeatCount),
 //                      color: Colors.red,
                 ),
@@ -152,7 +164,7 @@ class FacilityDetailState extends State<FacilityDetail>
                                 ? fontSizeH1[0]
                                 : fontSizeH1[1],
                             color: widget.availableSeatCount == 0
-                                ? Colors.grey[700]
+                                ? Colors.grey[500]
                                 : Colors.white,
                             fontWeight: FontWeight.normal,
                             letterSpacing: 1.0,
@@ -167,7 +179,7 @@ class FacilityDetailState extends State<FacilityDetail>
                               ? fontSizeH2[0]
                               : fontSizeH2[1],
                           color: widget.availableSeatCount == 0
-                              ? Colors.grey[700]
+                              ? Colors.grey[500]
                               : Colors.white,
                         ),
                       ],
@@ -177,7 +189,7 @@ class FacilityDetailState extends State<FacilityDetail>
                       style: TextStyle(
                         fontSize: 10,
                         color: widget.availableSeatCount == 0
-                            ? Colors.grey[700]
+                            ? Colors.grey[500]
                             : Colors.white,
                         letterSpacing: 1.0,
                       ),

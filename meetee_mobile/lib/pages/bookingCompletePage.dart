@@ -299,7 +299,7 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                         builder: (context) {
                           return ActivationPage(
                             userId: widget.userId,
-                            upComingBookingJson: _upComingBookingJson,
+                            upComingBookingJson: _upComingBookingJson[0],
                           );
                         },
                       ),

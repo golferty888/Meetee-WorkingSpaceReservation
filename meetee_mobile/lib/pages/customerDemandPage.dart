@@ -91,11 +91,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
   @override
   void initState() {
     super.initState();
-//    if (DateTime.now().hour >= 0) {
-//      startTime = 8;
-//      endTime = 9;
-//      _isToday = false;
-//    }
+
 //    print(widget.userId);
     startDate = DateTime.now();
     startTime = DateTime.now().add(Duration(hours: 1)).hour;
@@ -111,6 +107,11 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
       );
       startTime = 8;
       endTime = 9;
+    } else if (DateTime.now().hour >= 0 && DateTime.now().hour < 8) {
+      print('after mid');
+      startTime = 8;
+      endTime = 9;
+      _isToday = true;
     }
     urlGetCategoryByFacilityType =
         'http://18.139.12.132:9000/fac/type/${widget.facilityType.typeId}';
@@ -239,7 +240,9 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
               availableSeatCount: _cateCountList[index]["available_count"],
             ),
           ),
-        );
+        ).then((v) {
+          getAllAvailableCategoryCount();
+        });
       },
     );
   }
@@ -248,7 +251,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
     if (count == 1) {
       return Colors.red;
     } else if (count == 0) {
-      return Colors.grey[300].withOpacity(0.7);
+      return Colors.grey[300];
     } else {
       return Color(0xFF292b66);
     }
@@ -256,6 +259,19 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
 
   _buildCategoryCard(index) {
     return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey[500],
+            blurRadius: 16.0, // has the effect of softening the shadow
+            spreadRadius: -2, // has the effect of extending the shadow
+            offset: Offset(
+              8.0, // horizontal, move right 10
+              8.0, // vertical, move down 10
+            ),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
@@ -270,6 +286,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                         4.0,
                       ),
                     ),
+
                     color:
                         _countColor(_cateCountList[index]["available_count"]),
 //              color: Colors.indigo[600],
@@ -296,13 +313,11 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                   tag: 'category + ${index.toString()}',
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: Container(
-                      child: Image.network(
-                        _categoriesList[index]["image_url"],
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+                    child: Image.network(
+                      _categoriesList[index]["image_url"],
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -320,6 +335,19 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                                 4.0,
                               ),
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black54,
+                                blurRadius:
+                                    4.0, // has the effect of softening the shadow
+                                spreadRadius:
+                                    -2, // has the effect of extending the shadow
+                                offset: Offset(
+                                  4.0, // horizontal, move right 10
+                                  4.0, // vertical, move down 10
+                                ),
+                              )
+                            ],
                             color: _countColor(
                                 _cateCountList[index]["available_count"]),
 //                      color: Colors.red,
@@ -339,7 +367,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                                       color: _cateCountList[index]
                                                   ["available_count"] ==
                                               0
-                                          ? Colors.grey[700]
+                                          ? Colors.grey[500]
                                           : Colors.white,
                                       fontWeight: FontWeight.normal,
                                       letterSpacing: 1.0,
@@ -356,7 +384,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                                     color: _cateCountList[index]
                                                 ["available_count"] ==
                                             0
-                                        ? Colors.grey[700]
+                                        ? Colors.grey[500]
                                         : Colors.white,
                                   ),
                                 ],
@@ -368,7 +396,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                                   color: _cateCountList[index]
                                               ["available_count"] ==
                                           0
-                                      ? Colors.grey[700]
+                                      ? Colors.grey[500]
                                       : Colors.white,
                                   letterSpacing: 1.0,
                                 ),

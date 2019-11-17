@@ -165,14 +165,17 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
             onTap: (index) {
               Navigator.push(
                 context,
-                FadeRoute(
-                  page: CustomerDemandPage(
-                    userId: widget.userId,
-                    facilityType: facilityTypeList[index],
-                    index: index,
-                    subType: index == 0 ? 'Seat' : 'Room',
-                    isLargeScreen: widget.isLargeScreen,
-                  ),
+                MaterialPageRoute(
+                  settings: RouteSettings(name: '/customerDemand'),
+                  builder: (context) {
+                    return CustomerDemandPage(
+                      userId: widget.userId,
+                      facilityType: facilityTypeList[index],
+                      index: index,
+                      subType: index == 0 ? 'Seat' : 'Room',
+                      isLargeScreen: widget.isLargeScreen,
+                    );
+                  },
                 ),
               );
             },

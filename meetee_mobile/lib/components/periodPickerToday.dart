@@ -32,6 +32,11 @@ class _PeriodPickerTodayState extends State<PeriodPickerToday> {
   @override
   void initState() {
     print('today');
+    if (DateTime.now().hour >= 0 && DateTime.now().hour < 8) {
+      print('after mid');
+      startTime = 8;
+      endTime = 9;
+    }
     super.initState();
   }
 
