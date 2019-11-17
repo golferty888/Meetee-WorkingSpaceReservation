@@ -54,6 +54,7 @@ const equipment = require("./controllers/query/equipment");
 const facStatus = require("./controllers/query/facilityStatus");
 const user = require("./controllers/query/user");
 const reservation = require("./controllers/query/reservation");
+const booking = require("./controllers/query/booking");
 const iotQuery = require("./controllers/query/iot");
 const iot = require("./controllers/iot/iotActivate");
 const del = require("./controllers/query/deleteForTest");
@@ -61,6 +62,7 @@ const del = require("./controllers/query/deleteForTest");
 const login = require("./controllers/middleware/login");
 const signup = require("./controllers/middleware/signup");
 const reserve = require("./controllers/middleware/reserve");
+const redundancy = require("./controllers/middleware/redundancy");
 const iotActivate = require("./controllers/middleware/iotActivate");
 const consl = require("./controllers/middleware/console");
 app.post("/signup", consl.req, signup.middleware, user.signup);
@@ -79,7 +81,11 @@ app.get("/fac", consl.req, facDetail.getAllFacility);
 app.get("/fac/type/:id", consl.req, facDetail.getFacilityCategoriesFromType);
 app.get("/fac/cate/:id", consl.req, equipment.getFacilityCategoryDetail);
 // Checking Room/Seat Status
-app.post("/facility/type/status/av", consl.req, facStatus.checkStatusAvaialableAllCategories);
+app.post(
+  "/facility/type/status/av",
+  consl.req,
+  facStatus.checkStatusAvaialableAllCategories
+);
 app.post(
   "/facility/cate/status/av",
   consl.req,
@@ -101,7 +107,8 @@ app.post(
   facStatus.lockAndUnlockPendingFacilityInSpecificPeriod
 );
 // Do Reserve Room/Seat
-app.post("/reserve", consl.req, reserve.middleWare, reservation.reserve);
+// app.post("/reserve", consl.req, reserve.middleWare, reservation.reserve);
+app.post("/reserve", consl.req, redundancy.middleWare, booking.reserve);
 // Reservation Information
 app.post("/user/history", consl.req, user.getReservationHistoryList);
 app.post(
