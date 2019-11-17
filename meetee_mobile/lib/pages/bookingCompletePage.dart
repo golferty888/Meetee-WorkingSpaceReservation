@@ -15,7 +15,7 @@ import 'package:meetee_mobile/pages/selectFacility.dart';
 class BookingCompletePage extends StatefulWidget {
   final int userId;
   final bool isLargeScreen;
-  final String response;
+  final Map response;
 //  final int colorCode;
 //  final DateTime startDate;
 //  final DateTime startTime;
@@ -60,8 +60,14 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
 
   @override
   void initState() {
+    print(widget.response);
+    print(widget.response["message"]);
     getUpComingBookingJson();
-    _start = 720;
+    _start = DateTime.parse(widget.response["startTime"])
+        .difference(
+          DateTime.now(),
+        )
+        .inSeconds;
     startTimer();
     super.initState();
   }
@@ -195,7 +201,7 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                   fontSize: 24,
                 ),
               ),
-              Text('${widget.response}'),
+              Text('${widget.response["message"]}'),
               Container(
                 height: MediaQuery.of(context).size.height * 1 / 3,
                 child: FlareActor(

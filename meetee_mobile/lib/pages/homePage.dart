@@ -74,12 +74,13 @@ class _HomePageState extends State<HomePage>
       body: body,
       headers: headers,
     );
-    print(json.decode(response.body));
+//    print(json.decode(response.body));
     if (response.statusCode == 200) {
       setState(() {
         _upComingBookingJson = json.decode(response.body);
         _isUpComingBookingLoadDone = true;
       });
+      print('_upComingBookingJson : $_upComingBookingJson');
     } else {
       print('ereer');
       setState(() {
@@ -96,10 +97,10 @@ class _HomePageState extends State<HomePage>
       },
     );
     var jsonData = json.decode(response.body);
-    print(jsonData);
+//    print(jsonData);
     if (response.statusCode == 200) {
       if (jsonData["errorCode"] == '00') {
-        print('error 00');
+//        print('error 00');
         setState(() {
           _isHistoryLoadDone = true;
           _isHasHistory = true;
@@ -134,11 +135,13 @@ class _HomePageState extends State<HomePage>
             FadeRoute(
               page: ActivationPage(
                 userId: widget.userId,
-                index: index,
-                upComingBookingJson: _upComingBookingJson,
+                upComingBookingJson: _upComingBookingJson[index],
               ),
             ),
-          );
+          ).then((v) {
+            countDownToUnlock();
+            getHistoryByUserId();
+          });
         },
         child: Hero(
           tag: 'activationPanelTag$index',
@@ -147,7 +150,8 @@ class _HomePageState extends State<HomePage>
             width: MediaQuery.of(context).size.width * 2 / 3,
             decoration: BoxDecoration(
 //              color: Colors.black,
-              color: Theme.of(context).primaryColor,
+//              color: Theme.of(context).primaryColor,
+              color: Colors.black,
               borderRadius: BorderRadius.all(
                 Radius.circular(16.0),
               ),
@@ -194,87 +198,27 @@ class _HomePageState extends State<HomePage>
                       ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.all(16.0),
-//                    decoration: BoxDecoration(
-//                      border: Border.all(
-//                        color: Colors.white,
-//                      ),
-//                      shape: BoxShape.circle,
-//                    ),
-                    child: Icon(
-                      Icons.lock,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-                              decoration: BoxDecoration(
-                                color: Colors.yellow[600],
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                              ),
-                              child: Text(
-                                'Bar Table',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              ' x 2',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                  _upComingBookingJson[index]["faclist"][0]["status"] ==
+                          'In time'
+                      ? Text(
+                          '${_upComingBookingJson[index]["faclist"][0]["status"]}',
+                          style: TextStyle(
+                            fontSize: 32.0,
+                            color: Colors.greenAccent[400],
+                          ),
+                        )
+                      : Text(
+                          '${_upComingBookingJson[index]["faclist"][0]["status"]}',
+                          style: TextStyle(
+                            fontSize: 32.0,
+                            color: Colors.amber[600],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-                              decoration: BoxDecoration(
-                                color: Colors.pink[200],
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                              ),
-                              child: Text(
-                                'Meeting Room S',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              ' x 1',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'to activate your '
+                    '${_upComingBookingJson[index]["faclist"].length}'
+                    ' facilities',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ],
               ),
@@ -993,7 +937,10 @@ class _HomePageState extends State<HomePage>
                         );
                       },
                     ),
-                  );
+                  ).then((v) {
+                    countDownToUnlock();
+                    getHistoryByUserId();
+                  });
                 },
                 child: Icon(
                   Icons.add,
@@ -1226,7 +1173,10 @@ class _HomePageState extends State<HomePage>
                                               );
                                             },
                                           ),
-                                        );
+                                        ).then((v) {
+                                          countDownToUnlock();
+                                          getHistoryByUserId();
+                                        });
                                       },
                                     ),
                                   ),
@@ -1273,7 +1223,7 @@ class _HomePageState extends State<HomePage>
                     Padding(
                       padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
                       child: Text(
-                        'You can unlock your rooms here.',
+                        'You can activate your facilities here.',
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 18.0,
@@ -1294,7 +1244,7 @@ class _HomePageState extends State<HomePage>
                             )
                           : Container(
                               height:
-                                  MediaQuery.of(context).size.height * 2 / 3,
+                                  MediaQuery.of(context).size.height * 1 / 3,
                               child: ListView.builder(
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
@@ -1512,7 +1462,10 @@ class _HomePageState extends State<HomePage>
                             );
                           },
                         ),
-                      );
+                      ).then((v) {
+                        countDownToUnlock();
+                        getHistoryByUserId();
+                      });
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 16.0),

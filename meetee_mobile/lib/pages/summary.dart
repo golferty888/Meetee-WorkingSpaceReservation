@@ -62,7 +62,7 @@ class _SummaryState extends State<Summary> {
 
   Map<String, String> headers = {"Content-type": "application/json"};
 
-  String _responseFromReserve;
+  Map _responseFromReserve;
 
   @override
   void initState() {
@@ -107,9 +107,9 @@ class _SummaryState extends State<Summary> {
     );
     if (response.statusCode == 200) {
       setState(() {
-        _responseFromReserve = response.body;
+        _responseFromReserve = json.decode(response.body);
       });
-      print('_responseFromReserve: $_responseFromReserve');
+      print('_responseFromReserve: ${_responseFromReserve["message"]}');
     } else {
       print(response.body);
     }

@@ -80,8 +80,8 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
       'http://18.139.12.132:9000/facility/type/status/av';
   Map<String, String> headers = {"Content-type": "application/json"};
 
-//  final WebSocketChannel channel =
-//      IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
+  final WebSocketChannel channel =
+      IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
 
   List _categoriesList;
   List _cateCountList;
@@ -98,11 +98,6 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
 //    }
 //    print(widget.userId);
     startDate = DateTime.now();
-    if (DateTime.now().hour >= 21) {
-      startDate = DateTime.now().add(
-        Duration(days: 1),
-      );
-    }
     startTime = DateTime.now().add(Duration(hours: 1)).hour;
     endTime = DateTime.now()
         .add(
@@ -110,12 +105,19 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
         )
         .hour;
     _isToday = true;
+    if (DateTime.now().hour >= 21) {
+      startDate = DateTime.now().add(
+        Duration(days: 1),
+      );
+      startTime = 8;
+      endTime = 9;
+    }
     urlGetCategoryByFacilityType =
         'http://18.139.12.132:9000/fac/type/${widget.facilityType.typeId}';
 
     getCategoryByFacilityType();
     getAllAvailableCategoryCount();
-//    _connectSocket01();
+    _connectSocketForCount();
   }
 
 //  @override
@@ -124,16 +126,14 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
 //    super.dispose();
 //  }
 
-//  Future _connectSocket01() async {
-////    final channel =
-////        await IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
-//    print('connect');
-//    channel.sink.add("Hello, this is Meetee");
-//    channel.stream.listen((message) {
-//      print(message);
-//      getSeatByCategory();
-//    });
-//  }
+  Future _connectSocketForCount() async {
+    print('connect');
+    channel.sink.add("Hello, this is Meetee");
+    channel.stream.listen((message) {
+      print(message);
+      getAllAvailableCategoryCount();
+    });
+  }
 
   Future<dynamic> getCategoryByFacilityType() async {
     final response = await http.get(
@@ -578,7 +578,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                   isLargeScreen: widget.isLargeScreen,
                 ),
                 _isToday
-                    ? DateTime.now().hour <= 21
+                    ? DateTime.now().hour < 21
                         ? PeriodPickerToday(
                             returnStartTime: _updateStartTime,
                             returnEndTime: _updateEndTime,

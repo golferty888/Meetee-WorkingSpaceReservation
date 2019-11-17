@@ -5,10 +5,12 @@ import 'package:meetee_mobile/components/customTimerPainter.dart';
 
 class CountDownPanel extends StatefulWidget {
   final int start;
+  final ValueChanged<bool> returnIsInTime;
 
   CountDownPanel({
     Key key,
     this.start,
+    this.returnIsInTime,
   }) : super(key: key);
   @override
   _CountDownPanelState createState() => _CountDownPanelState();
@@ -22,13 +24,14 @@ class _CountDownPanelState extends State<CountDownPanel>
   void initState() {
     setState(() {
       _start = widget.start;
+//      _start = 62;
+      if (widget.start <= 0) {
+        _start = 0;
+        widget.returnIsInTime(true);
+      }
     });
+
     startTimer();
-//    controller = AnimationController(
-//      vsync: this,
-//      duration: Duration(seconds: 5),
-//    );
-//    controller.reverse(from: controller.value == 0.0 ? 1.0 : controller.value);
     super.initState();
   }
 
@@ -45,6 +48,7 @@ class _CountDownPanelState extends State<CountDownPanel>
             print('cancel');
             timer.cancel();
             _start = 0;
+            widget.returnIsInTime(true);
           } else {
             _start = _start - 1;
           }
@@ -64,19 +68,22 @@ class _CountDownPanelState extends State<CountDownPanel>
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Icon(
-          Icons.lock,
-          size: 32,
-        ),
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            'Your schedule will start in',
+        if (_start == 0 || _start < 0)
+          Text(
+            'It\'s time!',
             style: TextStyle(
-              fontSize: 16.0,
+              fontSize: 24.0,
+              color: Colors.greenAccent[400],
             ),
           ),
-        ),
+        if (_start == 1)
+          Text(
+            'Preparing',
+            style: TextStyle(
+              fontSize: 24.0,
+              color: Colors.amber[600],
+            ),
+          ),
         if (_start > 0 && _start < 86400)
           Text(
             '${(_start / 60 / 60 % 24).floor().toString().padLeft(2, '0')}'
@@ -86,6 +93,7 @@ class _CountDownPanelState extends State<CountDownPanel>
             '${(_start % 60).toString().padLeft(2, '0')}',
             style: TextStyle(
               fontSize: 24.0,
+              color: Colors.white,
             ),
           ),
         if (_start >= 86400 && _start < 172800)
@@ -93,6 +101,7 @@ class _CountDownPanelState extends State<CountDownPanel>
             '${(_start / 60 / 60 / 24 % 30).floor().toString()} day',
             style: TextStyle(
               fontSize: 24.0,
+              color: Colors.white,
             ),
           ),
         if (_start >= 172800)
@@ -100,6 +109,7 @@ class _CountDownPanelState extends State<CountDownPanel>
             '${(_start / 60 / 60 / 24 % 30).floor().toString()} days',
             style: TextStyle(
               fontSize: 24.0,
+              color: Colors.white,
             ),
           ),
       ],
