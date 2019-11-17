@@ -13,7 +13,6 @@ import 'package:meetee_mobile/pages/customerDemandPage.dart';
 import 'package:meetee_mobile/pages/historyPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:skeleton_text/skeleton_text.dart';
 
 import 'package:meetee_mobile/pages/selectFacility.dart';
 
@@ -538,10 +537,40 @@ class _HomePageState extends State<HomePage>
             _isUpComingBookingLoadDone
                 ? SliverToBoxAdapter(
                     child: _upComingBookingJson.length == 0
-                        ? Container(
-                            height: 80,
-                            child: Center(
-                              child: Text('No upcoming booking'),
+                        ? GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  settings:
+                                      RouteSettings(name: '/facilityType'),
+                                  builder: (context) {
+                                    return SelectFacilityType(
+                                      userId: widget.userId,
+                                      isLargeScreen: _isLargeScreen,
+                                    );
+                                  },
+                                ),
+                              ).then((v) {
+                                countDownToUnlock();
+                                getHistoryByUserId();
+                              });
+                            },
+                            child: Container(
+                              height: 80,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text('No upcoming booking'),
+                                  Text(
+                                    'Book now',
+                                    style: TextStyle(
+                                      color: Colors.blue[600],
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           )
                         : Container(
@@ -560,76 +589,12 @@ class _HomePageState extends State<HomePage>
                   )
                 : SliverToBoxAdapter(
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 1 / 3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 15.0,
-                              bottom: 5.0,
-                              top: 8.0,
-                            ),
-                            child: SkeletonAnimation(
-                              child: Container(
-                                height: 15,
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.grey[300]),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 15.0,
-                              bottom: 5.0,
-                              top: 8.0,
-                            ),
-                            child: SkeletonAnimation(
-                              child: Container(
-                                height: 15,
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.grey[300]),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 15.0,
-                              bottom: 5.0,
-                              top: 8.0,
-                            ),
-                            child: SkeletonAnimation(
-                              child: Container(
-                                height: 15,
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.grey[300]),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 5.0),
-                              child: SkeletonAnimation(
-                                child: Container(
-                                  width: 60,
-                                  height: 13,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.grey[300]),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      height: MediaQuery.of(context).size.height * 1 / 8,
+                      child: Container(
+                        height: 60,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                     ),
                   ),
@@ -863,51 +828,48 @@ class _HomePageState extends State<HomePage>
                         child: _buildHistoryList(),
                       )
                     : SliverToBoxAdapter(
-                        child: Container(
-                          height: 80,
-                          child: Center(
-                            child: Text('No history'),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                settings: RouteSettings(name: '/facilityType'),
+                                builder: (context) {
+                                  return SelectFacilityType(
+                                    userId: widget.userId,
+                                    isLargeScreen: _isLargeScreen,
+                                  );
+                                },
+                              ),
+                            ).then((v) {
+                              countDownToUnlock();
+                              getHistoryByUserId();
+                            });
+                          },
+                          child: Container(
+                            height: 80,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text('No history now'),
+                                Text(
+                                  'Book now',
+                                  style: TextStyle(
+                                    color: Colors.blue[600],
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       )
                 : SliverToBoxAdapter(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 15.0,
-                            bottom: 5.0,
-                            top: 16.0,
-                          ),
-                          child: SkeletonAnimation(
-                            child: Container(
-                              height: 15,
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: Colors.grey[300]),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 5.0),
-                            child: SkeletonAnimation(
-                              child: Container(
-                                width: 60,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: Colors.grey[300]),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 8,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
                     ),
                   ),
             SliverToBoxAdapter(

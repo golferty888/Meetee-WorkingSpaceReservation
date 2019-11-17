@@ -195,7 +195,8 @@ class _LogInPageState extends State<LogInPage>
         _userId = jsonData["userId"];
         _userName = userNameSignUpController.text;
       });
-
+      print(_userId);
+      print(jsonData);
       Future.delayed(
         Duration(milliseconds: 1500),
         () {
