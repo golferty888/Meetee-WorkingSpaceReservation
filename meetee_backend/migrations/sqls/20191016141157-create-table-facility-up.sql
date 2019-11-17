@@ -13,6 +13,7 @@ CREATE TABLE meeteenew.facility_category(
     price   NUMERIC(5, 2) NOT NULL CHECK(price > 0),
     image_url VARCHAR(256) NOT NULL,
     icon_url VARCHAR(256) NOT NULL,
+    map_url VARCHAR(256) NOT NULL,
     detail  VARCHAR(1024),
     type_id  INT    NOT NULL,
     FOREIGN KEY(type_id) REFERENCES meeteenew.facility_type(id)
@@ -26,26 +27,42 @@ CREATE TABLE meeteenew.facility(
     FOREIGN KEY(cate_id) REFERENCES meeteenew.facility_category(id)
 );
 --TYPE
-INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Meeting Room', '0xFFFAD74E');
-INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Private Seat', '0xFFFF8989');
+INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Meeting Room', '0xFFFF8989');
+INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Private Seat', '0xFFFAD74E');
 INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Seminar Room',  '0xFF92D2FC');
 --CATEGORY
-INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
-VALUES('Meeting Room S', '4', 120, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-s.jpg', '-', 1);
-INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
-VALUES('Meeting Room M', '8', 250, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-m.jpg', '-', 1);
-INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
-VALUES('Meeting Room L', '12', 400, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-l.jpg', '-', 1);
-INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
-VALUES('Single Chair', '1', 30, 'https://storage.googleapis.com/meetee-file-storage/img/fac/single-chair.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/single-chair.svg', 2);
-INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
-VALUES('Bar Table', '1', 30, 'https://storage.googleapis.com/meetee-file-storage/img/fac/bar-chair.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/bar-chair.svg', 2);
-INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
-VALUES('Single Sofa', '1', 40, 'https://storage.googleapis.com/meetee-file-storage/img/fac/single-sofa.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/single-sofa.svg', 2);
-INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
-VALUES('Twin Sofa', '2', 60, 'https://storage.googleapis.com/meetee-file-storage/img/fac/twin-sofa.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/twin-sofa.svg', 2);
-INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, type_id)
-VALUES('Hall room', '30', 950, 'https://storage.googleapis.com/meetee-file-storage/img/fac/hall-room.jpg', 'https://storage.googleapis.com/meetee-file-storage/icon/fac/hall-room.svg', 3);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
+VALUES('Meeting Room S', '4', 120, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-s.jpg'
+, '-' 
+, 'https://storage.googleapis.com/meetee-file-storage/map/meet-s.svg', 1);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
+VALUES('Meeting Room M', '8', 250, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-m.jpg'
+, '-'
+, 'https://storage.googleapis.com/meetee-file-storage/map/meet-m.svg', 1);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
+VALUES('Meeting Room L', '12', 400, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-l.jpg'
+, '-'
+, 'https://storage.googleapis.com/meetee-file-storage/map/meet-l.svg', 1);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
+VALUES('Single Chair', '1', 30, 'https://storage.googleapis.com/meetee-file-storage/img/fac/single-chair.jpg'
+, 'https://storage.googleapis.com/meetee-file-storage/icon/fac/single-chair.svg'
+, 'https://storage.googleapis.com/meetee-file-storage/map/single-chair.svg', 2);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
+VALUES('Bar Table', '1', 30, 'https://storage.googleapis.com/meetee-file-storage/img/fac/bar-chair.jpg'
+, 'https://storage.googleapis.com/meetee-file-storage/icon/fac/bar-chair.svg'
+, 'https://storage.googleapis.com/meetee-file-storage/map/bar-table.svg', 2);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
+VALUES('Single Sofa', '1', 40, 'https://storage.googleapis.com/meetee-file-storage/img/fac/single-sofa.jpg'
+, 'https://storage.googleapis.com/meetee-file-storage/icon/fac/single-sofa.svg'
+, 'https://storage.googleapis.com/meetee-file-storage/map/single-sofa.svg', 2);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
+VALUES('Twin Sofa', '2', 60, 'https://storage.googleapis.com/meetee-file-storage/img/fac/twin-sofa.jpg'
+, 'https://storage.googleapis.com/meetee-file-storage/icon/fac/twin-sofa.svg'
+, 'https://storage.googleapis.com/meetee-file-storage/map/twin-sofa.svg', 2);
+INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
+VALUES('Hall room', '30', 950, 'https://storage.googleapis.com/meetee-file-storage/img/fac/hall-room.jpg'
+, 'https://storage.googleapis.com/meetee-file-storage/icon/fac/hall-room.svg'
+, 'https://storage.googleapis.com/meetee-file-storage/map/hall-room.svg', 3);
 -- --ITEMS
 -- cateId: 1 Meeting Room S
 INSERT INTO meeteenew.facility(code, floor, cate_id)
