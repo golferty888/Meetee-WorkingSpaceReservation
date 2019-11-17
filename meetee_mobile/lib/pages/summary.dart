@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
@@ -28,6 +29,7 @@ class Summary extends StatefulWidget {
   final String totalPrice;
   final String imgPath;
   final int index;
+  final String cateIcon;
 
   Summary({
     Key key,
@@ -43,6 +45,7 @@ class Summary extends StatefulWidget {
     @required this.totalPrice,
     @required this.imgPath,
     @required this.index,
+    @required this.cateIcon,
   }) : super(key: key);
   @override
   _SummaryState createState() => _SummaryState();
@@ -206,7 +209,7 @@ class _SummaryState extends State<Summary> {
                   children: <Widget>[
                     Text(
                       widget.type,
-                      textAlign: TextAlign.start,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 24,
                       ),
@@ -214,72 +217,94 @@ class _SummaryState extends State<Summary> {
                     SizedBox(
                       height: 8.0,
                     ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          'Date: ',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 16,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Date: ',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                        Text(
-                          startDateFormatted,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 16,
+                          Text(
+                            startDateFormatted,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 4.0,
                     ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          'Schedule: ',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 16,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Schedule: ',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                        Text(
-                          '$startTimeFormatted - $endTimeFormatted',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 16,
+                          Text(
+                            '$startTimeFormatted - $endTimeFormatted',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 16.0,
                     ),
                     Expanded(
-                      child: GridView.count(
-                        childAspectRatio: 2.5,
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 8.0,
-                        physics: ClampingScrollPhysics(),
-                        children: List.generate(widget.code.length, (index) {
-                          return Container(
+                      child: Scrollbar(
+                        child: GridView.count(
+                          childAspectRatio: 2,
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 8.0,
+                          physics: ClampingScrollPhysics(),
+                          children: List.generate(widget.code.length, (index) {
+                            return Container(
 //                            margin: EdgeInsets.fromLTRB(0.0, 4.0, 8.0, 4.0),
-                            padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                            decoration: BoxDecoration(
-                              color: Color(widget.colorCode),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Center(
-                              child: Text(
-                                widget.code[index],
+                              padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 8.0),
+                              decoration: BoxDecoration(
+                                color: Color(widget.colorCode),
+                                borderRadius: BorderRadius.circular(4.0),
                               ),
-                            ),
-                          );
-                        }),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    SvgPicture.network(
+                                      widget.cateIcon,
+                                      height: 16,
+                                      color: Colors.black,
+                                    ),
+                                    Text(
+                                      widget.code[index],
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
                       ),
                     ),
                   ],
@@ -431,7 +456,7 @@ class _SummaryState extends State<Summary> {
 //        'Yes',
 //      ),
 //    );
-    Navigator.pushAndRemoveUntil(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
@@ -442,7 +467,6 @@ class _SummaryState extends State<Summary> {
           );
         },
       ),
-      ModalRoute.withName('/homePage'),
     );
 //    Navigator.popUntil(
 //      context,

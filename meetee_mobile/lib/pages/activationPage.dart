@@ -8,18 +8,17 @@ import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/countDownPanel.dart';
 
 import 'package:meetee_mobile/config.dart';
+import 'package:meetee_mobile/pages/homePage.dart';
 
 class ActivationPage extends StatefulWidget {
   final int index;
   final int userId;
-  final String userName;
   final upComingBookingJson;
 
   ActivationPage({
     Key key,
     this.index,
     this.userId,
-    this.userName,
     this.upComingBookingJson,
   }) : super(key: key);
   @override
@@ -84,7 +83,10 @@ class _ActivationPageState extends State<ActivationPage> {
                       color: Colors.black,
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.popUntil(
+                        context,
+                        ModalRoute.withName('/homePage'),
+                      );
                     },
                   ),
                 ),

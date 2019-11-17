@@ -11,6 +11,8 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:meetee_mobile/components/css.dart';
 
 import 'package:meetee_mobile/pages/summary.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class SeatMapPage extends StatefulWidget {
 //  final int type;
@@ -52,21 +54,15 @@ class SeatMapPage extends StatefulWidget {
 }
 
 class _SeatMapPageState extends State<SeatMapPage> {
-  @override
-  void initState() {
-    startDateFormatted = DateFormat("dd MMM").format(widget.startDate);
-    startTimeFormatted = '${widget.startTime}:00';
-    endTimeFormatted = '${widget.endTime}:00';
-//    totalHour = widget.endTime.difference(widget.startTime).inHours;
-    totalHour = widget.endTime - widget.startTime;
-
-    startDateFormattedForApi =
-        DateFormat("yyyy-MM-dd").format(widget.startDate);
-    super.initState();
-  }
-
   final String getSeatsByCateURL =
       'http://18.139.12.132:9000/facility/cate/status';
+  Map<String, String> headers = {"Content-type": "application/json"};
+
+  final WebSocketChannel channel =
+      IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
+
+  List _seatsList;
+  bool _isSeatListLoadDone = false;
 
   String startDateFormatted;
   String startDateFormattedForApi;
@@ -78,6 +74,67 @@ class _SeatMapPageState extends State<SeatMapPage> {
   int _totalPrice = 0;
   List _selectedSeatList = [];
   List _selectedSeatCode = [];
+
+  @override
+  void initState() {
+    startDateFormatted = DateFormat("dd MMM").format(widget.startDate);
+    startTimeFormatted = '${widget.startTime}:00';
+    endTimeFormatted = '${widget.endTime}:00';
+//    totalHour = widget.endTime.difference(widget.startTime).inHours;
+    totalHour = widget.endTime - widget.startTime;
+
+    startDateFormattedForApi =
+        DateFormat("yyyy-MM-dd").format(widget.startDate);
+    getSeatByCategory();
+    _connectSocketGetSeatByCategory();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    channel.sink.close();
+    super.dispose();
+  }
+
+  Future _connectSocketGetSeatByCategory() async {
+//    final channel =
+//        await IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
+    print('connect');
+    channel.sink.add("Hello, this is Meetee");
+    channel.stream.listen((message) {
+      print(message);
+      getSeatByCategory();
+    });
+  }
+
+  Future<dynamic> getSeatByCategory() async {
+    print(widget.cateId.toString());
+    print(startDateFormattedForApi);
+    print(startTimeFormatted);
+    print(endTimeFormatted);
+    final response = await http.post(
+      getSeatsByCateURL,
+//      headers: headers,
+      body: {
+        "cateId": widget.cateId.toString(),
+        "startDate": "$startDateFormattedForApi",
+        "startTime": "$startTimeFormatted",
+        "endTime": "$endTimeFormatted",
+      },
+    );
+    if (response.statusCode == 200) {
+//      print(response.body);
+      setState(() {
+        _seatsList = json.decode(response.body);
+        _isSeatListLoadDone = true;
+      });
+      print(_seatsList);
+    } else {
+      print('400');
+      throw Exception('Failed to load post');
+    }
+  }
+
   _onSelectedSeat(selectedSeatFacId, selectedSeatCode) {
     setState(() {
       if (_selectedSeatList.contains(selectedSeatFacId)) {
@@ -91,138 +148,82 @@ class _SeatMapPageState extends State<SeatMapPage> {
     });
   }
 
-  List _seatsList;
-  FutureBuilder _buildGridView() {
-    return FutureBuilder(
-      future: http.post(
-        getSeatsByCateURL,
-        body: {
-          "cateId": widget.cateId.toString(),
-          "startDate": "$startDateFormattedForApi",
-          "startTime": "$startTimeFormatted",
-          "endTime": "$endTimeFormatted",
-        },
-      ),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Text('none...');
-          case ConnectionState.active:
-            return Center(
+  _buildGridView() {
+    return _isSeatListLoadDone
+        ? Container(
+            height: 64,
+            child: Stack(
+              children: <Widget>[
+                ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _seatsList.length,
+                  padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildSelectableGrid(_seatsList, index);
+                  },
+                ),
+              ],
+            ),
+          )
+        : Container(
+            child: Center(
               child: CircularProgressIndicator(),
-            );
-          case ConnectionState.waiting:
-            if (_isFetched == false) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            continue done;
-
-//              return null;
-          done:
-          case ConnectionState.done:
-            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-//              print('getSeats: ${json.decode(snapshot.data.body)}');
-            _seatsList = json.decode(snapshot.data.body);
-            _isFetched = true;
-//            print(_seatsList);
-
-            return Container(
-              height: 64,
-              child: Stack(
-                children: <Widget>[
-                  ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _seatsList.length,
-                    padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                    itemBuilder: (BuildContext context, int index) {
-                      return _buildSelectableGrid(_seatsList, index);
-//                      return _seatsList[index]["status"] == "available"
-//                          ? GestureDetector(
-//                              onTap: () => _onSelectedSeat(
-//                                _seatsList[index]["facid"],
-//                                _seatsList[index]["code"],
-//                              ),
-//                              child: Container(
-//                                margin: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-//                                decoration: BoxDecoration(
-//                                  color: _selectedSeatList
-//                                          .contains(_seatsList[index]["facid"])
-//                                      ? Color(widget.secondaryColor)
-//                                      : Colors.transparent,
-//                                  borderRadius: BorderRadius.circular(8.0),
-////                                  border: Border.all(
-////                                    color: Colors.grey[900].withOpacity(0.2),
-////                                  ),
-//                                ),
-//                                width: 64,
-//                                child: Column(
-//                                  mainAxisAlignment:
-//                                      MainAxisAlignment.spaceEvenly,
-//                                  children: <Widget>[
-//                                    SvgPicture.network(
-//                                      widget.categoryIcon,
-//                                      height: 24,
-//                                      color: _selectedSeatList.contains(
-//                                              _seatsList[index]["facid"])
-//                                          ? Colors.black
-//                                          : Colors.white,
-//                                    ),
-//                                    Center(
-//                                      child: Text(
-//                                        _seatsList[index]["code"].toString(),
-//                                        style: TextStyle(
-//                                          color: _selectedSeatList.contains(
-//                                                  _seatsList[index]["facid"])
-//                                              ? Colors.black
-//                                              : Colors.white,
-//                                          fontWeight: FontWeight.normal,
-////                                      letterSpacing: 1.0,
-//                                        ),
-//                                      ),
-//                                    ),
-//                                  ],
-//                                ),
-//                              ),
-//                            )
-//                          : Container(
-//                              width: 64,
-//                              margin: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-//                              color: Colors.transparent,
-//                              child: Column(
-//                                mainAxisAlignment:
-//                                    MainAxisAlignment.spaceEvenly,
-//                                children: <Widget>[
-//                                  SvgPicture.network(
-//                                    widget.categoryIcon,
-//                                    height: 24,
-//                                    color: Colors.grey[800].withOpacity(0.4),
-//                                  ),
-//                                  Center(
-//                                    child: Text(
-////                                      _seatsList[index]["code"].toString(),
-//                                      'Booked',
-//                                      style: TextStyle(
-//                                        color:
-//                                            Colors.grey[800].withOpacity(0.5),
-//                                        fontWeight: FontWeight.normal,
-////                                    letterSpacing: 1.5,
-//                                      ),
-//                                    ),
-//                                  ),
-//                                ],
-//                              ),
-//                            );
-                    },
-                  ),
-                ],
-              ),
-            );
-        }
-        return null;
-      },
-    );
+            ),
+          );
+//    return FutureBuilder(
+//      future: http.post(
+//        getSeatsByCateURL,
+//        body: {
+//          "cateId": widget.cateId.toString(),
+//          "startDate": "$startDateFormattedForApi",
+//          "startTime": "$startTimeFormatted",
+//          "endTime": "$endTimeFormatted",
+//        },
+//      ),
+//      builder: (BuildContext context, AsyncSnapshot snapshot) {
+//        switch (snapshot.connectionState) {
+//          case ConnectionState.none:
+//            return Text('none...');
+//          case ConnectionState.active:
+//            return Center(
+//              child: CircularProgressIndicator(),
+//            );
+//          case ConnectionState.waiting:
+//            if (_isFetched == false) {
+//              return Center(
+//                child: CircularProgressIndicator(),
+//              );
+//            }
+//            continue done;
+//
+////              return null;
+//          done:
+//          case ConnectionState.done:
+//            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+////              print('getSeats: ${json.decode(snapshot.data.body)}');
+//            _seatsList = json.decode(snapshot.data.body);
+//            _isFetched = true;
+////            print(_seatsList);
+//
+//            return Container(
+//              height: 64,
+//              child: Stack(
+//                children: <Widget>[
+//                  ListView.builder(
+//                    scrollDirection: Axis.horizontal,
+//                    itemCount: _seatsList.length,
+//                    padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+//                    itemBuilder: (BuildContext context, int index) {
+//                      return _buildSelectableGrid(_seatsList, index);
+//                    },
+//                  ),
+//                ],
+//              ),
+//            );
+//        }
+//        return null;
+//      },
+//    );
   }
 
   _buildSelectableGrid(List seatsList, int index) {
@@ -615,6 +616,7 @@ class _SeatMapPageState extends State<SeatMapPage> {
                                         totalPrice: _totalPrice.toString(),
                                         imgPath: widget.imgPath,
                                         index: widget.index,
+                                        cateIcon: widget.categoryIcon,
                                       ),
                                     ),
                                   );

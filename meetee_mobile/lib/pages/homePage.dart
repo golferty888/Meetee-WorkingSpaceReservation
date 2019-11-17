@@ -30,7 +30,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   bool _isLargeScreen = false;
   final String upComingUrl = 'http://18.139.12.132:9000/user/history/upcoming';
   final String countDownUrl = 'http://18.139.12.132:9000/activate/initial';
@@ -38,19 +39,23 @@ class _HomePageState extends State<HomePage> {
   Map<String, String> headers = {"Content-type": "application/json"};
 
   final _scrollController = ScrollController();
+  AnimationController _mostBookingController;
 
   @override
   void initState() {
     print('userId: ${widget.userId}');
     countDownToUnlock();
     getHistoryByUserId();
-//    _scrollController.addListener(onScroll);
+    _mostBookingController = AnimationController(
+      duration: Duration(milliseconds: 100),
+      vsync: this,
+    );
     super.initState();
   }
 
   @override
   void dispose() {
-//    _scrollController.removeListener(onScroll);
+    _mostBookingController.dispose();
     super.dispose();
   }
 
@@ -130,7 +135,6 @@ class _HomePageState extends State<HomePage> {
               page: ActivationPage(
                 userId: widget.userId,
                 index: index,
-                userName: widget.userName,
                 upComingBookingJson: _upComingBookingJson,
               ),
             ),
@@ -953,14 +957,6 @@ class _HomePageState extends State<HomePage> {
   bool _isHistoryLoadDone = false;
   bool _isShowFloatingActionButton = false;
 
-//  _delayHistory() {
-//    Future.delayed(Duration(seconds: 2), () {
-//      setState(() {
-//        _isHistoryLoadDone = true;
-//      });
-//    });
-//  }
-
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).size.height > 700) {
@@ -989,6 +985,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      settings: RouteSettings(name: '/facilityType'),
                       builder: (context) {
                         return SelectFacilityType(
                           userId: widget.userId,
@@ -1086,134 +1083,166 @@ class _HomePageState extends State<HomePage> {
                     16.0,
                     0.0,
                   ),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 3 / 4,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(16.0),
-                      ),
-                      image: DecorationImage(
-                        image: AssetImage(
-                          'images/single_chair.jpg',
-                        ),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            20.0,
-                            0.0,
-                            0.0,
-                            18.0,
+                  child: AnimatedBuilder(
+                    animation: _mostBookingController,
+                    child: GestureDetector(
+//                      onTapDown: (e) {
+//                        _mostBookingController.forward();
+//                      },
+//                      onTapUp: (e) {
+//                        _mostBookingController.reverse();
+//                      },
+//                      onVerticalDragEnd: (e) {
+//                        _mostBookingController.reverse();
+//                      },
+                      onTapDown: (d) {
+                        _mostBookingController.forward().whenComplete(() {
+                          _mostBookingController.reverse();
+                        });
+                      },
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 3 / 4,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16.0),
                           ),
-                          child: Text(
-                            'Most\nBooking',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 48.0,
-                              fontWeight: FontWeight.bold,
+                          image: DecorationImage(
+                            image: AssetImage(
+                              'images/single_chair.jpg',
                             ),
+                            fit: BoxFit.fill,
                           ),
                         ),
-                        Container(
-                          padding: EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.7),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                20.0,
+                                0.0,
+                                0.0,
+                                18.0,
+                              ),
+                              child: Text(
+                                'Most\nBooking',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 48.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
 //                          color:
 //                              Theme.of(context).primaryColor.withOpacity(0.9),
-                            borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(16.0),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Row(
+                                borderRadius: BorderRadius.vertical(
+                                  bottom: Radius.circular(16.0),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Container(
-                                    padding: EdgeInsets.all(4.0),
-                                    height: 40.0,
-                                    width: 40.0,
-                                    decoration: BoxDecoration(
-                                      color: Colors.yellow[600],
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                    ),
-                                    child: SvgPicture.asset(
-                                      facilityTypeList[0].imagePath,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width / 24,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: <Widget>[
-                                      Text(
-                                        'Single Chair',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
+                                      Container(
+                                        padding: EdgeInsets.all(4.0),
+                                        height: 40.0,
+                                        width: 40.0,
+                                        decoration: BoxDecoration(
+                                          color: Colors.yellow[600],
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(8.0),
+                                          ),
+                                        ),
+                                        child: SvgPicture.asset(
+                                          facilityTypeList[0].imagePath,
                                         ),
                                       ),
-                                      Text(
-                                        '${facilityTypeList[0].typeName}',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16.0,
-                                        ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                24,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            'Single Chair',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${facilityTypeList[0].typeName}',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              Container(
-                                height: 40.0,
-                                width: 80.0,
-                                child: RaisedButton(
-                                  elevation: 0.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(32.0),
-                                  ),
-                                  color: Colors.white,
-                                  child: Text(
-                                    'Book',
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
+                                  Container(
+                                    height: 40.0,
+                                    width: 80.0,
+                                    child: RaisedButton(
+                                      elevation: 0.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(32.0),
+                                      ),
+                                      color: Colors.white,
+                                      child: Text(
+                                        'Book',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            settings: RouteSettings(
+                                                name: '/customerDemand'),
+                                            builder: (context) {
+                                              return CustomerDemandPage(
+                                                userId: widget.userId,
+                                                facilityType:
+                                                    facilityTypeList[0],
+                                                index: 0,
+                                                subType:
+                                                    0 == 0 ? 'Seat' : 'Room',
+                                                isLargeScreen: _isLargeScreen,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return CustomerDemandPage(
-                                            userId: widget.userId,
-                                            facilityType: facilityTypeList[0],
-                                            index: 0,
-                                            subType: 0 == 0 ? 'Seat' : 'Room',
-                                            isLargeScreen: _isLargeScreen,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
+                    builder: (BuildContext context, Widget child) {
+                      return Transform.scale(
+                        scale: 1 - (0.02 * _mostBookingController.value),
+                        child: child,
+                      );
+                    },
                   ),
                 ),
               ),
@@ -1237,7 +1266,6 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 24.0,
-//                letterSpacing: 0.5,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -1476,6 +1504,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                          settings: RouteSettings(name: '/facilityType'),
                           builder: (context) {
                             return SelectFacilityType(
                               userId: widget.userId,

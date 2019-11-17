@@ -37,6 +37,11 @@ class _DatePickerState extends State<DatePicker> {
   checkTimeOut() {
     if (TimeOfDay.now().hour >= 21) {
       _selectedIndex = 1;
+      formattedDate = DateFormat('d MMMM yyyy').format(
+        DateTime.now().add(
+          Duration(days: 1),
+        ),
+      );
       timeOut = true;
     }
   }

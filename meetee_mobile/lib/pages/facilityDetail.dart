@@ -26,6 +26,7 @@ class FacilityDetail extends StatefulWidget {
   final DateTime startDate;
   final int startTime;
   final int endTime;
+  final int availableSeatCount;
 
   FacilityDetail({
     Key key,
@@ -43,21 +44,41 @@ class FacilityDetail extends StatefulWidget {
     this.startDate,
     this.startTime,
     this.endTime,
+    this.availableSeatCount,
   }) : super(key: key);
   @override
   FacilityDetailState createState() => FacilityDetailState();
 }
 
-class FacilityDetailState extends State<FacilityDetail> {
-  void initState() {
-    super.initState();
-    getEquipmentByCateId();
-  }
-
+class FacilityDetailState extends State<FacilityDetail>
+    with SingleTickerProviderStateMixin {
   List _equipmentList;
   bool _isEquipmentLoadDone = false;
 
-  List _tmpIcon = [Icons.power, Icons.network_wifi];
+  AnimationController _fadeController;
+  Animation _fadeAnimation;
+
+  void initState() {
+    super.initState();
+    getEquipmentByCateId();
+    _fadeController = AnimationController(
+      duration: Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fadeAnimation = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_fadeController);
+    Future.delayed(const Duration(milliseconds: 300), () {
+      _fadeController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
 
   Future<dynamic> getEquipmentByCateId() async {
     final response = await http.get(
@@ -76,6 +97,16 @@ class FacilityDetailState extends State<FacilityDetail> {
     }
   }
 
+  _countColor(int count) {
+    if (count == 1) {
+      return Colors.red;
+    } else if (count == 0) {
+      return Colors.grey[300].withOpacity(0.7);
+    } else {
+      return Color(0xFF292b66);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +119,72 @@ class FacilityDetailState extends State<FacilityDetail> {
               widget.imgPath,
               height: double.infinity,
               fit: BoxFit.cover,
+            ),
+          ),
+          Positioned(
+            top: 32.0,
+            right: 32.0,
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Container(
+                width: 72,
+                padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 8.0),
+//            width: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      4.0,
+                    ),
+                  ),
+                  color: _countColor(widget.availableSeatCount),
+//                      color: Colors.red,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '${widget.availableSeatCount}',
+                          style: TextStyle(
+                            fontSize: widget.isLargeScreen
+                                ? fontSizeH1[0]
+                                : fontSizeH1[1],
+                            color: widget.availableSeatCount == 0
+                                ? Colors.grey[700]
+                                : Colors.white,
+                            fontWeight: FontWeight.normal,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        SvgPicture.network(
+                          widget.categoryIcon,
+                          height: widget.isLargeScreen
+                              ? fontSizeH2[0]
+                              : fontSizeH2[1],
+                          color: widget.availableSeatCount == 0
+                              ? Colors.grey[700]
+                              : Colors.white,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'available',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: widget.availableSeatCount == 0
+                            ? Colors.grey[700]
+                            : Colors.white,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
           SafeArea(

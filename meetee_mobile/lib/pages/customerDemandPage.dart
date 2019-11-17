@@ -7,11 +7,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:intl/intl.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/datePicker.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
 import 'package:meetee_mobile/components/periodPickerToday.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 import 'package:meetee_mobile/components/calendarPicker.dart';
 import 'package:meetee_mobile/components/periodPicker.dart';
@@ -27,7 +29,7 @@ class CustomerDemandPage extends StatefulWidget {
 
   CustomerDemandPage({
     Key key,
-    @required this.facilityType,
+    this.facilityType,
     this.userId,
     this.index,
     this.subType,
@@ -38,14 +40,10 @@ class CustomerDemandPage extends StatefulWidget {
 }
 
 class _CustomerDemandPageState extends State<CustomerDemandPage> {
-  DateTime startDate = DateTime.now();
-  int startTime = DateTime.now().add(Duration(hours: 1)).hour;
-  int endTime = DateTime.now()
-      .add(
-        Duration(hours: 2),
-      )
-      .hour;
-  bool _isToday = true;
+  DateTime startDate;
+  int startTime;
+  int endTime;
+  bool _isToday;
 
   _updateStartDate(DateTime startDate) {
     if (startDate.day != DateTime.now().day || DateTime.now().hour >= 21) {
@@ -60,19 +58,35 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
     setState(() {
       this.startDate = startDate;
     });
+    getAllAvailableCategoryCount();
   }
 
   _updateStartTime(int startTime) {
     setState(() {
       this.startTime = startTime;
     });
+    getAllAvailableCategoryCount();
   }
 
   _updateEndTime(int endTime) {
     setState(() {
       this.endTime = endTime;
     });
+    getAllAvailableCategoryCount();
   }
+
+  String urlGetCategoryByFacilityType;
+  String urlGetAllAvailableCategoryCount =
+      'http://18.139.12.132:9000/facility/type/status/av';
+  Map<String, String> headers = {"Content-type": "application/json"};
+
+//  final WebSocketChannel channel =
+//      IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
+
+  List _categoriesList;
+  List _cateCountList;
+  bool _isCategoryLoadDone = false;
+  bool _isCateCountListLoadDone = false;
 
   @override
   void initState() {
@@ -82,28 +96,90 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
 //      endTime = 9;
 //      _isToday = false;
 //    }
-    print(widget.userId);
+//    print(widget.userId);
+    startDate = DateTime.now();
+    if (DateTime.now().hour >= 21) {
+      startDate = DateTime.now().add(
+        Duration(days: 1),
+      );
+    }
+    startTime = DateTime.now().add(Duration(hours: 1)).hour;
+    endTime = DateTime.now()
+        .add(
+          Duration(hours: 2),
+        )
+        .hour;
+    _isToday = true;
     urlGetCategoryByFacilityType =
         'http://18.139.12.132:9000/fac/type/${widget.facilityType.typeId}';
 
     getCategoryByFacilityType();
+    getAllAvailableCategoryCount();
+//    _connectSocket01();
   }
 
-  String urlGetCategoryByFacilityType;
-  List _categoriesList;
-  bool _isCategoryLoadDone = false;
+//  @override
+//  void dispose() {
+//    channel.sink.close();
+//    super.dispose();
+//  }
+
+//  Future _connectSocket01() async {
+////    final channel =
+////        await IOWebSocketChannel.connect('ws://18.139.12.132:9001/');
+//    print('connect');
+//    channel.sink.add("Hello, this is Meetee");
+//    channel.stream.listen((message) {
+//      print(message);
+//      getSeatByCategory();
+//    });
+//  }
 
   Future<dynamic> getCategoryByFacilityType() async {
     final response = await http.get(
       urlGetCategoryByFacilityType,
     );
     if (response.statusCode == 200) {
-      print(response.body);
+//      print(response.body);
       setState(() {
         _categoriesList = json.decode(response.body);
         _isCategoryLoadDone = true;
       });
-      print(_categoriesList);
+//      print(_categoriesList);
+    } else {
+      print('400');
+      throw Exception('Failed to load post');
+    }
+  }
+
+  Future<dynamic> getAllAvailableCategoryCount() async {
+    String startDateFormatted = DateFormat("MMMM dd, yyyy").format(startDate);
+    String startTimeFormatted = '$startTime:00';
+    String endTimeFormatted = '$endTime:00';
+//    String body = '{'
+//        '"typeId": ${widget.facilityType.typeId}, '
+//        '"startDate": "November 17, 2019", '
+//        '"startTime": "08:00:00", '
+//        '"endTime": "12:00:00"'
+//        '}';
+    String body = '{'
+        '"typeId": ${widget.facilityType.typeId}, '
+        '"startDate": "$startDateFormatted}", '
+        '"startTime": "$startTimeFormatted", '
+        '"endTime": "$endTimeFormatted"'
+        '}';
+    final response = await http.post(
+      urlGetAllAvailableCategoryCount,
+      headers: headers,
+      body: body,
+    );
+    if (response.statusCode == 200) {
+//      print(response.body);
+      setState(() {
+        _cateCountList = json.decode(response.body);
+        _isCateCountListLoadDone = true;
+      });
+      print(_cateCountList);
     } else {
       print('400');
       throw Exception('Failed to load post');
@@ -160,6 +236,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
               startDate: startDate,
               startTime: startTime,
               endTime: endTime,
+              availableSeatCount: _cateCountList[index]["available_count"],
             ),
           ),
         );
@@ -167,169 +244,290 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
     );
   }
 
+  _countColor(int count) {
+    if (count == 1) {
+      return Colors.red;
+    } else if (count == 0) {
+      return Colors.grey[300].withOpacity(0.7);
+    } else {
+      return Color(0xFF292b66);
+    }
+  }
+
   _buildCategoryCard(index) {
     return Container(
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          Hero(
-            tag: 'category + ${index.toString()}',
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Container(
-                child: Image.network(
-                  _categoriesList[index]["image_url"],
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 8.0,
-            right: 8.0,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-//            width: 100,
-              decoration: BoxDecoration(
-//                borderRadius: BorderRadius.horizontal(
-//                  left: Radius.circular(
-//                    8.0,
-//                  ),
-//                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8.0),
-                ),
-                color: Colors.black.withOpacity(0.5),
-//                color: Color(
-//                  widget.facilityType.secondaryColorCode,
-//                ),
-              ),
-              child: Text(
-                '4 seats available',
-                style: TextStyle(
-                  fontSize:
-                      widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
-                  color: Colors.white,
-                  letterSpacing: 1.0,
-                ),
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: Container(),
-              ),
-              Hero(
-                flightShuttleBuilder: (
-                  BuildContext flightContext,
-                  Animation<double> animation,
-                  HeroFlightDirection flightDirection,
-                  BuildContext fromHeroContext,
-                  BuildContext toHeroContext,
-                ) {
-                  return SingleChildScrollView(
-                    child: fromHeroContext.widget,
-                  );
-                },
-                tag: 'detail + ${index.toString()}',
-                child: Material(
-                  color: Colors.transparent,
-                  child: ClipRRect(
+          _isCateCountListLoadDone
+              ? Container(
+                  margin: EdgeInsets.only(right: 14),
+                  height: 4,
+                  width: 72,
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(16.0),
-                    ),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: 5.0,
-                        sigmaY: 5.0,
+                      top: Radius.circular(
+                        4.0,
                       ),
-                      child: Container(
-                        color: Colors.black.withOpacity(0.5),
-                        padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  _categoriesList[index]["catename"].toString(),
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    fontSize: widget.isLargeScreen
-                                        ? fontSizeH1[0]
-                                        : fontSizeH1[1],
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                SvgPicture.network(
-                                  _categoriesList[index]["icon_url"],
-                                  height: widget.isLargeScreen
-                                      ? fontSizeH1[0]
-                                      : fontSizeH1[1],
-                                  color: Colors.white,
-                                ),
-                              ],
+                    ),
+                    color:
+                        _countColor(_cateCountList[index]["available_count"]),
+//              color: Colors.indigo[600],
+                  ),
+                )
+              : Container(
+                  margin: EdgeInsets.only(right: 14),
+                  height: 4,
+                  width: 72,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(
+                        4.0,
+                      ),
+                    ),
+                    color: Color(0xFF292b66),
+//              color: Colors.indigo[600],
+                  ),
+                ),
+          Expanded(
+            child: Stack(
+              children: <Widget>[
+                Hero(
+                  tag: 'category + ${index.toString()}',
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: Container(
+                      child: Image.network(
+                        _categoriesList[index]["image_url"],
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                _isCateCountListLoadDone
+                    ? Positioned(
+                        top: 0.0,
+                        right: 14.0,
+                        child: Container(
+                          width: 72,
+                          padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+//            width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.vertical(
+                              bottom: Radius.circular(
+                                4.0,
+                              ),
                             ),
-                            SizedBox(
-                              height: 6.0,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  '฿${_categoriesList[index]["price"].toString()} per hour',
-                                  style: TextStyle(
-                                    fontSize: widget.isLargeScreen
-                                        ? fontSizeH3[0]
-                                        : fontSizeH3[1],
-                                    color: Color(
-                                      widget.facilityType.secondaryColorCode,
+                            color: _countColor(
+                                _cateCountList[index]["available_count"]),
+//                      color: Colors.red,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    '${_cateCountList[index]["available_count"]}',
+                                    style: TextStyle(
+                                      fontSize: widget.isLargeScreen
+                                          ? fontSizeH1[0]
+                                          : fontSizeH1[1],
+                                      color: _cateCountList[index]
+                                                  ["available_count"] ==
+                                              0
+                                          ? Colors.grey[700]
+                                          : Colors.white,
+                                      fontWeight: FontWeight.normal,
+                                      letterSpacing: 1.0,
                                     ),
                                   ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  SvgPicture.network(
+                                    _categoriesList[index]["icon_url"],
+                                    height: widget.isLargeScreen
+                                        ? fontSizeH2[0]
+                                        : fontSizeH2[1],
+                                    color: _cateCountList[index]
+                                                ["available_count"] ==
+                                            0
+                                        ? Colors.grey[700]
+                                        : Colors.white,
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'available',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: _cateCountList[index]
+                                              ["available_count"] ==
+                                          0
+                                      ? Colors.grey[700]
+                                      : Colors.white,
+                                  letterSpacing: 1.0,
                                 ),
-                                _categoriesList[index]["capacity"] > 1
-                                    ? Text(
-                                        '${_categoriesList[index]["capacity"].toString()} persons',
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Positioned(
+                        top: 0.0,
+                        right: 14.0,
+                        child: Container(
+                          width: 72,
+                          height: 48,
+                          padding: EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 8.0),
+//            width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.vertical(
+                              bottom: Radius.circular(
+                                4.0,
+                              ),
+                            ),
+                            color: Color(0xFF292b66),
+//                      color: Colors.red,
+                          ),
+                          child: Center(
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(),
+                    ),
+                    Hero(
+                      flightShuttleBuilder: (
+                        BuildContext flightContext,
+                        Animation<double> animation,
+                        HeroFlightDirection flightDirection,
+                        BuildContext fromHeroContext,
+                        BuildContext toHeroContext,
+                      ) {
+                        return SingleChildScrollView(
+                          child: fromHeroContext.widget,
+                        );
+                      },
+                      tag: 'detail + ${index.toString()}',
+                      child: Material(
+                        color: Colors.transparent,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(16.0),
+                          ),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(
+                              sigmaX: 5.0,
+                              sigmaY: 5.0,
+                            ),
+                            child: Container(
+                              color: Colors.black.withOpacity(0.5),
+                              padding:
+                                  EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        _categoriesList[index]["catename"]
+                                            .toString(),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontSize: widget.isLargeScreen
-                                              ? fontSizeH3[0]
-                                              : fontSizeH3[1],
-                                          letterSpacing: 1.5,
-                                          color: Color(
-                                            widget.facilityType
-                                                .secondaryColorCode,
-                                          ),
+                                              ? fontSizeH1[0]
+                                              : fontSizeH1[1],
+                                          color: Colors.white,
                                         ),
-                                      )
-                                    : Text(
-                                        '${_categoriesList[index]["capacity"].toString()} person',
-                                        textAlign: TextAlign.start,
+                                      ),
+                                      SvgPicture.network(
+                                        _categoriesList[index]["icon_url"],
+                                        height: widget.isLargeScreen
+                                            ? fontSizeH1[0]
+                                            : fontSizeH1[1],
+                                        color: Colors.white,
+                                      ),
+//
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 6.0,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        '฿${_categoriesList[index]["price"].toString()} per hour',
                                         style: TextStyle(
                                           fontSize: widget.isLargeScreen
                                               ? fontSizeH3[0]
                                               : fontSizeH3[1],
-                                          letterSpacing: 1.5,
                                           color: Color(
                                             widget.facilityType
                                                 .secondaryColorCode,
                                           ),
                                         ),
                                       ),
-                              ],
+                                      _categoriesList[index]["capacity"] > 1
+                                          ? Text(
+                                              '${_categoriesList[index]["capacity"].toString()} persons',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                fontSize: widget.isLargeScreen
+                                                    ? fontSizeH3[0]
+                                                    : fontSizeH3[1],
+                                                letterSpacing: 1.5,
+                                                color: Color(
+                                                  widget.facilityType
+                                                      .secondaryColorCode,
+                                                ),
+                                              ),
+                                            )
+                                          : Text(
+                                              '${_categoriesList[index]["capacity"].toString()} person',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                fontSize: widget.isLargeScreen
+                                                    ? fontSizeH3[0]
+                                                    : fontSizeH3[1],
+                                                letterSpacing: 1.5,
+                                                color: Color(
+                                                  widget.facilityType
+                                                      .secondaryColorCode,
+                                                ),
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

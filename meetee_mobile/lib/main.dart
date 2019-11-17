@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:meetee_mobile/pages/activationPage.dart';
+import 'package:meetee_mobile/pages/customerDemandPage.dart';
 import 'package:meetee_mobile/pages/historyPage.dart';
 import 'package:meetee_mobile/pages/homePage.dart';
 import 'package:meetee_mobile/pages/logInPage.dart';
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
         '/': (BuildContext context) => SplashPage(),
         '/login': (BuildContext context) => LogInPage(),
         '/homePage': (BuildContext context) => HomePage(),
+        '/activationPage': (BuildContext context) => ActivationPage(),
+        '/facilityType': (BuildContext context) => SelectFacilityType(),
+        '/customerDemand': (BuildContext context) => CustomerDemandPage(),
       },
       theme: ThemeData(
         primaryColor: Color(0xFF292b66),

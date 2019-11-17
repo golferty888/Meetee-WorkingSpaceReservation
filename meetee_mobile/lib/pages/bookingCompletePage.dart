@@ -52,6 +52,7 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
   Map<String, String> headers = {"Content-type": "application/json"};
 
   var _upComingBookingJson;
+  bool _isUpComingBookingJsonLoadDone = false;
 
   int _start;
 
@@ -59,7 +60,8 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
 
   @override
   void initState() {
-    countDownToUnlock();
+    getUpComingBookingJson();
+    _start = 720;
     startTimer();
     super.initState();
   }
@@ -88,7 +90,7 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
     );
   }
 
-  Future countDownToUnlock() async {
+  Future getUpComingBookingJson() async {
     String body = '{'
         '"userId": ${widget.userId}'
         '}';
@@ -102,11 +104,12 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
       setState(() {
         _upComingBookingJson = json.decode(response.body);
         print(_upComingBookingJson);
-        _start = DateTime.parse(_upComingBookingJson[0]["start_time"])
-            .difference(
-              DateTime.now(),
-            )
-            .inSeconds;
+//        _start = DateTime.parse(_upComingBookingJson[0]["start_time"])
+//            .difference(
+//              DateTime.now(),
+//            )
+//            .inSeconds;
+        _isUpComingBookingJsonLoadDone = true;
 //        _start = 230;
       });
       print(_upComingBookingJson);
@@ -117,17 +120,6 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
 
   _buildTimerText() {
     if (_start > 0 && _start < 60) {
-//      return Text(
-//        'You can activate your facilities in '
-//        '${(_start / 60 / 60 % 24).floor().toString().padLeft(2, '0')}'
-//        ':'
-//        '${(_start / 60 % 60).floor().toString().padLeft(2, '0')}'
-//        ':'
-//        '${(_start % 60).toString().padLeft(2, '0')}',
-//        style: TextStyle(
-//          fontSize: 16.0,
-//        ),
-//      );
       return Text(
         'You can activate your facilities in '
         ' ${(_start % 60).toString().padLeft(2, '0')}'
@@ -170,6 +162,8 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
           fontSize: 14.0,
         ),
       );
+    } else {
+      Text('start = $_start');
     }
   }
 
@@ -180,20 +174,13 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
-//        leading: IconButton(
-//          icon: Icon(
-//            Icons.arrow_back,
-//            color: Colors.black,
-//          ),
-//          onPressed: () => Navigator.pop(context),
-//        ),
-//        title: Text(
-//          'Confirm booking'.toUpperCase(),
-//          style: TextStyle(
-//            color: Colors.black54,
-//            fontSize: widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
-//          ),
-//        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: SafeArea(
         child: Container(
@@ -202,29 +189,6 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
 //            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-//              Column(
-//                crossAxisAlignment: CrossAxisAlignment.start,
-//                children: <Widget>[
-//                  Text(
-//                    'Thank you'.toUpperCase(),
-//                    style: TextStyle(
-//                      fontSize: 32,
-//                    ),
-//                  ),
-//                  Text(
-//                    'for'.toUpperCase(),
-//                    style: TextStyle(
-//                      fontSize: 32,
-//                    ),
-//                  ),
-//                  Text(
-//                    'your booking'.toUpperCase(),
-//                    style: TextStyle(
-//                      fontSize: 32,
-//                    ),
-//                  ),
-//                ],
-//              ),
               Text(
                 'Booking completed'.toUpperCase(),
                 style: TextStyle(
@@ -239,25 +203,22 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                   animation: 'Wait',
                 ),
               ),
-
               Expanded(
                 child: Container(),
               ),
-//              Text(
-//                'You can activate your facilities in 02:51',
-//                textAlign: TextAlign.center,
-//                style: TextStyle(
-//                  fontSize:
-//                      widget.isLargeScreen ? fontSizeH3[0] : fontSizeH3[1],
-//                ),
-//              ),
-              _buildTimerText(),
-//              Container(
-//                height: 40,
-//                child: CountDownPanel(
-//                  start: _start,
-//                ),
-//              ),
+              Center(
+                child: _isUpComingBookingJsonLoadDone
+                    ? _buildTimerText()
+                    : Container(
+                        height: 16,
+                        width: 16,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ),
+              ),
               Container(
                 padding: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
                 child: OutlineButton(
@@ -267,17 +228,9 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                   ),
                   color: Colors.indigo[100],
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
+                    Navigator.popUntil(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return SelectFacilityType(
-                            userId: widget.userId,
-                            isLargeScreen: widget.isLargeScreen,
-                          );
-                        },
-                      ),
-                      ModalRoute.withName('/homePage'),
+                      ModalRoute.withName('/customerDemand'),
                     );
                   },
                   child: Container(
@@ -305,16 +258,8 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                   ),
                   color: Colors.indigo[50],
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
+                    Navigator.popUntil(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return HomePage(
-                            userName: 'eiei',
-                            userId: widget.userId,
-                          );
-                        },
-                      ),
                       ModalRoute.withName('/homePage'),
                     );
                   },
@@ -347,9 +292,8 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                       MaterialPageRoute(
                         builder: (context) {
                           return ActivationPage(
-                            userName: 'eiei',
-                            upComingBookingJson: _upComingBookingJson,
                             userId: widget.userId,
+                            upComingBookingJson: _upComingBookingJson,
                           );
                         },
                       ),
@@ -371,12 +315,6 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                   ),
                 ),
               ),
-//              Text(
-//                'You can activate your facilities in 02:46',
-//                style: TextStyle(
-//                  fontSize: 16,
-//                ),
-//              ),
             ],
           ),
         ),

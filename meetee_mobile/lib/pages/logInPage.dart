@@ -65,6 +65,7 @@ class _LogInPageState extends State<LogInPage>
     return Navigator.pushReplacement(
       context,
       MaterialPageRoute(
+        settings: RouteSettings(name: '/homePage'),
         builder: (context) {
           return HomePage(
             userName: _userName,
