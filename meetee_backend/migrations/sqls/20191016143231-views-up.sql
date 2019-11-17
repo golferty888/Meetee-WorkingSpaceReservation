@@ -13,13 +13,14 @@
 create or replace view meeteenew.init_activation_page as
 select resv.start_time ::text,
 		meeteenew.date_format1(start_time) ::text as inDate,
-		array_agg(json_build_object('id', fac.id, 'code', fac.code, 'floor', fac.floor, 'end_time', end_time ::text
-		, 'status', case when ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time)) then 'in_time'
-		else 'up_coming' end)) as facList, user_id as userId
+		array_agg(json_build_object('id', fac.id, 'code', fac.code, 'cateName', cate.name, 'color_code', type.color_code,'floor', fac.floor, 'end_time', end_time ::text
+		, 'status', case when ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time)) then 'In time'
+		else 'Waiting' end)) as facList, user_id as userId
 from meeteenew.reservation resv
 join meeteenew.reservation_line li on resv.id = li.reserve_id
 join meeteenew.facility fac on li.facility_id = fac.id
 join meeteenew.facility_category cate on fac.cate_id = cate.id
+join meeteenew.facility_type type on cate.type_id = type.id
 where end_time >= now()
 group by start_time, user_id
 order by start_time asc; 
@@ -49,17 +50,17 @@ create or replace view meeteenew.view_fac_status as
 	join meeteenew.facility_category cate on fac.cate_id = cate.id;
 
 create MATERIALIZED VIEW meeteenew.view_factype_detail as 
-	select cate.id cateId, cate.name cateName, cate.capacity  :: int, cate.price  :: int, cate.image_url, cate.icon_url, type.id typeId, type.name typeName
+	select cate.id cateId, cate.name cateName, cate.capacity  :: int, cate.price  :: int, cate.image_url, cate.icon_url, cate.map_url, type.id typeId, type.name typeName
 	from meeteenew.facility_category cate
 	join meeteenew.facility_type type on cate.type_id = type.id
 	order by cateId;
 
 create MATERIALIZED VIEW meeteenew.view_faccate_detail as
-	select fe.cate_id cateId, cate."name" cateName, cate.capacity :: int, cate.price :: int, cate.image_url, cate.icon_url, array_agg(json_build_object('eqid', fe.equipment_id,'eqname', eq."name", 'iconcode', eq.icon_code)) eqList
+	select fe.cate_id cateId, cate."name" cateName, cate.capacity :: int, cate.price :: int, cate.image_url, cate.icon_url, cate.map_url, array_agg(json_build_object('eqid', fe.equipment_id,'eqname', eq."name", 'iconcode', eq.icon_code)) eqList
 	from meeteenew.facility_has_equipments fe
 	join meeteenew.equipment eq on fe.equipment_id = eq.id
 	join meeteenew.facility_category cate on fe.cate_id = cate.id
-	group by cateId, catename, capacity, price, image_url, icon_url
+	group by cateId, catename, capacity, price, image_url, icon_url, map_url
 	order by cateId;
 
 create or replace view meeteenew.view_user_history as 
@@ -79,14 +80,15 @@ create or replace view meeteenew.view_user_history as
 	resv.status,
 	type.color_code as typeColor,
 	cate.image_url,
-	cate.icon_url
+	cate.icon_url,
+	cate.map_url
 	from meeteenew.users
 	join meeteenew.reservation as resv on users.id = resv.user_id
 	join meeteenew.reservation_line as li on resv.id = li.reserve_id
 	join meeteenew.facility as fac on li.facility_id = fac.id
 	join meeteenew.facility_category cate on fac.cate_id = cate.id
 	join meeteenew.facility_type type on cate.type_id = type.id
-	group by reservId, userId, cateName, price, date, period, hour , totalPrice, status, typeColor, image_url, icon_url
+	group by reservId, userId, cateName, price, date, period, hour , totalPrice, status, typeColor, image_url, icon_url, map_url
 	order by reservId desc;
 
 create or replace view meeteenew.upcoming_and_intime_reservation as
