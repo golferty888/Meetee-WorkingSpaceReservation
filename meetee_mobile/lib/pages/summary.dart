@@ -54,6 +54,8 @@ class Summary extends StatefulWidget {
 class _SummaryState extends State<Summary> {
 //  final String userId = '2';
   final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
+  final String lockUrl = 'http://18.139.12.132:9000/facility/pending/lock';
+  final String unlockUrl = 'http://18.139.12.132:9000/facility/pending/unlock';
 
   String startDateFormattedForApi;
   String startDateFormatted;
@@ -73,6 +75,7 @@ class _SummaryState extends State<Summary> {
     startDateFormatted = DateFormat("dd MMMM yyy").format(widget.startDate);
     startTimeFormatted = '${widget.startTime}:00';
     endTimeFormatted = '${widget.endTime}:00';
+    lock();
   }
 
   Future<dynamic> reserveSeat() async {
@@ -95,13 +98,6 @@ class _SummaryState extends State<Summary> {
     print(body);
     final response = await http.post(
       reserveSeatUrl,
-//      body: {
-//        "userId": 1.toString(),
-//        "startDate": "2019-11-17",
-//        "startTime": "08:00:00",
-//        "endTime": "09:00:00",
-//        "facId": [10, 11].toString()
-//      },
       headers: headers,
       body: body,
     );
@@ -115,48 +111,48 @@ class _SummaryState extends State<Summary> {
     }
   }
 
-  _buildAlertDialog(
-      String title, String content, String actionLeft, String actionRight) {
-    return AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () {},
-          child: Text(
-            actionLeft,
-          ),
-        ),
-        FlatButton(
-          onPressed: () {},
-          child: Text(
-            actionRight,
-          ),
-        ),
-      ],
+  Future<dynamic> lock() async {
+    String body = '{'
+        '"startDate": "$startDateFormattedForApi", '
+        '"startTime": "$startTimeFormatted", '
+        '"endTime": "$endTimeFormatted", '
+        '"facList": ${widget.facId}'
+        '}';
+    print(body);
+    final response = await http.post(
+      lockUrl,
+      headers: headers,
+      body: body,
     );
+    if (response.statusCode == 200) {
+      var responseFromLock = response.body;
+      print('responseFromLock: $responseFromLock');
+    } else {
+      print(response.body);
+    }
   }
 
-  _buildCupertinoAlertDialog(
-      String title, String content, String actionLeft, String actionRight) {
-    return CupertinoAlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: <Widget>[
-        CupertinoDialogAction(
-          onPressed: () {},
-          child: Text(
-            actionLeft,
-          ),
-        ),
-        CupertinoDialogAction(
-          onPressed: () {},
-          child: Text(
-            actionRight,
-          ),
-        ),
-      ],
+  Future<dynamic> unlock() async {
+    String body = '{'
+        '"startDate": "$startDateFormattedForApi", '
+        '"startTime": "$startTimeFormatted", '
+        '"endTime": "$endTimeFormatted", '
+        '"facList": ${widget.facId}'
+        '}';
+    print(body);
+    final response = await http.post(
+      unlockUrl,
+      headers: headers,
+      body: body,
     );
+    if (response.statusCode == 200) {
+      var responseFromUnlock = response.body;
+      print('responseFromLock: $responseFromUnlock');
+      return;
+    } else {
+      print(response.body);
+      return;
+    }
   }
 
   @override
@@ -171,7 +167,10 @@ class _SummaryState extends State<Summary> {
             Icons.arrow_back,
             color: Colors.black,
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () async {
+            await unlock();
+            Navigator.pop(context);
+          },
         ),
         title: Text(
           'Confirm booking'.toUpperCase(),

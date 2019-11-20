@@ -64,10 +64,11 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
     print(widget.response["message"]);
     getUpComingBookingJson();
     _start = DateTime.parse(widget.response["startTime"])
-        .difference(
-          DateTime.now(),
-        )
-        .inSeconds;
+            .difference(
+              DateTime.now(),
+            )
+            .inSeconds -
+        25200;
     startTimer();
     super.initState();
   }
@@ -180,13 +181,13 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
+//        leading: IconButton(
+//          icon: Icon(
+//            Icons.arrow_back,
+//            color: Colors.black,
+//          ),
+//          onPressed: () => Navigator.pop(context),
+//        ),
       ),
       body: SafeArea(
         child: Container(
