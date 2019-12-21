@@ -1,5 +1,4 @@
 /* Replace with your SQL commands */
-
 CREATE TABLE meeteenew.facility_type(
     id      SERIAL  PRIMARY KEY,
     name    VARCHAR(256) NOT NULL,
@@ -33,15 +32,15 @@ INSERT INTO meeteenew.facility_type(name, color_code) VALUES('Seminar Room',  '0
 --CATEGORY
 INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
 VALUES('Meeting Room S', '4', 120, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-s.jpg'
-, '-' 
+, 'https://storage.googleapis.com/meetee-file-storage/icon/fac/meet-s.svg' 
 , 'https://storage.googleapis.com/meetee-file-storage/map/meet-s.svg', 1);
 INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
 VALUES('Meeting Room M', '8', 250, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-m.jpg'
-, '-'
+, 'https://storage.googleapis.com/meetee-file-storage/icon/fac/meet-m.svg'
 , 'https://storage.googleapis.com/meetee-file-storage/map/meet-m.svg', 1);
 INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
 VALUES('Meeting Room L', '12', 400, 'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-l.jpg'
-, '-'
+, 'https://storage.googleapis.com/meetee-file-storage/icon/fac/meet-l.svg'
 , 'https://storage.googleapis.com/meetee-file-storage/map/meet-l.svg', 1);
 INSERT INTO meeteenew.facility_category(name, capacity, price, image_url, icon_url, map_url, type_id)
 VALUES('Single Chair', '1', 30, 'https://storage.googleapis.com/meetee-file-storage/img/fac/single-chair.jpg'

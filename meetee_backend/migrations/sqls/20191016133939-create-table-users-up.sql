@@ -1,4 +1,4 @@
-/* Replace with your SQL commands */
+/* Users */
 CREATE TABLE meeteenew.users(
     id          SERIAL  PRIMARY KEY,
     username    VARCHAR(20) NOT NULL UNIQUE,
@@ -11,6 +11,7 @@ CREATE TABLE meeteenew.users(
     create_at   TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
     CONSTRAINT chk_username_min_length CHECK (char_length(username) >= 4)
 );
+
 INSERT INTO meeteenew.users (id, username, password, first_name, last_name, role)
 VALUES (0, 'guest', '$2b$04$q5/WmPTjzSCtT6bbEYwlWOyPxeKxcHE7nEGq4WCuAMnW0Z11Encj2','Guest','Guest','guest');
 INSERT INTO meeteenew.users (username, password, first_name, last_name, role, phone_number, birthday)

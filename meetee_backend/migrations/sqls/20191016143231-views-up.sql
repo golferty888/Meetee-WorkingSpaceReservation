@@ -1,19 +1,8 @@
 /* Replace with your SQL commands */
--- create or replace view meeteenew.init_activation_page as
--- select resv.start_time ::text, meeteenew.date_format1(start_time) ::text as inDate ,
--- 		array_agg(json_build_object('id', fac.id, 'code', fac.code, 'floor', fac.floor)) as facList, resv.user_id as userId
--- from meeteenew.reservation resv
--- join meeteenew.reservation_line li on resv.id = li.reserve_id
--- join meeteenew.facility fac on li.facility_id = fac.id
--- join meeteenew.facility_category cate on fac.cate_id = cate.id
--- where end_time >= now()
--- group by start_time, user_id
--- order by start_time asc;
-
 create or replace view meeteenew.init_activation_page as
 select resv.start_time ::text,
 		meeteenew.date_format1(start_time) ::text as inDate,
-		array_agg(json_build_object('id', fac.id, 'code', fac.code, 'cateName', cate.name, 'color_code', type.color_code,'floor', fac.floor, 'end_time', end_time ::text
+		array_agg(json_build_object('id', fac.id, 'code', fac.code, 'cateName', cate.name, 'icon_url', cate.icon_url, 'color_code', type.color_code, 'floor', fac.floor, 'end_time', end_time ::text
 		, 'status', case when ((NOW() ::timestamp, NOW() ::timestamp) overlaps (start_time, end_time)) then 'In time'
 		else 'Waiting' end)) as facList, user_id as userId
 from meeteenew.reservation resv

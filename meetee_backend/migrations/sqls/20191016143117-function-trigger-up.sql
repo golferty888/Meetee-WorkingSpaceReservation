@@ -1,6 +1,4 @@
 /* Replace with your SQL commands */
-    
-
 CREATE OR REPLACE FUNCTION meeteenew.date_format1(timestamp) 
     RETURNS date AS $$
     SELECT to_char($1, 'Month DD, YYYY') :: date;
