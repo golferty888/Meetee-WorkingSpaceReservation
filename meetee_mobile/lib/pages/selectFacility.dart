@@ -24,9 +24,9 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
         elevation: 0.0,
         leading: Padding(
           padding: EdgeInsets.only(left: 24.0),

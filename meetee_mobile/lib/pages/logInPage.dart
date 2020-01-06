@@ -7,11 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:meetee_mobile/components/css.dart';
+import 'package:meetee_mobile/pages/navigationPage.dart';
 import 'package:vector_math/vector_math_64.dart' as vector_math;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:meetee_mobile/components/colorLoader.dart';
-import 'package:meetee_mobile/pages/homePage.dart';
+import 'package:meetee_mobile/pages/schedulePage.dart';
 
 class LogInPage extends StatefulWidget {
   @override
@@ -65,9 +66,13 @@ class _LogInPageState extends State<LogInPage>
     return Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        settings: RouteSettings(name: '/homePage'),
+        settings: RouteSettings(name: '/navigationPage'),
         builder: (context) {
-          return HomePage(
+//          return HomePage(
+//            userName: _userName,
+//            userId: _userId,
+//          );
+          return NavigationPage(
             userName: _userName,
             userId: _userId,
           );

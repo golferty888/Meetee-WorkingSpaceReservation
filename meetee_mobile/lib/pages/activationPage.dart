@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/countDownPanel.dart';
 
 import 'package:meetee_mobile/config.dart';
-import 'package:meetee_mobile/pages/homePage.dart';
+import 'package:meetee_mobile/pages/schedulePage.dart';
 
 class ActivationPage extends StatefulWidget {
   final int userId;

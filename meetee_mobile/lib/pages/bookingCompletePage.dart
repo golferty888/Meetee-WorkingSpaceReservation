@@ -9,7 +9,7 @@ import 'package:meetee_mobile/components/countDownText.dart';
 
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
-import 'package:meetee_mobile/pages/homePage.dart';
+import 'package:meetee_mobile/pages/schedulePage.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
 
 class BookingCompletePage extends StatefulWidget {
@@ -267,7 +267,7 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                   onPressed: () {
                     Navigator.popUntil(
                       context,
-                      ModalRoute.withName('/homePage'),
+                      ModalRoute.withName('/navigationPage'),
                     );
                   },
                   child: Container(
@@ -304,14 +304,14 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                           );
                         },
                       ),
-                      ModalRoute.withName('/homePage'),
+                      ModalRoute.withName('/navigationPage'),
                     );
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      'Activate now'.toUpperCase(),
+                      'My schedule'.toUpperCase(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,

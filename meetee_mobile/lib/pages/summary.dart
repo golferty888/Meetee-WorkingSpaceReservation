@@ -10,7 +10,7 @@ import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/main.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/bookingCompletePage.dart';
-import 'package:meetee_mobile/pages/homePage.dart';
+import 'package:meetee_mobile/pages/schedulePage.dart';
 
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
@@ -467,53 +467,5 @@ class _SummaryState extends State<Summary> {
         },
       ),
     );
-//    Navigator.popUntil(
-//      context,
-//      ModalRoute.withName('/homePage'),
-//    );
-//    showDialog(
-//      context: context,
-//      builder: (_) => FlareGiffyDialog(
-//        key: Key('success'),
-//        flarePath: 'images/success_end.flr',
-//        flareAnimation: 'Wait',
-//        title: Text(
-//          'Booking completed!'.toUpperCase(),
-//          style: TextStyle(
-//            fontSize: 22.0,
-//            fontWeight: FontWeight.bold,
-//          ),
-//        ),
-//        description: Text(
-//          'Thank you.\n  Please remind that you must activate  \n  the room to use the facilities privided.',
-//          textAlign: TextAlign.center,
-//          style: TextStyle(
-//            fontSize: 16.0,
-//          ),
-//        ),
-//        buttonOkColor: Color(widget.colorCode),
-//        buttonOkText: Text(
-//          'Activate now'.toUpperCase(),
-//          textAlign: TextAlign.center,
-//          style: TextStyle(
-//            letterSpacing: 1.5,
-//            fontSize: 16.0,
-//          ),
-//        ),
-//        buttonCancelText: Text(
-//          'Done'.toUpperCase(),
-//          textAlign: TextAlign.center,
-//          style: TextStyle(
-//            fontSize: 16.0,
-//          ),
-//        ),
-//        onOkButtonPressed: () {
-//          Navigator.push(
-//            context,
-//            MaterialPageRoute(builder: (context) => ActivationPage()),
-//          );
-//        },
-//      ),
-//    );
   }
 }

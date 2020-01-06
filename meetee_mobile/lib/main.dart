@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/customerDemandPage.dart';
 import 'package:meetee_mobile/pages/historyPage.dart';
-import 'package:meetee_mobile/pages/homePage.dart';
+import 'package:meetee_mobile/pages/schedulePage.dart';
 import 'package:meetee_mobile/pages/logInPage.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
 import 'package:meetee_mobile/pages/splashPage.dart';
+import 'package:meetee_mobile/pages/navigationPage.dart';
 
 const bool debugEnableDeviceSimulator = true;
 
@@ -22,14 +23,15 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (BuildContext context) => SplashPage(),
         '/login': (BuildContext context) => LogInPage(),
-        '/homePage': (BuildContext context) => HomePage(),
+        '/navigationPage': (BuildContext context) => NavigationPage(),
+        '/schedulePage': (BuildContext context) => SchedulePage(),
         '/activationPage': (BuildContext context) => ActivationPage(),
         '/facilityType': (BuildContext context) => SelectFacilityType(),
         '/customerDemand': (BuildContext context) => CustomerDemandPage(),
       },
       theme: ThemeData(
-        primaryColor: Color(0xFF292b66),
-//        primaryColor: Color(0xFF361FB2),
+//        primaryColor: Color(0xFF292b66),
+        primaryColor: Color(0xFF361FB2),
         scaffoldBackgroundColor: Colors.grey[300],
         fontFamily: 'productSans',
       ),
