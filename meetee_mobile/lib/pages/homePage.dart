@@ -4,6 +4,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/css.dart';
+import 'package:meetee_mobile/model/facilityType.dart';
+import 'package:meetee_mobile/pages/customerDemandPage.dart';
+import 'package:meetee_mobile/pages/selectFacility.dart';
 
 class HomePage extends StatefulWidget {
   final String userName;
@@ -18,25 +21,191 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> {
   bool _isLargeScreen = false;
-
-  AnimationController _mostBookingController;
 
   @override
   void initState() {
-    _mostBookingController = AnimationController(
-      duration: Duration(milliseconds: 100),
-      vsync: this,
-    );
     super.initState();
   }
 
   @override
   void dispose() {
-    _mostBookingController.dispose();
     super.dispose();
+  }
+
+  List _menuItems = [
+    [
+      '/facilityType',
+      Icons.airline_seat_recline_normal,
+      'Book now',
+    ],
+    [
+      '/facilityType',
+      Icons.star,
+      'Featured',
+    ],
+    [
+      '/facilityType',
+      Icons.assistant_photo,
+      'Promotion',
+    ],
+  ];
+
+  _buildItem(
+    String path,
+    IconData icon,
+    String title,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(name: path),
+            builder: (context) {
+              return SelectFacilityType(
+                userId: widget.userId,
+                isLargeScreen: _isLargeScreen,
+              );
+            },
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: 10.0),
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.all(
+            Radius.circular(16.0),
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: Row(
+              children: <Widget>[
+                Icon(icon),
+                SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildRecommendCard(int type, int index, String imageUrl, String headTitle,
+      String title, String subtitle) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        16.0,
+        0.0,
+        16.0,
+        0.0,
+      ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              settings: RouteSettings(name: '/customerDemand'),
+              builder: (context) {
+                return CustomerDemandPage(
+                  userId: widget.userId,
+                  facilityType: facilityTypeList[type],
+                  index: index,
+                  subType: type == 0 ? 'Seat' : 'Room',
+                  isLargeScreen: _isLargeScreen,
+                );
+              },
+            ),
+          );
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height * 3 / 5,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(
+              Radius.circular(16.0),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey[500],
+                blurRadius: 8.0, // has the effect of softening the shadow
+                spreadRadius: -2, // has the effect of extending the shadow
+                offset: Offset(
+                  8.0, // horizontal, move right 10
+                  8.0, // vertical, move down 10
+                ),
+              )
+            ],
+            image: DecorationImage(
+              image: NetworkImage(
+                imageUrl,
+              ),
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.fromLTRB(
+                  20.0,
+                  16.0,
+                  20.0,
+                  16.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black87,
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(18.0),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      headTitle.toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16.0,
+//                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -95,90 +264,64 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
             ),
-
-//            SliverToBoxAdapter(
-//              child: Padding(
-//                padding: EdgeInsets.only(top: 8.0, bottom: 24),
-//                child: Divider(
-//                  indent: 16.0,
-//                  endIndent: 16.0,
-//                  color: Colors.grey[400],
-//                ),
-//              ),
-//            ),
             SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  16.0,
-                  0.0,
-                  16.0,
-                  0.0,
-                ),
-                child: AnimatedBuilder(
-                  animation: _mostBookingController,
-                  child: GestureDetector(
-                    onTapDown: (d) {
-                      _mostBookingController.forward().whenComplete(() {
-                        _mostBookingController.reverse();
-                      });
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 2 / 3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(16.0),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey[500],
-                            blurRadius:
-                                8.0, // has the effect of softening the shadow
-                            spreadRadius:
-                                -2, // has the effect of extending the shadow
-                            offset: Offset(
-                              8.0, // horizontal, move right 10
-                              8.0, // vertical, move down 10
-                            ),
-                          )
-                        ],
-                        image: DecorationImage(
-                          image: AssetImage(
-                            'images/single_chair.jpg',
-                          ),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(
-                              20.0,
-                              0.0,
-                              0.0,
-                              18.0,
-                            ),
-                            child: Text(
-                              'Most\nBooking',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 48.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  builder: (BuildContext context, Widget child) {
-                    return Transform.scale(
-                      scale: 1 - (0.02 * _mostBookingController.value),
-                      child: child,
+              child: Container(
+                height: 48.0,
+                padding: EdgeInsets.only(left: 16.0),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _menuItems.length,
+                  itemBuilder: (context, index) {
+                    return _buildItem(
+                      _menuItems[index][0],
+                      _menuItems[index][1],
+                      _menuItems[index][2],
                     );
                   },
                 ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(top: 8.0, bottom: 8),
+                child: Divider(
+                  indent: 16.0,
+                  endIndent: 16.0,
+                  color: Colors.grey[400],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 24),
+                child: _buildRecommendCard(
+                  0,
+                  0,
+                  'https://storage.googleapis.com/meetee-file-storage/img/fac/single-chair.jpg',
+                  'Most Booking',
+                  'Single Chair',
+                  'Just a simple seat you looking for.',
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 24),
+                child: _buildRecommendCard(
+                  2,
+                  0,
+                  'https://storage.googleapis.com/meetee-file-storage/img/fac/hall-room.jpg',
+                  'Seminar Await',
+                  'Hall Room',
+                  'Up to 30 persons, only one room available!',
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                color: Colors.transparent,
+                height: kBottomNavigationBarHeight +
+                    MediaQuery.of(context).padding.bottom,
               ),
             ),
           ],

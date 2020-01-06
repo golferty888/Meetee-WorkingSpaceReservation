@@ -141,7 +141,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
       urlGetCategoryByFacilityType,
     );
     if (response.statusCode == 200) {
-//      print(response.body);
+      print(response.body);
       setState(() {
         _categoriesList = json.decode(response.body);
         _isCategoryLoadDone = true;
@@ -175,7 +175,6 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
       body: body,
     );
     if (response.statusCode == 200) {
-//      print(response.body);
       setState(() {
         _cateCountList = json.decode(response.body);
         _isCateCountListLoadDone = true;
@@ -214,10 +213,10 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
         );
       },
       loop: false,
-//      index: widget.index,
       itemCount: categoriesMap.length,
       viewportFraction: 0.8,
       scale: 0.9,
+      index: widget.index,
       onTap: (index) {
         Navigator.push(
           context,
@@ -492,7 +491,6 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                                             : fontSizeH1[1],
                                         color: Colors.white,
                                       ),
-//
                                     ],
                                   ),
                                   SizedBox(

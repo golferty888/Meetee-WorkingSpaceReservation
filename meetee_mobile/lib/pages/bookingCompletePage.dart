@@ -177,9 +177,9 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[100],
         elevation: 0.0,
 //        leading: IconButton(
 //          icon: Icon(

@@ -171,7 +171,7 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
                     return CustomerDemandPage(
                       userId: widget.userId,
                       facilityType: facilityTypeList[index],
-                      index: index,
+                      index: 0,
                       subType: index == 0 ? 'Seat' : 'Room',
                       isLargeScreen: widget.isLargeScreen,
                     );

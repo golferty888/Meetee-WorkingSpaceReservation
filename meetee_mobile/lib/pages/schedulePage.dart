@@ -283,12 +283,12 @@ class _SchedulePageState extends State<SchedulePage>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey[350],
+                    color: Colors.grey[500],
                     blurRadius: 16.0, // has the effect of softening the shadow
                     spreadRadius: -14, // has the effect of extending the shadow
                     offset: Offset(
-                      -3.0, // horizontal, move right 10
-                      8.0, // vertical, move down 10
+                      10.0, // horizontal, move right 10
+                      4.0, // vertical, move down 10
                     ),
                   )
                 ],
@@ -583,9 +583,6 @@ class _SchedulePageState extends State<SchedulePage>
                         child: CircularProgressIndicator(),
                       ),
                     ),
-              SizedBox(
-                height: 2,
-              ),
             ],
           ),
         ),
