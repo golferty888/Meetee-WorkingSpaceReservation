@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:meetee_mobile/pages/homePage.dart';
+import 'package:meetee_mobile/pages/menuPage.dart';
 import 'schedulePage.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -31,60 +32,45 @@ class _NavigationPageState extends State<NavigationPage> {
         userName: widget.userName,
         userId: widget.userId,
       ),
+      MenuPage(
+        userName: widget.userName,
+        userId: widget.userId,
+      ),
     ];
 
     return Scaffold(
-//      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Expanded(
-                child: _menuList[_currentIndex],
-              ),
-              Container(
-                height: 0.1,
-                color: Colors.black45,
-              ),
-            ],
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(16.0),
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: 5.0,
-                  sigmaY: 5.0,
-                ),
-                child: BottomNavigationBar(
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  elevation: 0.0,
-                  currentIndex: _currentIndex,
-                  onTap: (index) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                  },
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.home),
-                      title: Text('Home'),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.schedule),
-                      title: Text('Schedule'),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.menu),
-                      title: Text('Menu'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.schedule),
+            title: Text('Schedule'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_pin),
+            title: Text('Account'),
+          ),
+        ],
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: _menuList[_currentIndex],
+          ),
+          Container(
+            height: 0.1,
+            color: Colors.black26,
           ),
         ],
       ),

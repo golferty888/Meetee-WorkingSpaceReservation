@@ -85,7 +85,10 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: Row(
               children: <Widget>[
-                Icon(icon),
+                Icon(
+                  icon,
+                  color: Theme.of(context).primaryColor,
+                ),
                 SizedBox(
                   width: 4,
                 ),
@@ -93,6 +96,7 @@ class _HomePageState extends State<HomePage> {
                   title,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
               ],
@@ -166,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                   16.0,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.black87,
+                  color: Colors.black87.withOpacity(0.8),
                   borderRadius: BorderRadius.vertical(
                     bottom: Radius.circular(18.0),
                   ),
@@ -315,13 +319,6 @@ class _HomePageState extends State<HomePage> {
                   'Hall Room',
                   'Up to 30 persons, only one room available!',
                 ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                color: Colors.transparent,
-                height: kBottomNavigationBarHeight +
-                    MediaQuery.of(context).padding.bottom,
               ),
             ),
           ],

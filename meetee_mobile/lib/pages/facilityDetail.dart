@@ -444,39 +444,6 @@ class FacilityDetailState extends State<FacilityDetail>
                 SizedBox(
                   height: 16.0,
                 ),
-//                Center(
-//                  child: ClipRRect(
-//                    borderRadius: BorderRadius.all(
-//                      Radius.circular(16.0),
-//                    ),
-//                    child: BackdropFilter(
-//                      filter: ImageFilter.blur(
-//                        sigmaX: 5.0,
-//                        sigmaY: 5.0,
-//                      ),
-//                      child: Container(
-//                        color: Colors.black.withOpacity(0.5),
-//                        padding: EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),
-//                        child: Row(
-//                          mainAxisSize: MainAxisSize.min,
-//                          children: <Widget>[
-//                            Text(
-//                              'More detail',
-//                              style: TextStyle(
-//                                color: Colors.white,
-//                                letterSpacing: 1.5,
-//                              ),
-//                            ),
-//                            Icon(
-//                              Icons.keyboard_arrow_down,
-//                              color: Colors.white,
-//                            ),
-//                          ],
-//                        ),
-//                      ),
-//                    ),
-//                  ),
-//                ),
               ],
             ),
           ),
