@@ -665,7 +665,7 @@ class _LogInPageState extends State<LogInPage>
           ColorLoader4(
             dotOneColor: Colors.yellow[700],
             dotTwoColor: Colors.pink[400],
-            dotThreeColor: Colors.blue[400],
+            dotThreeColor: Color(0xFFA422BA),
             duration: Duration(milliseconds: 1000),
           ),
           Container(
@@ -754,7 +754,7 @@ class _LogInPageState extends State<LogInPage>
                                                   8,
 //                                  width: 160.0,
                                           child: SvgPicture.asset(
-                                            'images/logo.svg',
+                                            'images/meetee_logo.svg',
                                           ),
                                         ),
                                         SizedBox(
@@ -812,17 +812,6 @@ class _LogInPageState extends State<LogInPage>
                                   height:
                                       MediaQuery.of(context).size.height / 20,
                                 ),
-//                            Expanded(
-//                              child: PageView(
-//                                controller: pageViewController,
-//                                physics: NeverScrollableScrollPhysics(),
-//                                children: <Widget>[
-//                                  _buildLoginView(),
-//                                  _buildSignUpView(),
-//                                  _buildLoadView(),
-//                                ],
-//                              ),
-//                            ),
                               ],
                             ),
                           ),

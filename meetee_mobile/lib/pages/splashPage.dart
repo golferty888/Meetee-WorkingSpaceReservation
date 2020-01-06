@@ -88,7 +88,7 @@ class _SplashPageState extends State<SplashPage>
                     Container(
                       height: MediaQuery.of(context).size.height / 5,
                       child: SvgPicture.asset(
-                        'images/logo.svg',
+                        'images/meetee_logo.svg',
                       ),
                     ),
                     SizedBox(

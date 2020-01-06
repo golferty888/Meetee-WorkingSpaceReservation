@@ -456,11 +456,19 @@ class _SchedulePageState extends State<SchedulePage>
                                 padding: EdgeInsets.all(32.0),
                                 child: Column(
                                   children: <Widget>[
-                                    Text('No upcoming booking'),
+                                    Text(
+                                      'No upcoming booking',
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
                                     Text(
                                       'Book now',
                                       style: TextStyle(
-                                        color: Colors.blue[600],
+                                        color: Theme.of(context).primaryColor,
                                         fontSize: 16.0,
                                       ),
                                     ),
@@ -516,7 +524,7 @@ class _SchedulePageState extends State<SchedulePage>
                     Text(
                       'See all',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: Theme.of(context).primaryColor,
                         fontSize: 12.0,
 //                            fontWeight: FontWeight.bold,
                       ),
@@ -549,11 +557,19 @@ class _SchedulePageState extends State<SchedulePage>
                             padding: EdgeInsets.all(32.0),
                             child: Column(
                               children: <Widget>[
-                                Text('No history'),
+                                Text(
+                                  'No history',
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 4,
+                                ),
                                 Text(
                                   'Book now',
                                   style: TextStyle(
-                                    color: Colors.blue[600],
+                                    color: Theme.of(context).primaryColor,
                                     fontSize: 16.0,
                                   ),
                                 ),
