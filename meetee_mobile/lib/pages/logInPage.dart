@@ -10,6 +10,7 @@ import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/pages/navigationPage.dart';
 import 'package:vector_math/vector_math_64.dart' as vector_math;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flushbar/flushbar.dart';
 
 import 'package:meetee_mobile/components/colorLoader.dart';
 import 'package:meetee_mobile/pages/schedulePage.dart';
@@ -208,9 +209,31 @@ class _LogInPageState extends State<LogInPage>
           setState(
             () {
               _isLoading = false;
+              _isLogInFailed = false;
+              _isLogInView = true;
             },
           );
-          _navigateToHomePage();
+          pageViewController.animateToPage(
+            0,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.ease,
+          );
+//          _navigateToHomePage();
+//          Scaffold.of(context).showSnackBar(snackBar);
+          print('flush bar');
+          Flushbar(
+            flushbarStyle: FlushbarStyle.FLOATING,
+            margin: EdgeInsets.all(8),
+            borderRadius: 8,
+            backgroundColor: Theme.of(context).primaryColor,
+            icon: Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            title: 'Sign up success!',
+            message: 'Log in to book your seat.',
+            duration: Duration(seconds: 5),
+          )..show(context);
         },
       );
     } else {
@@ -484,6 +507,7 @@ class _LogInPageState extends State<LogInPage>
                       ),
                     ),
               onPressed: () {
+                FocusScope.of(context).unfocus();
                 logIn();
               },
             ),
@@ -572,14 +596,19 @@ class _LogInPageState extends State<LogInPage>
               onChanged: (input) {
                 checkPassWordField();
               },
-//              onSubmitted: (term) {
-//                _textFocusChange(
-//                    context, _passWordSignUpFocus, _rePassWordSignUpFocus);
-//              },
               onSubmitted: (term) {
                 checkUserNameField();
                 checkPassWordField();
                 signUp();
+//                if (_isLogInView = true) {
+//                  print('flush bar');
+//                  Flushbar(
+//                    title: "Hey Ninja",
+//                    message:
+//                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+//                    duration: Duration(seconds: 3),
+//                  )..show(context);
+//                }
               },
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(0.0),
@@ -641,9 +670,19 @@ class _LogInPageState extends State<LogInPage>
                       ),
                     ),
               onPressed: () {
+                FocusScope.of(context).unfocus();
                 checkUserNameField();
                 checkPassWordField();
                 signUp();
+//                if (_isLogInView = true) {
+//                  print('flush bar');
+//                  Flushbar(
+//                    title: "Hey Ninja",
+//                    message:
+//                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+//                    duration: Duration(seconds: 5),
+//                  )..show(context);
+//                }
               },
             ),
           ),
@@ -880,6 +919,7 @@ class _LogInPageState extends State<LogInPage>
                                         setState(() {
                                           _isLogInView = true;
                                           _isSignUpView = false;
+                                          _isLogInFailed = false;
                                           userNameSignUpController.clear();
                                           passWordSignUpController.clear();
                                           _errorUserNameMessage = null;
