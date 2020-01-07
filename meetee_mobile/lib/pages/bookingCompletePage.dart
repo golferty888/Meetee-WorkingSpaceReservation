@@ -4,44 +4,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:meetee_mobile/components/countDownPanel.dart';
-import 'package:meetee_mobile/components/countDownText.dart';
 
-import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
-import 'package:meetee_mobile/pages/schedulePage.dart';
-import 'package:meetee_mobile/pages/selectFacility.dart';
 
 class BookingCompletePage extends StatefulWidget {
   final int userId;
   final bool isLargeScreen;
   final Map response;
-//  final int colorCode;
-//  final DateTime startDate;
-//  final DateTime startTime;
-//  final DateTime endTime;
-//  final List facId;
-//  final String type;
-//  final List code;
-//  final String totalPrice;
-//  final String imgPath;
-//  final int index;
 
   BookingCompletePage({
     Key key,
-//    @required this.colorCode,
     @required this.userId,
     @required this.isLargeScreen,
     @required this.response,
-//    @required this.startDate,
-//    @required this.startTime,
-//    @required this.endTime,
-//    @required this.facId,
-//    @required this.type,
-//    @required this.code,
-//    @required this.totalPrice,
-//    @required this.imgPath,
-//    @required this.index,
   }) : super(key: key);
   @override
   _BookingCompletePageState createState() => _BookingCompletePageState();

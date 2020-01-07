@@ -38,6 +38,7 @@ dependencies:
   skeleton_text: ^1.0.0
   flare_flutter: ^1.7.1
   flushbar: ^1.9.1
+  flutter_local_notifications: ^0.9.1+1
 
 dev_dependencies:
   flutter_test:

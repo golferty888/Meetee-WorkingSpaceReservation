@@ -3,15 +3,16 @@ import 'package:meetee_mobile/pages/accountPage.dart';
 
 import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/customerDemandPage.dart';
-import 'package:meetee_mobile/pages/historyPage.dart';
 import 'package:meetee_mobile/pages/homePage.dart';
 import 'package:meetee_mobile/pages/schedulePage.dart';
 import 'package:meetee_mobile/pages/logInPage.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
 import 'package:meetee_mobile/pages/splashPage.dart';
 import 'package:meetee_mobile/pages/navigationPage.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-const bool debugEnableDeviceSimulator = true;
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void main() => runApp(MyApp());
 

@@ -227,18 +227,15 @@ class _AccountPageState extends State<AccountPage> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: 80.0,
-              padding: EdgeInsets.fromLTRB(
-                16.0,
-                16.0,
-                16.0,
-                16.0,
-              ),
+              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+//              color: Colors.white,
               child: OutlineButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 borderSide: BorderSide(
                   color: Theme.of(context).primaryColor,
+//                  color: Colors.red,
                 ),
                 onPressed: () async {
                   final prefs = await SharedPreferences.getInstance();

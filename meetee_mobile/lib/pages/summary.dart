@@ -52,7 +52,6 @@ class Summary extends StatefulWidget {
 }
 
 class _SummaryState extends State<Summary> {
-//  final String userId = '2';
   final String reserveSeatUrl = 'http://18.139.12.132:9000/reserve';
   final String lockUrl = 'http://18.139.12.132:9000/facility/pending/lock';
   final String unlockUrl = 'http://18.139.12.132:9000/facility/pending/unlock';
@@ -87,14 +86,6 @@ class _SummaryState extends State<Summary> {
         '"facId": ${widget.facId}, '
         '"totalPrice": ${widget.totalPrice}'
         '}';
-//    String body = '{'
-//        '"userId": "${widget.userId}", '
-//        '"startDate": "$startDateFormattedForApi", '
-//        '"startTime": "19:00:00", '
-//        '"endTime": "20:00:00", '
-//        '"facId": ${widget.facId}, '
-//        '"totalPrice": ${widget.totalPrice}'
-//        '}';
     print(body);
     final response = await http.post(
       reserveSeatUrl,
@@ -439,22 +430,6 @@ class _SummaryState extends State<Summary> {
 
   void _onCardEntryComplete() {
     print('_onCardEntryComplete');
-//    Navigator.push(
-//      context,
-//      MaterialPageRoute(
-//        builder: (context) => HomePage(),
-//      ),
-//    );
-
-//    showDialog(
-//      context: context,
-//      builder: (_) => _buildCupertinoAlertDialog(
-//        'Booked complete',
-//        '',
-//        'No',
-//        'Yes',
-//      ),
-//    );
     Navigator.push(
       context,
       MaterialPageRoute(
