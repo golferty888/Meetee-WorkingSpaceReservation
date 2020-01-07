@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:meetee_mobile/pages/homePage.dart';
-import 'package:meetee_mobile/pages/menuPage.dart';
+import 'package:meetee_mobile/pages/accountPage.dart';
 import 'schedulePage.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -32,7 +32,7 @@ class _NavigationPageState extends State<NavigationPage> {
         userName: widget.userName,
         userId: widget.userId,
       ),
-      MenuPage(
+      AccountPage(
         userName: widget.userName,
         userId: widget.userId,
       ),

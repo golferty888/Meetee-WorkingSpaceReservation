@@ -87,7 +87,6 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 Icon(
                   icon,
-                  color: Theme.of(context).primaryColor,
                 ),
                 SizedBox(
                   width: 4,
@@ -96,7 +95,6 @@ class _HomePageState extends State<HomePage> {
                   title,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
                   ),
                 ),
               ],

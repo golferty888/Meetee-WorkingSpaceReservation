@@ -826,7 +826,7 @@ class _LogInPageState extends State<LogInPage>
                                         fontSize: isLargeScreen
                                             ? fontSizeH3[0]
                                             : fontSizeH3[1],
-                                        fontWeight: FontWeight.bold,
+//                                        fontWeight: FontWeight.bold,
                                         letterSpacing: 1.5,
                                       ),
                                     ),
@@ -845,7 +845,7 @@ class _LogInPageState extends State<LogInPage>
                                       child: Text(
                                         'Sign up',
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: Theme.of(context).primaryColor,
                                           fontSize: isLargeScreen
                                               ? fontSizeH3[0]
                                               : fontSizeH3[1],
@@ -889,7 +889,7 @@ class _LogInPageState extends State<LogInPage>
                                       child: Text(
                                         'Login',
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: Theme.of(context).primaryColor,
                                           fontSize: isLargeScreen
                                               ? fontSizeH3[0]
                                               : fontSizeH3[1],
