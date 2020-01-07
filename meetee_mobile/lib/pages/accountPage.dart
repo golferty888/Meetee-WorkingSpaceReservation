@@ -77,18 +77,146 @@ class _AccountPageState extends State<AccountPage> {
                           fontSize: 16,
                         ),
                       ),
-                      Text(
-                        'Not verified',
-                        style: TextStyle(fontSize: 16, color: Colors.red),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Not verified',
+                            style: TextStyle(fontSize: 16, color: Colors.red),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black,
+                            size: 16,
+                          ),
+                        ],
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: 2,
+                    height: 8,
                   ),
                   Text(
                     'placeholder_email@gmail.com',
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 2,
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Change password',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.black,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 2,
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Language',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'English',
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 16, top: 24, bottom: 8),
+              height: 16,
+              child: Text(
+                'Notification'.toUpperCase(),
+                style: TextStyle(
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Alert time',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Before 3 minutes',
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
