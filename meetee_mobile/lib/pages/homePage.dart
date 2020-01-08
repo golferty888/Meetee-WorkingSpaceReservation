@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
@@ -173,10 +174,21 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  headTitle.toUpperCase(),
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 48.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               Container(
                 padding: EdgeInsets.fromLTRB(
                   20.0,
-                  16.0,
+                  12.0,
                   20.0,
                   16.0,
                 ),
@@ -186,31 +198,48 @@ class _HomePageState extends State<HomePage> {
                     bottom: Radius.circular(18.0),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: <Widget>[
-                    Text(
-                      headTitle.toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      padding: EdgeInsets.all(4.0),
+                      height: 40.0,
+                      width: 40.0,
+                      decoration: BoxDecoration(
+                        color: Color(facilityTypeList[type].secondaryColorCode),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                      ),
+                      child: SvgPicture.asset(
+                        facilityTypeList[type].imagePath,
                       ),
                     ),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SizedBox(
+                      width: 16,
                     ),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16.0,
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Container(
+                            child: Text(
+                              subtitle,
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16.0,
 //                        fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -313,7 +342,7 @@ class _HomePageState extends State<HomePage> {
                   0,
                   0,
                   'https://storage.googleapis.com/meetee-file-storage/img/fac/single-chair.jpg',
-                  'Most Booking',
+                  'Most\nBooking',
                   'Single Chair',
                   'Just a simple seat you looking for.',
                 ),
@@ -323,12 +352,12 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: EdgeInsets.only(bottom: 24),
                 child: _buildRecommendCard(
-                  2,
-                  0,
-                  'https://storage.googleapis.com/meetee-file-storage/img/fac/hall-room.jpg',
-                  'Seminar Await',
-                  'Hall Room',
-                  'Up to 30 persons, only one room available!',
+                  1,
+                  1,
+                  'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-m.jpg',
+                  'Work!\nWork!\nTogether',
+                  'Meeting Room',
+                  'Cooperate in individual room',
                 ),
               ),
             ),
