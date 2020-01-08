@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:meetee_mobile/pages/homePage.dart';
 import 'package:meetee_mobile/pages/accountPage.dart';
+import '../main.dart';
 import 'schedulePage.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -20,6 +22,25 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage> {
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+    super.initState();
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      print('notification payload: ' + payload);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
