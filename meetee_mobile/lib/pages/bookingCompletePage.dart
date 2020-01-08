@@ -286,7 +286,7 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     width: MediaQuery.of(context).size.width,
                     child: Text(
-                      'My schedule'.toUpperCase(),
+                      'Activate now'.toUpperCase(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,

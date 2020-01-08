@@ -371,8 +371,9 @@ class _ActivationPageState extends State<ActivationPage>
                     onPressed: () {
                       Navigator.popUntil(
                         context,
-                        ModalRoute.withName('/homePage'),
+                        ModalRoute.withName('/navigationPage'),
                       );
+//                      Navigator.of(context).pop();
                     },
                   ),
                 ),
