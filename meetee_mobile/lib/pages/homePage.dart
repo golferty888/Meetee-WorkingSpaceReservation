@@ -1,17 +1,11 @@
-import 'dart:convert';
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/customerDemandPage.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
-
-import '../main.dart';
 
 class HomePage extends StatefulWidget {
   final String userName;
@@ -32,19 +26,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-  }
-
-  Future sendNotification() async {
-    print('send!');
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
-        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(0, 'Hello world!',
-        'This is notification messege', platformChannelSpecifics,
-        payload: 'payload x');
   }
 
   @override
@@ -361,14 +342,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: RaisedButton(
-                onPressed: () {
-                  sendNotification();
-                },
-                child: Text('press me'),
-              ),
-            )
           ],
         ),
       ),
