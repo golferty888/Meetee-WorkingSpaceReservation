@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:meetee_mobile/main.dart';
 
 import 'package:meetee_mobile/pages/activationPage.dart';
 
@@ -38,12 +40,16 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
     print(widget.response);
     print(widget.response["message"]);
     getUpComingBookingJson();
+
     _start = DateTime.parse(widget.response["startTime"])
             .difference(
               DateTime.now(),
             )
             .inSeconds -
         25200;
+//    _start = 15;
+    startNotificationReminder();
+    startNotificationActivate();
     startTimer();
     super.initState();
   }
@@ -52,6 +58,47 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
   void dispose() {
     _timer.cancel();
     super.dispose();
+  }
+
+  Future startNotificationReminder() async {
+    var scheduledNotificationDateTime = DateTime.now().add(
+      Duration(seconds: _start - 300),
+//      Duration(seconds: _start - 10),
+    );
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      '1',
+      'reminderNotificationChannel',
+      'For startNotificationReminder()',
+    );
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    NotificationDetails platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(
+        1,
+        'Reminder',
+        'Don\'t forget, you can activate your room in 5 minutes.',
+        scheduledNotificationDateTime,
+        platformChannelSpecifics);
+  }
+
+  Future startNotificationActivate() async {
+    var scheduledNotificationDateTime = DateTime.now().add(
+      Duration(seconds: _start),
+    );
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      '2',
+      'activateNotificationChannel',
+      'For startNotificationActivate()',
+    );
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    NotificationDetails platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(
+        2,
+        'Activate now',
+        'It\'s time!\, You can activate your room now.',
+        scheduledNotificationDateTime,
+        platformChannelSpecifics);
   }
 
   void startTimer() {
