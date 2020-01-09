@@ -10,11 +10,13 @@ import 'schedulePage.dart';
 class NavigationPage extends StatefulWidget {
   final String userName;
   final int userId;
+  final int page;
 
   NavigationPage({
     Key key,
     this.userName,
     this.userId,
+    this.page,
   }) : super(key: key);
   @override
   _NavigationPageState createState() => _NavigationPageState();
@@ -33,6 +35,11 @@ class _NavigationPageState extends State<NavigationPage> {
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
+
+    if (widget.page != null) {
+      _currentIndex = widget.page;
+    }
+
     super.initState();
   }
 
@@ -40,6 +47,16 @@ class _NavigationPageState extends State<NavigationPage> {
     if (payload != null) {
       print('notification payload: ' + payload);
     }
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NavigationPage(
+          userName: widget.userName,
+          userId: widget.userId,
+          page: 1,
+        ),
+      ),
+    );
   }
 
   @override

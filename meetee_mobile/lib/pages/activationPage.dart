@@ -378,7 +378,7 @@ class _ActivationPageState extends State<ActivationPage>
                   ),
                 ),
                 Text(
-                  'Activation',
+                  'Activate your facility',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.0,

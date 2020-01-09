@@ -9,6 +9,7 @@ import 'package:meetee_mobile/components/fadeRoute.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/customerDemandPage.dart';
+import 'package:meetee_mobile/pages/historyPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -231,22 +232,21 @@ class _SchedulePageState extends State<SchedulePage>
   }
 
   _buildHistoryList() {
-    return Expanded(
-      child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        scrollDirection: Axis.vertical,
-        itemCount: historiesList.length,
-        reverse: false,
-        itemBuilder: (BuildContext context, int index) {
-          return _buildHistories(index);
-        },
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        children: <Widget>[
+          _buildHistories(0),
+          _buildHistories(1),
+          _buildHistories(2),
+        ],
       ),
     );
   }
 
   _buildHistories(int index) {
     return Container(
-      height: 80,
+      height: 62,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -316,27 +316,6 @@ class _SchedulePageState extends State<SchedulePage>
                             color: Colors.black,
                           ),
                         ),
-                        Container(
-                          height: 14,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: historiesList[index]["faclist"].length,
-                            itemBuilder: (BuildContext context, int i) {
-                              return Padding(
-                                padding:
-                                    EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
-                                child: Text(
-                                  '${historiesList[index]["faclist"][i]["facCode"]}',
-                                  style: TextStyle(
-                                    color: Colors.black54, fontSize: 12,
-//                                  fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -388,140 +367,150 @@ class _SchedulePageState extends State<SchedulePage>
         right: false,
         left: false,
         bottom: false,
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.fromLTRB(16, 16, 0, 16),
-                child: Text(
-                  'Schedule',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: _isLargeScreen ? fontSizeH2[0] : fontSizeH2[1],
-                    fontWeight: FontWeight.bold,
-                  ),
+        child: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(16, 16, 0, 16),
+              child: Text(
+                'Schedule',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: _isLargeScreen ? fontSizeH2[0] : fontSizeH2[1],
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 8.0),
-                    child: Text(
-                      'Upcoming bookings',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(16.0, 0.0, 0.0, 8.0),
+                  child: Text(
+                    'Upcoming bookings',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
-                    child: Text(
-                      'You can activate your facilities here.',
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 18.0,
-                      ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0),
+                  child: Text(
+                    'You can activate your facilities here.',
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 18.0,
                     ),
                   ),
-                ],
-              ),
-              _isUpComingBookingLoadDone
-                  ? Container(
-                      child: _upComingBookingJson.length == 0
-                          ? GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    settings:
-                                        RouteSettings(name: '/facilityType'),
-                                    builder: (context) {
-                                      return SelectFacilityType(
-                                        userId: widget.userId,
-                                        isLargeScreen: _isLargeScreen,
-                                      );
-                                    },
-                                  ),
-                                ).then((v) {
-                                  countDownToUnlock();
-                                  getHistoryByUserId();
-                                });
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(32.0),
-                                child: Column(
-                                  children: <Widget>[
-                                    Text(
-                                      'No upcoming booking',
-                                      style: TextStyle(
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Text(
-                                      'Book now',
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                  ],
+                ),
+              ],
+            ),
+            _isUpComingBookingLoadDone
+                ? Container(
+                    child: _upComingBookingJson.length == 0
+                        ? GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  settings:
+                                      RouteSettings(name: '/facilityType'),
+                                  builder: (context) {
+                                    return SelectFacilityType(
+                                      userId: widget.userId,
+                                      isLargeScreen: _isLargeScreen,
+                                    );
+                                  },
                                 ),
-                              ),
-                            )
-                          : Container(
-                              height: 184,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: _upComingBookingJson == null
-                                    ? 0
-                                    : _upComingBookingJson.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return _buildUpComingBookingCard(index);
-                                },
+                              ).then((v) {
+                                countDownToUnlock();
+                                getHistoryByUserId();
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(32.0),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'No upcoming booking',
+                                    style: TextStyle(
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    'Book now',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                    )
-                  : Container(
-                      height: MediaQuery.of(context).size.height * 1 / 8,
-                      child: Container(
-                        height: 60,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                          )
+                        : Container(
+                            height: 184,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _upComingBookingJson == null
+                                  ? 0
+                                  : _upComingBookingJson.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return _buildUpComingBookingCard(index);
+                              },
+                            ),
+                          ),
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.height * 1 / 8,
+                    child: Container(
+                      height: 60,
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
                     ),
-              Padding(
-                padding: EdgeInsets.only(top: 8.0, bottom: 8),
-                child: Divider(
-                  indent: 16.0,
-                  endIndent: 16.0,
-                  color: Colors.grey[500],
-                ),
+                  ),
+            Padding(
+              padding: EdgeInsets.only(top: 8.0, bottom: 8),
+              child: Divider(
+                indent: 16.0,
+                endIndent: 16.0,
+                color: Colors.grey[500],
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      'History',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    'History',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HistoryPage(
+                            userId: widget.userId,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
                       'See all',
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
@@ -529,62 +518,62 @@ class _SchedulePageState extends State<SchedulePage>
 //                            fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              _isHistoryLoadDone
-                  ? _isHasHistory
-                      ? _buildHistoryList()
-                      : GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                settings: RouteSettings(name: '/facilityType'),
-                                builder: (context) {
-                                  return SelectFacilityType(
-                                    userId: widget.userId,
-                                    isLargeScreen: _isLargeScreen,
-                                  );
-                                },
-                              ),
-                            ).then((v) {
-                              countDownToUnlock();
-                              getHistoryByUserId();
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(32.0),
-                            child: Column(
-                              children: <Widget>[
-                                Text(
-                                  'No history',
-                                  style: TextStyle(
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  'Book now',
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ],
+            ),
+            _isHistoryLoadDone
+                ? _isHasHistory
+                    ? _buildHistoryList()
+                    : GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              settings: RouteSettings(name: '/facilityType'),
+                              builder: (context) {
+                                return SelectFacilityType(
+                                  userId: widget.userId,
+                                  isLargeScreen: _isLargeScreen,
+                                );
+                              },
                             ),
+                          ).then((v) {
+                            countDownToUnlock();
+                            getHistoryByUserId();
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(32.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'No history',
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                'Book now',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
                           ),
-                        )
-                  : Container(
-                      height: MediaQuery.of(context).size.height / 8,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                        ),
+                      )
+                : Container(
+                    height: MediaQuery.of(context).size.height / 8,
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
-            ],
-          ),
+                  ),
+          ],
         ),
       ),
     );

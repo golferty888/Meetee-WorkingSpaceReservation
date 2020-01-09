@@ -133,13 +133,7 @@ class _BookingCompletePageState extends State<BookingCompletePage> {
       setState(() {
         _upComingBookingJson = json.decode(response.body);
         print(_upComingBookingJson);
-//        _start = DateTime.parse(_upComingBookingJson[0]["start_time"])
-//            .difference(
-//              DateTime.now(),
-//            )
-//            .inSeconds;
         _isUpComingBookingJsonLoadDone = true;
-//        _start = 230;
       });
       print(_upComingBookingJson);
     } else {

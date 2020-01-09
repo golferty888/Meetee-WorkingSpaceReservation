@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       width: 16,
                     ),
-                    Container(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -213,9 +213,12 @@ class _HomePageState extends State<HomePage> {
                           Container(
                             child: Text(
                               subtitle,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: Colors.white70,
-                                fontSize: 16.0,
+                                fontSize: _isLargeScreen
+                                    ? fontSizeH3[0]
+                                    : fontSizeH3[1],
 //                        fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -338,7 +341,7 @@ class _HomePageState extends State<HomePage> {
                   'https://storage.googleapis.com/meetee-file-storage/img/fac/meet-m.jpg',
                   'Work!\nWork!\nTogether',
                   'Meeting Room',
-                  'Cooperate in individual room',
+                  'Cooperate in individual room.',
                 ),
               ),
             ),
