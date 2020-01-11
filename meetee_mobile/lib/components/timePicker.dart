@@ -45,8 +45,6 @@ class _TimePickerState extends State<TimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    bool isChanging = false;
-
     if (widget.isToday) {
       print('is today = true');
       if (TimeOfDay.now().hour >= 0 && TimeOfDay.now().hour < 8) {
@@ -58,10 +56,6 @@ class _TimePickerState extends State<TimePicker> {
         _minTick = 8.0;
         _divisionTick = 14;
       } else {
-//        _values = RangeValues(
-////          TimeOfDay.now().hour.toDouble() + 1,
-////          TimeOfDay.now().hour.toDouble() + 2,
-////        );
         _minTick = TimeOfDay.now().hour.toDouble() + 1.0;
 
         _divisionTick = 21 - TimeOfDay.now().hour;
@@ -126,7 +120,6 @@ class _TimePickerState extends State<TimePicker> {
                             _values = RangeValues(_values.end - 1, _values.end);
                           }
                         }
-                        isChanging = true;
                       },
                     );
                   },

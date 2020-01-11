@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
-import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/selectFacility.dart';
 
 class HistoryPage extends StatefulWidget {

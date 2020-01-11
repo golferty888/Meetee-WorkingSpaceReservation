@@ -15,7 +15,6 @@ import 'package:meetee_mobile/components/datePicker.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
 import 'package:meetee_mobile/components/periodPickerToday.dart';
 
-import 'package:meetee_mobile/components/calendarPicker.dart';
 import 'package:meetee_mobile/components/periodPicker.dart';
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/facilityDetail.dart';

@@ -5,12 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
-import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:meetee_mobile/components/css.dart';
-import 'package:meetee_mobile/main.dart';
-import 'package:meetee_mobile/pages/activationPage.dart';
 import 'package:meetee_mobile/pages/bookingCompletePage.dart';
-import 'package:meetee_mobile/pages/schedulePage.dart';
 
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';

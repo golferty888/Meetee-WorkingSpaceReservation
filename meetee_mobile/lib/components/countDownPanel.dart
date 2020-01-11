@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:meetee_mobile/components/customTimerPainter.dart';
 
 class CountDownPanel extends StatefulWidget {
   final int start;

@@ -8,7 +8,6 @@ import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/components/fadeRoute.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/seatMapPage.dart';
 
 class FacilityDetail extends StatefulWidget {

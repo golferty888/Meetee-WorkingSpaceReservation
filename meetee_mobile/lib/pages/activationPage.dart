@@ -7,10 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:meetee_mobile/components/countDownPanel.dart';
 
 import 'package:meetee_mobile/config_tmp.dart';
-import 'package:meetee_mobile/pages/schedulePage.dart';
 
 class ActivationPage extends StatefulWidget {
   final int userId;
@@ -37,7 +35,6 @@ class _ActivationPageState extends State<ActivationPage>
 
   @override
   void initState() {
-//    print('init: ${widget.upComingBookingJson}');
     _fadeController = AnimationController(
       duration: Duration(milliseconds: 200),
       vsync: this,
@@ -46,14 +43,11 @@ class _ActivationPageState extends State<ActivationPage>
       begin: 0.0,
       end: 1.0,
     ).animate(_fadeController);
-//    countDownToUnlock();
     _start = DateTime.parse(widget.upComingBookingJson["start_time"])
         .difference(
           DateTime.now(),
         )
         .inSeconds;
-//    _start = 4;
-//    _start = 172850;
     startTimer();
     print('seconds: $_start');
     _fadeController.forward();
@@ -101,7 +95,6 @@ class _ActivationPageState extends State<ActivationPage>
     );
     if (response.statusCode == 200) {
       print(response.body);
-//      final jsonData = (json.decode(response.body));
       setState(() {});
     } else {
       print('400');
@@ -156,7 +149,6 @@ class _ActivationPageState extends State<ActivationPage>
                           color: Colors.black54,
                           wordSpacing: 2,
                           fontSize: 14.0,
-//                  fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -248,8 +240,6 @@ class _ActivationPageState extends State<ActivationPage>
               child: Material(
                 color: Colors.transparent,
                 child: Stack(
-//                    crossAxisAlignment: CrossAxisAlignment.stretch,
-//                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -334,7 +324,6 @@ class _ActivationPageState extends State<ActivationPage>
                               child: Container(
                                 height: 140,
                                 decoration: BoxDecoration(
-//                                  border: Border.all(color: Colors.white),
                                   shape: BoxShape.circle,
                                   color: Colors.greenAccent[400],
                                 ),
@@ -373,7 +362,6 @@ class _ActivationPageState extends State<ActivationPage>
                         context,
                         ModalRoute.withName('/navigationPage'),
                       );
-//                      Navigator.of(context).pop();
                     },
                   ),
                 ),

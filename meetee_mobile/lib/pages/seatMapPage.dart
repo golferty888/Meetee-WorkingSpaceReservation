@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:meetee_mobile/components/css.dart';
 
 import 'package:meetee_mobile/pages/summary.dart';
@@ -69,7 +68,6 @@ class _SeatMapPageState extends State<SeatMapPage> {
   String startTimeFormatted;
   String endTimeFormatted;
   int totalHour;
-  bool _isFetched = false;
 
   int _totalPrice = 0;
   List _selectedSeatList = [];

@@ -25,11 +25,8 @@ class _AccountPageState extends State<AccountPage> {
       body: ListView(
         shrinkWrap: true,
         children: <Widget>[
-          SizedBox(
-            height: 8,
-          ),
           Container(
-            padding: EdgeInsets.fromLTRB(16, 24, 16, 24),
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
             color: Colors.white,
             child: Row(
               children: <Widget>[
@@ -98,7 +95,7 @@ class _AccountPageState extends State<AccountPage> {
                   height: 8,
                 ),
                 Text(
-                  'placeholder_email@gmail.com',
+                  'panakit_gulfz@gmail.com',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black54,
@@ -202,7 +199,7 @@ class _AccountPageState extends State<AccountPage> {
                     Row(
                       children: <Widget>[
                         Text(
-                          'Before 3 minutes',
+                          'Before 5 minutes',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         SizedBox(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:meetee_mobile/components/css.dart';
-import 'package:meetee_mobile/components/fadeRoute.dart';
 
 import 'package:meetee_mobile/model/facilityType.dart';
 import 'package:meetee_mobile/pages/customerDemandPage.dart';

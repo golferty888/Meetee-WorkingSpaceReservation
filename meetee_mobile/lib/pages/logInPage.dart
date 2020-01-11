@@ -13,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flushbar/flushbar.dart';
 
 import 'package:meetee_mobile/components/colorLoader.dart';
-import 'package:meetee_mobile/pages/schedulePage.dart';
 
 class LogInPage extends StatefulWidget {
   @override
@@ -179,8 +178,6 @@ class _LogInPageState extends State<LogInPage>
       );
     }
   }
-
-  bool _isSignUpView = false;
 
   Future<dynamic> signUp() async {
     setState(() {
@@ -877,7 +874,6 @@ class _LogInPageState extends State<LogInPage>
                                           curve: Curves.ease,
                                         );
                                         setState(() {
-                                          _isSignUpView = true;
                                           _isLogInView = false;
                                         });
                                       },
@@ -918,7 +914,6 @@ class _LogInPageState extends State<LogInPage>
                                         );
                                         setState(() {
                                           _isLogInView = true;
-                                          _isSignUpView = false;
                                           _isLogInFailed = false;
                                           userNameSignUpController.clear();
                                           passWordSignUpController.clear();
