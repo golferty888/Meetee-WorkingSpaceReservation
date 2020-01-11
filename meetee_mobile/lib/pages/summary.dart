@@ -14,7 +14,7 @@ import 'package:meetee_mobile/pages/schedulePage.dart';
 
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
-import 'package:meetee_mobile/config.dart';
+import 'package:meetee_mobile/config_tmp.dart';
 
 class Summary extends StatefulWidget {
   final int userId;
@@ -346,7 +346,7 @@ class _SummaryState extends State<Summary> {
                       onPressed: () {
                         Clipboard.setData(
                           ClipboardData(
-                            text: fakeCardId,
+                            text: $fakeCardId,
                           ),
                         );
                       },
@@ -406,7 +406,7 @@ class _SummaryState extends State<Summary> {
   Future<void> _onStartCardEntryFlow() async {
     print('_onStartCardEntryFlow');
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    await InAppPayments.setSquareApplicationId(squareApplicationId);
+    await InAppPayments.setSquareApplicationId($squareApplicationId);
     print('afterStartCardEntryFlow');
     await InAppPayments.startCardEntryFlow(
         onCardNonceRequestSuccess: _onCardEntryCardNonceRequestSuccess,

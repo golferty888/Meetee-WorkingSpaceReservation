@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:meetee_mobile/components/countDownPanel.dart';
 
-import 'package:meetee_mobile/config.dart';
+import 'package:meetee_mobile/config_tmp.dart';
 import 'package:meetee_mobile/pages/schedulePage.dart';
 
 class ActivationPage extends StatefulWidget {
@@ -95,7 +95,7 @@ class _ActivationPageState extends State<ActivationPage>
       activateUrl,
       body: body,
       headers: {
-        HttpHeaders.authorizationHeader: fakeToken,
+        HttpHeaders.authorizationHeader: $fakeToken,
         "Content-type": "application/json"
       },
     );
