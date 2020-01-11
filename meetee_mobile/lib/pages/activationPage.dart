@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-import 'package:meetee_mobile/config_tmp.dart';
+import 'package:meetee_mobile/config.dart';
 
 class ActivationPage extends StatefulWidget {
   final int userId;

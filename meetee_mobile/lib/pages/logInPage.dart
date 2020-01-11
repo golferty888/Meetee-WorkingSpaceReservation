@@ -83,8 +83,8 @@ class _LogInPageState extends State<LogInPage>
 
   _loadUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print('pref: ${prefs.getString('userName')} '
-        '${prefs.getString('passWord')}');
+//    print('pref: ${prefs.getString('userName')} '
+//        '${prefs.getString('passWord')}');
     setState(() {
       _userName = prefs.getString('userName');
     });
@@ -109,7 +109,7 @@ class _LogInPageState extends State<LogInPage>
       Duration(milliseconds: 1000),
       () {
         if (response.statusCode == 200) {
-          print('auto login success ${response.body}');
+          print('auto login success');
           Map jsonData = json.decode(response.body);
           setState(
             () {
@@ -117,7 +117,6 @@ class _LogInPageState extends State<LogInPage>
               _promptLoadingText = 'Logging in ...';
             },
           );
-          print(_userId);
           Future.delayed(
             Duration(milliseconds: 1000),
             () {

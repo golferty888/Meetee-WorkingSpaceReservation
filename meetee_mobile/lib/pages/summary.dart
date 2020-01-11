@@ -10,7 +10,7 @@ import 'package:meetee_mobile/pages/bookingCompletePage.dart';
 
 import 'package:square_in_app_payments/models.dart';
 import 'package:square_in_app_payments/in_app_payments.dart';
-import 'package:meetee_mobile/config_tmp.dart';
+import 'package:meetee_mobile/config.dart';
 
 class Summary extends StatefulWidget {
   final int userId;

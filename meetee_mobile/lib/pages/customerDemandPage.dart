@@ -91,7 +91,6 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
   void initState() {
     super.initState();
 
-//    print(widget.userId);
     startDate = DateTime.now();
     startTime = DateTime.now().add(Duration(hours: 1)).hour;
     endTime = DateTime.now()
@@ -120,12 +119,6 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
     _connectSocketForCount();
   }
 
-//  @override
-//  void dispose() {
-//    channel.sink.close();
-//    super.dispose();
-//  }
-
   Future _connectSocketForCount() async {
     print('connect');
     channel.sink.add("Hello, this is Meetee");
@@ -140,7 +133,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
       urlGetCategoryByFacilityType,
     );
     if (response.statusCode == 200) {
-      print(response.body);
+//      print(response.body);
       setState(() {
         _categoriesList = json.decode(response.body);
         _isCategoryLoadDone = true;
@@ -178,7 +171,7 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
         _cateCountList = json.decode(response.body);
         _isCateCountListLoadDone = true;
       });
-      print(_cateCountList);
+//      print(_cateCountList);
     } else {
       print('400');
       throw Exception('Failed to load post');
