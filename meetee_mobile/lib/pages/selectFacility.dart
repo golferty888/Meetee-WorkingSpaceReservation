@@ -158,9 +158,9 @@ class _SelectFacilityTypeState extends State<SelectFacilityType> {
             itemCount: facilityTypeList.length,
             viewportFraction: 0.85,
             scale: 0.9,
-            pagination: SwiperPagination(
-              margin: EdgeInsets.fromLTRB(0.0, 0, 0.0, 16.0),
-            ),
+//            pagination: SwiperPagination(
+//              margin: EdgeInsets.fromLTRB(0.0, 0, 0.0, 16.0),
+//            ),
             onTap: (index) {
               Navigator.push(
                 context,
