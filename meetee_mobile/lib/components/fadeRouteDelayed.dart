@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class FadeRouteDelayed extends PageRouteBuilder {
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 800);
+  Duration get transitionDuration => const Duration(milliseconds: 1200);
 
   final Widget page;
   FadeRouteDelayed({this.page})
