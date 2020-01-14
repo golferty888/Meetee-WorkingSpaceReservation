@@ -309,6 +309,13 @@ class _CustomerDemandPageState extends State<CustomerDemandPage> {
                       width: double.infinity,
                       height: double.infinity,
                       fit: BoxFit.cover,
+                      loadingBuilder: (context, child, progress) {
+                        return progress == null
+                            ? child
+                            : Container(
+                                color: Colors.grey[100],
+                              );
+                      },
                     ),
                   ),
                 ),

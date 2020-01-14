@@ -144,90 +144,113 @@ class _HomePageState extends State<HomePage> {
                 ),
               )
             ],
-            image: DecorationImage(
-              image: NetworkImage(
-                imageUrl,
-              ),
-              fit: BoxFit.fitWidth,
-            ),
+//            image: DecorationImage(
+//              image: NetworkImage(
+//                imageUrl,
+//              ),
+//              fit: BoxFit.fitWidth,
+//            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.end,
+          child: Stack(
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  headTitle.toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 48.0,
-                    fontWeight: FontWeight.bold,
+              Positioned.fill(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(16.0),
+                  ),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.fitWidth,
+                    loadingBuilder: (context, child, progress) {
+                      return progress == null
+                          ? child
+                          : Container(
+                              color: Colors.grey[100],
+                            );
+                    },
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                  20.0,
-                  12.0,
-                  20.0,
-                  16.0,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.black87.withOpacity(0.8),
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(18.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      headTitle.toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 48.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(4.0),
-                      height: 40.0,
-                      width: 40.0,
-                      decoration: BoxDecoration(
-                        color: Color(facilityTypeList[type].secondaryColorCode),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8.0),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(
+                      20.0,
+                      12.0,
+                      20.0,
+                      16.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black87.withOpacity(0.8),
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(18.0),
+                      ),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.all(4.0),
+                          height: 40.0,
+                          width: 40.0,
+                          decoration: BoxDecoration(
+                            color: Color(
+                                facilityTypeList[type].secondaryColorCode),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                          ),
+                          child: SvgPicture.asset(
+                            facilityTypeList[type].imagePath,
+                          ),
                         ),
-                      ),
-                      child: SvgPicture.asset(
-                        facilityTypeList[type].imagePath,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Container(
-                            child: Text(
-                              subtitle,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: _isLargeScreen
-                                    ? fontSizeH3[0]
-                                    : fontSizeH3[1],
-//                        fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                title,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
+                              Container(
+                                child: Text(
+                                  subtitle,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: _isLargeScreen
+                                        ? fontSizeH3[0]
+                                        : fontSizeH3[1],
+//                        fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
