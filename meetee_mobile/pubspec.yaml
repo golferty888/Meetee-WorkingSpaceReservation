@@ -28,14 +28,7 @@ dependencies:
   intl: ^0.16.0
   http: ^0.12.0+2
   web_socket_channel: ^1.0.15
-  transparent_image: ^1.0.0
-  square_in_app_payments: ^1.2.3
-  giffy_dialog: ^1.4.0
-  flutter_picker:
-    git: git://github.com/yangyxd/flutter_picker.git
-  flutter_statusbarcolor: ^0.2.2
   shared_preferences: ^0.5.4+1
-  skeleton_text: ^1.0.0
   flare_flutter: ^1.7.1
   flushbar: ^1.9.1
   flutter_local_notifications: ^0.9.1+1
@@ -83,16 +76,7 @@ flutter:
         - asset: fonts/product-sans/ProductSansBoldItalic.ttf
           weight: 700
           style: italic
-    - family: Oswald
-      fonts:
-        - asset: fonts/Oswald/static/Oswald-Regular.ttf
-        - asset: fonts/Oswald/static/Oswald-Bold.ttf
-          weight: 700
-    - family: HeaventRounded
-      fonts:
-        - asset: fonts/Font-DB/hr.ttf
-        - asset: fonts/Font-DB/hr-bold.ttf
-          weight: 700
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
