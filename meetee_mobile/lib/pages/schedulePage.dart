@@ -35,10 +35,6 @@ class _SchedulePageState extends State<SchedulePage>
 
   AnimationController _mostBookingController;
 
-//  int _currentIndex = 0;
-//
-//  final List<Widget> _menuList = [];
-
   @override
   void initState() {
     print('userId: ${widget.userId}');
@@ -229,19 +225,21 @@ class _SchedulePageState extends State<SchedulePage>
   }
 
   _buildHistoryList() {
+    print('historiesList.length: ${historiesList.length}');
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         children: <Widget>[
           _buildHistories(0),
-          _buildHistories(1),
-          _buildHistories(2),
+          historiesList.length <= 1 ? Container() : _buildHistories(1),
+          historiesList.length <= 2 ? Container() : _buildHistories(2),
         ],
       ),
     );
   }
 
   _buildHistories(int index) {
+    print('_buildHistories: $index');
     return Container(
       height: 62,
       child: Row(
