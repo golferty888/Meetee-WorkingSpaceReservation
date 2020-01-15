@@ -228,7 +228,7 @@ class _LogInPageState extends State<LogInPage>
             ),
             title: 'Sign up success!',
             message: 'Log in to book your seat.',
-            duration: Duration(seconds: 5),
+            duration: Duration(seconds: 3),
           )..show(context);
         },
       );

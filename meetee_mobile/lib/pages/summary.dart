@@ -8,8 +8,6 @@ import 'dart:convert';
 import 'package:meetee_mobile/components/css.dart';
 import 'package:meetee_mobile/pages/bookingCompletePage.dart';
 
-import 'package:square_in_app_payments/models.dart';
-import 'package:square_in_app_payments/in_app_payments.dart';
 import 'package:meetee_mobile/config.dart';
 
 class Summary extends StatefulWidget {
@@ -325,62 +323,33 @@ class _SummaryState extends State<Summary> {
               Divider(
                 color: Colors.grey[700],
               ),
-              Row(
-                children: <Widget>[
-                  Container(
-                    width: 48,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.content_copy,
-                        color: Colors.grey[700],
-                      ),
-                      iconSize: 16,
-                      onPressed: () {
-                        Clipboard.setData(
-                          ClipboardData(
-                            text: $fakeCardId,
-                          ),
-                        );
-                      },
-                    ),
+              RaisedButton(
+                elevation: 0.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                color: Color(widget.colorCode),
+                onPressed: () {
+//                        _onStartCardEntryFlow();
+
+                  _onCardEntryComplete();
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 24.0,
                   ),
-                  SizedBox(
-                    width: 16.0,
-                  ),
-                  Expanded(
-                    child: RaisedButton(
-                      elevation: 0.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      color: Color(widget.colorCode),
-                      onPressed: () {
-                        _onStartCardEntryFlow();
-//                  _onCardEntryComplete();
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 24.0,
-                        ),
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        width: MediaQuery.of(context).size.width / 3,
-                        child: Text(
-                          'CHECK OUT',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            letterSpacing: 2.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Text(
+                    'CHECK OUT',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
-                ],
+                ),
               ),
               SizedBox(
                 height: 32.0,
@@ -392,39 +361,8 @@ class _SummaryState extends State<Summary> {
     );
   }
 
-  bool isLoading = true;
-  bool applePayEnabled = false;
-  bool googlePayEnabled = false;
-
-  static final GlobalKey<ScaffoldState> scaffoldKey =
-      GlobalKey<ScaffoldState>();
-
-  Future<void> _onStartCardEntryFlow() async {
-    print('_onStartCardEntryFlow');
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    await InAppPayments.setSquareApplicationId($squareApplicationId);
-    print('afterStartCardEntryFlow');
-    await InAppPayments.startCardEntryFlow(
-        onCardNonceRequestSuccess: _onCardEntryCardNonceRequestSuccess,
-        onCardEntryCancel: _onCancelCardEntryFlow);
-  }
-
-  void _onCancelCardEntryFlow() {
-    print('_onCancelCardEntryFlow');
-  }
-
-  void _onCardEntryCardNonceRequestSuccess(CardDetails result) async {
-    try {
-      print('success $result');
-      reserveSeat();
-      InAppPayments.completeCardEntry(
-          onCardEntryComplete: _onCardEntryComplete);
-    } on Exception catch (ex) {
-      InAppPayments.showCardNonceProcessingError(ex.toString());
-    }
-  }
-
-  void _onCardEntryComplete() {
+  void _onCardEntryComplete() async {
+    await reserveSeat();
     print('_onCardEntryComplete');
     Navigator.push(
       context,

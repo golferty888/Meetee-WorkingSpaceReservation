@@ -165,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                       return progress == null
                           ? child
                           : Container(
-                              color: Colors.grey[100],
+                              color: Colors.grey[50],
                             );
                     },
                   ),
@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> {
       });
     }
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[50],
       body: SafeArea(
         right: false,
         left: false,
@@ -285,7 +285,7 @@ class _HomePageState extends State<HomePage> {
               centerTitle: false,
               floating: true,
               automaticallyImplyLeading: false,
-              backgroundColor: Colors.grey[100],
+              backgroundColor: Colors.grey[50],
               title: Text(
                 '${DateFormat("EEEE d MMMM").format(DateTime.now())}',
                 textAlign: TextAlign.start,

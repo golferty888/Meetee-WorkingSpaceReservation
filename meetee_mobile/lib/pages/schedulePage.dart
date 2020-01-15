@@ -357,7 +357,7 @@ class _SchedulePageState extends State<SchedulePage>
       });
     }
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[50],
       body: SafeArea(
         right: false,
         left: false,
