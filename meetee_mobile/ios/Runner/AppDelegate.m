@@ -8,10 +8,6 @@
   [GeneratedPluginRegistrant registerWithRegistry:self];
 
   // cancel old notifications that were scheduled to be periodically shown upon a reinstallation of the app
-  if(![[NSUserDefaults standardUserDefaults]objectForKey:@"Notification"]){
-      [[UIApplication sharedApplication] cancelAllLocalNotifications];
-      [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"Notification"];
-  }
   if(@available(iOS 10.0, *)) {
       [UNUserNotificationCenter currentNotificationCenter].delegate = (id<UNUserNotificationCenterDelegate>) self;
   }
